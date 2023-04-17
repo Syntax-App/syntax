@@ -1,0 +1,11 @@
+{
+  "name": "syntax-backend",
+  "version": "1.0.0",
+  "description": "The backend for Syntax, a CS32 Final Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ayman Benjelloun Touimi, Daniel Liu, Haruka Masamura, Jess Wan",
+  "license": "ISC"
+}
