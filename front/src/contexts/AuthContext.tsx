@@ -5,6 +5,8 @@ import {
   UserCredential,
   onAuthStateChanged,
   signOut,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { getAuth } from "firebase/auth";
@@ -20,7 +22,6 @@ export interface IAuthMethods {
   emailLogin: () => void;
   emailSignup: () => void;
   googleLogin: () => void;
-  googleSignup: () => void;
   signout: () => void;
 }
 
@@ -32,7 +33,6 @@ const defaultState: IAuthContext = {
     emailLogin: emptyFunc,
     emailSignup: emptyFunc,
     googleLogin: emptyFunc,
-    googleSignup: emptyFunc,
     signout: emptyFunc,
   },
 };
@@ -46,6 +46,7 @@ export function useAuth() {
 export function AuthProvider({ children }: any) {
   const auth = getAuth(app);
   const [currentUser, setCurrentUser] = useState<User>();
+  const googleProvider = new GoogleAuthProvider();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -90,9 +91,16 @@ export function AuthProvider({ children }: any) {
       });
   }
 
-  function googleLogin() {}
-
-  function googleSignup() {}
+  function googleLogin() {
+    signInWithPopup(auth, googleProvider)
+    .then((result) => {
+        setCurrentUser(result.user);
+    })
+    .catch((error : FirebaseError) => {
+        console.log(error.code);
+        console.log(error.message);
+    })
+  }
 
   function signout() {
     signOut(auth);
@@ -100,7 +108,7 @@ export function AuthProvider({ children }: any) {
 
   const value: IAuthContext = {
     currentUser: currentUser,
-    methods: { emailLogin, emailSignup, googleLogin, googleSignup, signout },
+    methods: { emailLogin, emailSignup, googleLogin, signout },
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

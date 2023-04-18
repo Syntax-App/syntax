@@ -22,6 +22,7 @@ export default function Home() {
       <Text fontSize="3xl">Welcome to Syntax!</Text>
       {currentUser ? <Text>You are logged in as {currentUser.email}</Text> : <Text>Please log in!</Text>}
       {currentUser && <Button color="crimson" size="lg" onClick={methods?.signout}>Sign out</Button>}
+      {!currentUser && <Button color="crimson" size="lg" onClick={methods?.googleLogin}>Google Login</Button>}
       <Card maxW="2xs">
         <CardBody>
           <Image
