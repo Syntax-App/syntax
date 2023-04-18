@@ -12,11 +12,19 @@ import {
   ButtonGroup,
   Button,
 } from "@chakra-ui/react";
+import { getAuth } from "firebase/auth";
+import { app as firebaseApp } from "../config/firebase";
 
 export default function Home() {
+  const auth = getAuth(firebaseApp);
   return (
     <ChakraProvider>
       <Text fontSize="3xl">Welcome to Syntax!</Text>
+      {auth.currentUser ? (
+        <Text>You are logged in as {auth.currentUser.email}!</Text>
+      ) : (
+        <Text>You are not logged in!</Text>
+      )}
       <Card maxW="2xs">
         <CardBody>
           <Image
