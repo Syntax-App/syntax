@@ -7,23 +7,13 @@ import {
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { Button, ChakraProvider } from "@chakra-ui/react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function signup() {
-  const auth = getAuth(firebaseApp);
+  const {currentUser, methods} = useAuth();
 
-  function signup() {
-    createUserWithEmailAndPassword(
-      auth,
-      "daniel_liu2@brown.edu",
-      "supersecurepassword"
-    )
-      .then((userCredentials: UserCredential) => {
-        console.log(userCredentials.user.email);
-      })
-      .catch((error: FirebaseError) => {
-        console.log(error.code);
-        console.log(error.message);
-      });
+  async function signup() {
+    methods?.emailSignup();
   }
 
   return (

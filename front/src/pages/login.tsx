@@ -9,30 +9,25 @@ import {
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { Button, ChakraProvider } from "@chakra-ui/react";
+import { IAuthContext, useAuth } from "@/contexts/AuthContext";
+import { Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Login() {
-  const auth = getAuth(firebaseApp);
+  const { currentUser, methods } = useAuth();
+  const router = useRouter();
 
-  function login() {
-    signInWithEmailAndPassword(
-      auth,
-      "daniel_liu2@brown.edu",
-      "supersecurepassword"
-    )
-      .then((userCredentials: UserCredential) => {
-        console.log(userCredentials.user.email);
-        
-      })
-      .catch((error: FirebaseError) => {
-        console.log(error.code);
-        console.log(error.message);
-      });
+  async function login() {
+    methods?.emailLogin();
+    router.replace("/");
   }
   return (
-    <ChakraProvider>
+    <>
       <Button color="teal" size="sm" onClick={login}>
         Sign in as Dan!
       </Button>
-    </ChakraProvider>
+      <Text>{currentUser?.email}</Text>
+    </>
   );
 }

@@ -14,17 +14,14 @@ import {
 } from "@chakra-ui/react";
 import { getAuth } from "firebase/auth";
 import { app as firebaseApp } from "../config/firebase";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
-  const auth = getAuth(firebaseApp);
-  return (
-    <ChakraProvider>
+  const {currentUser, methods} = useAuth();
+  return (<>
       <Text fontSize="3xl">Welcome to Syntax!</Text>
-      {auth.currentUser ? (
-        <Text>You are logged in as {auth.currentUser.email}!</Text>
-      ) : (
-        <Text>You are not logged in!</Text>
-      )}
+      {currentUser ? <Text>You are logged in as {currentUser.email}</Text> : <Text>Please log in!</Text>}
+      {currentUser && <Button color="crimson" size="lg" onClick={methods?.signout}>Sign out</Button>}
       <Card maxW="2xs">
         <CardBody>
           <Image
@@ -56,6 +53,5 @@ export default function Home() {
           </ButtonGroup>
         </CardFooter>
       </Card>
-    </ChakraProvider>
-  );
+  </>);
 }
