@@ -15,13 +15,11 @@ import {
 import { getAuth } from "firebase/auth";
 import { app as firebaseApp } from "../config/firebase";
 import { useAuth } from "@/contexts/AuthContext";
-import NavBar from "@/components/NavBar";
 
 export default function Home() {
   const {currentUser, methods} = useAuth();
   return (
     <>
-      <NavBar/>
       <Text fontSize="3xl">Welcome to Syntax!</Text>
       {currentUser ? <Text>You are logged in as {currentUser.email}</Text> : <Text>Please log in!</Text>}
       {currentUser && <Button color="crimson" size="lg" onClick={methods?.signout}>Sign out</Button>}

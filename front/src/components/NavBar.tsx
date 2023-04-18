@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import {
   Box,
   Flex,
-  Link,
   Button,
   Menu,
   MenuButton,
@@ -19,21 +18,7 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FaUser } from "react-icons/fa";
 import { IoIosStats } from "react-icons/io";
 import { Icon } from "@chakra-ui/react";
-
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-    href={"#"}
-  >
-    {children}
-  </Link>
-);
+import Link from "next/link";
 
 export default function NavBar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -44,9 +29,9 @@ export default function NavBar() {
 
   return (
     <>
-      <Box bg={nav_color} px={4}>
+      <Box bg={"transparent"} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <Box color={icon_color}>SYNTAX</Box>
+          <Link href={'/#'} className="logo" color={icon_color}>SYNTAX</Link>
 
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={6}>
@@ -76,7 +61,7 @@ export default function NavBar() {
                     <p>Username</p>
                   </Center>
                   <MenuDivider />
-                  <MenuItem>Your Profile</MenuItem>
+                  <MenuItem as='a' href='/profile'>Your Profile</MenuItem>
                   <MenuItem>Account Settings</MenuItem>
                   <MenuItem>Logout</MenuItem>
                 </MenuList>
