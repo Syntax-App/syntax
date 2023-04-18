@@ -9,6 +9,4 @@ const firebaseConfig : FirebaseOptions = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-if (!getApps().length) {
-    const app = initializeApp(firebaseConfig);
-}
+export const app = initializeApp(firebaseConfig);
