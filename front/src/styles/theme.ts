@@ -21,28 +21,23 @@ const colors = {
         800: "#232C43",
         900: "#121621"
     },
-    // colors for darkmode
     dark: {
-        extralight: '#9FC1E1', 
-        lightblue: '#77A3CD', // button/logo color
-        indigo: '#56699B', // chatGPT bg color
-        blue: '#3A496F', // bg color
-        darkblue: '#2A3656', // code bg color
+        extralight: "#9FC1E1",
+        mediumlightblue: "#7786AE",
+        lightblue: "#77A3CD", // button/logo color
+        indigo: "#56699B", // chatGPT bg color
+        blue: "#3A496F", // bg color
+        darkblue: "#2A3656", // code bg color
+        dullblue: "#B1C5EC", // input box placeholder
+        vibrantblue: "#83BFF6",
     },
-    // colors for lightmode
     light: {
-        extralight: '#DBE7FF',
-        lightblue: '#77A3CD',
-        indigo: '#56699B',
-        blue: '#3A496F',
+        extralight: "#DBE7FF",
+        lightblue: "#77A3CD",
+        indigo: "#56699B",
+        blue: "#3A496F",
     },
-}
-
-const fonts = {
-    heading: `"Inter", sans-serif`,
-    body: `"Inter", sans-serif`,
-    code: `"Source Code Pro", monospace`
-}
+};
 
 const styles = {
     global: () => ({
@@ -52,7 +47,19 @@ const styles = {
         p: {
             color: useColorModeValue(colors.light.blue, colors.dark.extralight),
         },
+        h1: {
+            color: useColorModeValue(colors.light.blue, colors.dark.blue),
+        },
+        a: {
+            color: useColorModeValue(colors.light.blue, colors.dark.vibrantblue),
+        },
     }),
+};
+
+const fonts = {
+  heading: `"Inter", sans-serif`,
+  body: `"Inter", sans-serif`,
+  code: `"Source Code Pro", monospace`
 }
 
 const components = {
@@ -74,14 +81,41 @@ const components = {
             }),
         },
     },
+    Input: {
+        variants: {
+            solid: () => ({
+            variant: "unstyled",
+            _placeholder: {
+                color: colors.dark.dullblue,
+                fontSize: ".3rem",
+            },
+            color: colors.dark.dullblue,
+            p: "1rem",
+            size: "md",
+            bgColor: useColorModeValue(colors.light.extralight, colors.dark.blue),
+            borderRadius: "2rem",
+            }),
+        },
+    },
+    Divider: {
+        variants: {
+            thick: () => ({
+                borderWidth: "3px", // change the width of the border
+                borderStyle: "solid", // change the style of the border
+                borderRadius: 10,
+                bg: useColorModeValue(colors.light.extralight, colors.dark.blue),
+                width: "10%",
+            }),
+        },
+    },
 }
 
 const customTheme = {
-    config,
-    colors,
-    styles,
-    fonts,
-    components,
+  config,
+  colors,
+  styles,
+  fonts,
+  components,
 }
 
 export default extendTheme(customTheme);

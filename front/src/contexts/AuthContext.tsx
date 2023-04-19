@@ -19,13 +19,15 @@ export interface IAuthContext {
 }
 
 export interface IAuthMethods {
-  emailLogin: () => void;
-  emailSignup: () => void;
-  googleLogin: () => void;
-  signout: () => void;
+  emailLogin: () => Promise<void>;
+  emailSignup: () => Promise<void>;
+  googleLogin: () => Promise<void>;
+  signout: () => Promise<void>;
 }
 
-const emptyFunc = () => {return;}
+const emptyFunc = async () => {
+  return;
+};
 
 const defaultState: IAuthContext = {
   currentUser: undefined,
@@ -59,8 +61,8 @@ export function AuthProvider({ children }: any) {
     return unsubscribe;
   }, []);
 
-  function emailLogin() {
-    signInWithEmailAndPassword(
+  async function emailLogin() {
+    return signInWithEmailAndPassword(
       auth,
       "daniel_liu2@brown.edu",
       "supersecurepassword"
@@ -75,8 +77,8 @@ export function AuthProvider({ children }: any) {
       });
   }
 
-  function emailSignup() {
-    createUserWithEmailAndPassword(
+  async function emailSignup() {
+    return createUserWithEmailAndPassword(
       auth,
       "daniel_liu2@brown.edu",
       "supersecurepassword"
@@ -91,19 +93,19 @@ export function AuthProvider({ children }: any) {
       });
   }
 
-  function googleLogin() {
-    signInWithPopup(auth, googleProvider)
-    .then((result) => {
+  async function googleLogin() {
+    return signInWithPopup(auth, googleProvider)
+      .then((result) => {
         setCurrentUser(result.user);
-    })
-    .catch((error : FirebaseError) => {
+      })
+      .catch((error: FirebaseError) => {
         console.log(error.code);
         console.log(error.message);
-    })
+      });
   }
 
-  function signout() {
-    signOut(auth);
+  async function signout() {
+    return signOut(auth);
   }
 
   const value: IAuthContext = {
