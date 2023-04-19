@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Text, useColorModeValue, Flex } from "@chakra-ui/react";
+import { Box, SimpleGrid, Text, useColorModeValue, Flex, Stack, HStack, CircularProgress } from "@chakra-ui/react";
 
 //Interface for StatsBox props. Contains header and stats to be displayed
 interface StatsBoxProps {
@@ -24,9 +24,14 @@ export default function StatsBox(props: StatsBoxProps) {
                     <Text fontFamily="code" fontSize="xs" fontWeight="regular">HIGHEST LINES/MIN</Text>
                     <Text fontSize="5xl" fontWeight="medium">{props.stats.highlpm}</Text>
                 </Flex>
-                <Flex direction="column" alignItems="center">
-                    <Text fontFamily="code" fontSize="xs" fontWeight="regular">HIGHEST ACCURACY</Text>
-                    <Text fontSize="5xl" fontWeight="medium">{props.stats.highacc}%</Text>
+                <Flex direction="row" justifyContent="center">
+                    <Stack>
+                        <Text fontFamily="code" fontSize="xs" fontWeight="regular">HIGHEST ACCURACY</Text>
+                        <HStack>
+                            <Text fontSize="5xl" fontWeight="medium">{props.stats.highacc}%</Text>
+                            <CircularProgress value={props.stats.highacc} size="60px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
+                        </HStack>
+                    </Stack>
                 </Flex>
                 <Flex direction="column" alignItems="center">
                     <Text fontFamily="code" fontSize="xs" fontWeight="regular">RACES COMPLETED</Text>
@@ -36,9 +41,14 @@ export default function StatsBox(props: StatsBoxProps) {
                     <Text fontFamily="code" fontSize="xs" fontWeight="regular">AVG. LINES/MIN</Text>
                     <Text fontSize="5xl" fontWeight="medium">{props.stats.avglpm}</Text>
                 </Flex>
-                <Flex direction="column" alignItems="center">
-                    <Text fontFamily="code" fontSize="xs" fontWeight="regular">RACES ACCURACY</Text>
-                    <Text fontSize="5xl" fontWeight="medium">{props.stats.avgacc}%</Text>
+                <Flex direction="row" justifyContent="center">
+                    <Stack>
+                        <Text fontFamily="code" fontSize="xs" fontWeight="regular">AVG. ACCURACY</Text>
+                        <HStack>
+                            <Text fontSize="5xl" fontWeight="medium">{props.stats.avgacc}%</Text>
+                            <CircularProgress value={props.stats.highacc} size="60px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
+                        </HStack>
+                    </Stack>
                 </Flex>
             </SimpleGrid>
         </Box>

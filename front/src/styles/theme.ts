@@ -58,13 +58,20 @@ const styles = {
 const components = {
     Button: {
         variants: {
-          solid: () => ({
-            bg: useColorModeValue(colors.light.indigo, colors.dark.lightblue),
-            color: useColorModeValue(colors.light.extralight, colors.dark.blue),
-            _hover: {
-                bg: useColorModeValue(colors.light.blue, colors.dark.extralight),
-            },
-          }),
+            solid: () => ({
+                bg: useColorModeValue(colors.light.indigo, colors.dark.lightblue),
+                color: useColorModeValue(colors.light.extralight, colors.dark.blue),
+                _hover: {
+                    bg: useColorModeValue(colors.light.blue, colors.dark.extralight),
+                },
+            }),
+            outline: () => ({
+                color: useColorModeValue(colors.light.blue, colors.dark.lightblue),
+                outline: "1px solid",
+                _hover: {
+                    bg: useColorModeValue(colors.blue[300], colors.blue[500]),
+                },
+            }),
         },
     },
 }
