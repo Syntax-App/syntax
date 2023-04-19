@@ -26,9 +26,9 @@ export default function Login() {
 
   const handleClick = () => setShow(!show)
 
-  async function login() {
-    methods?.emailLogin();
-    router.replace("/");
+  async function login(isGoogle: boolean) {
+    isGoogle ? await methods?.googleLogin() : methods?.emailLogin();
+    await router.push("/");
   }
   return (
     <Flex
@@ -37,9 +37,6 @@ export default function Login() {
       alignItems="center"
       overflow="-moz-hidden-unscrollable"
     >
-      {/* <Button color="teal" size="sm" onClick={login}>
-        Sign in as Dan!
-      </Button> */}
       <Text>{currentUser?.email}</Text>
       <Box
         bg={"#7786AE"}
@@ -111,7 +108,7 @@ export default function Login() {
           leftIcon={<FcGoogle size="1.2rem" />}
           bg="#DBE7FF"
           my="1.8rem"
-          onClick={methods?.googleLogin}
+          onClick={() => login(true)}
         >
           Sign in with Google
         </Button>
