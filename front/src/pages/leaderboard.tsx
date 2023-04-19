@@ -25,7 +25,7 @@ let ranking = [
     { username: "aymann", lpm: 85},
     { username: "dantheman", lpm: 78},
     { username: "itsjess", lpm: 75},
-    { username: "nimtelson", lpm: 70}
+    { username: "nimtelson", lpm: 70},
 ]
 
 export default function Leaderboard() {
@@ -40,7 +40,7 @@ export default function Leaderboard() {
                 <Table variant='striped' colorScheme='blue'>
                     <Thead>
                         <Tr>
-                            <Th isNumeric>#</Th>
+                            <Th>#</Th>
                             <Th>name</Th>
                             <Th isNumeric>lpm</Th>
                         </Tr>
@@ -48,7 +48,7 @@ export default function Leaderboard() {
                     <Tbody>
                         {ranking.map((user, key) => (
                             <Tr>
-                                <Td isNumeric>{key + 1}</Td>
+                                <Td>{key + 1}</Td>
                                 <Td>{user.username}</Td>
                                 <Td isNumeric>{user.lpm}</Td>
                             </Tr>
