@@ -5,7 +5,6 @@ import {
   Button,
   Flex,
   Icon,
-  Box,
   Spacer,
 } from "@chakra-ui/react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -29,7 +28,7 @@ export default function Profile() {
     return (
       <Flex justifyContent="center">
         <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={14} paddingY="14" >
-            <Flex direction='row' alignContent="start" alignItems='center' w="90%" gap={8}>
+            <Flex direction='row' alignContent="start" alignItems='center' w="95%" gap={8}>
                 <Icon as={FaUser} boxSize='12' color={icon_color} />
                 <Text fontSize='3xl'>Hi {currentUser ? <>{currentUser.displayName}</> : <>Guest</>}!</Text>
                 <Spacer />
