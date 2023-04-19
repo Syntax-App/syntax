@@ -1,4 +1,6 @@
 import { extendTheme, ThemeConfig, useColorModeValue } from "@chakra-ui/react";
+import "@fontsource/inter";
+import "@fontsource/source-code-pro"
 
 const config: ThemeConfig = {
     useSystemColorMode: false,
@@ -6,6 +8,20 @@ const config: ThemeConfig = {
   }
 
 const colors = {
+    // blue color scheme based off of #3A496F
+    blue: {
+        50: "#EEF1F6",
+        100: "#D0D6E6",
+        200: "#B2BCD7",
+        300: "#94A2C7",
+        400: "#7688B7",
+        500: "#586EA7",
+        600: "#465886",
+        700: "#354264",
+        800: "#232C43",
+        900: "#121621"
+    },
+    // colors for darkmode
     dark: {
         extralight: '#9FC1E1', 
         lightblue: '#77A3CD', // button/logo color
@@ -13,12 +29,19 @@ const colors = {
         blue: '#3A496F', // bg color
         darkblue: '#2A3656', // code bg color
     },
+    // colors for lightmode
     light: {
         extralight: '#DBE7FF',
         lightblue: '#77A3CD',
         indigo: '#56699B',
         blue: '#3A496F',
     },
+}
+
+const fonts = {
+    heading: `"Inter", sans-serif`,
+    body: `"Inter", sans-serif`,
+    code: `"Source Code Pro", monospace`
 }
 
 const styles = {
@@ -50,6 +73,7 @@ const customTheme = {
     config,
     colors,
     styles,
+    fonts,
     components,
 }
 

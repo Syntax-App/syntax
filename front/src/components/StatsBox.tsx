@@ -1,5 +1,6 @@
-import { Box, SimpleGrid, Text, useColorModeValue, Flex, Spacer } from "@chakra-ui/react";
+import { Box, SimpleGrid, Text, useColorModeValue, Flex } from "@chakra-ui/react";
 
+//Interface for StatsBox props. Contains header and stats to be displayed
 interface StatsBoxProps {
     header: string,
     stats: {
@@ -11,6 +12,7 @@ interface StatsBoxProps {
     }
 }
 
+// Displays a box with stats for profile page
 export default function StatsBox(props: StatsBoxProps) {
 
     return (
@@ -19,23 +21,23 @@ export default function StatsBox(props: StatsBoxProps) {
             <br/>
             <SimpleGrid columns={3} spacing={10}>
                 <Flex direction="column" alignItems="center">
-                    <Text fontSize="xs" fontWeight="regular">HIGHEST LINES/MIN</Text>
+                    <Text fontFamily="code" fontSize="xs" fontWeight="regular">HIGHEST LINES/MIN</Text>
                     <Text fontSize="5xl" fontWeight="medium">{props.stats.highlpm}</Text>
                 </Flex>
                 <Flex direction="column" alignItems="center">
-                    <Text fontSize="xs" fontWeight="regular">HIGHEST ACCURACY</Text>
+                    <Text fontFamily="code" fontSize="xs" fontWeight="regular">HIGHEST ACCURACY</Text>
                     <Text fontSize="5xl" fontWeight="medium">{props.stats.highacc}%</Text>
                 </Flex>
                 <Flex direction="column" alignItems="center">
-                    <Text fontSize="xs" fontWeight="regular">RACES COMPLETED</Text>
+                    <Text fontFamily="code" fontSize="xs" fontWeight="regular">RACES COMPLETED</Text>
                     <Text fontSize="5xl" fontWeight="medium">{props.stats.numraces}</Text>
                 </Flex>
                 <Flex direction="column" alignItems="center">
-                    <Text fontSize="xs" fontWeight="regular">AVG. LINES/MIN</Text>
+                    <Text fontFamily="code" fontSize="xs" fontWeight="regular">AVG. LINES/MIN</Text>
                     <Text fontSize="5xl" fontWeight="medium">{props.stats.avglpm}</Text>
                 </Flex>
                 <Flex direction="column" alignItems="center">
-                    <Text fontSize="xs" fontWeight="regular">RACES ACCURACY</Text>
+                    <Text fontFamily="code" fontSize="xs" fontWeight="regular">RACES ACCURACY</Text>
                     <Text fontSize="5xl" fontWeight="medium">{props.stats.avgacc}%</Text>
                 </Flex>
             </SimpleGrid>
