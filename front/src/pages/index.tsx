@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Text,
   Flex,
@@ -16,6 +15,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { useRouter } from "next/router";
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
@@ -43,11 +43,20 @@ const gptSays = `This Java program starts by creating a HashMap named "languages
 export default function Home() {
   const { currentUser, methods } = useAuth();
   const [ currLang, setcurrLang ] = useState("PYTHON");
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   if (currentUser == undefined) {
+  //     console.log(currentUser)
+  //     router.push("/login");
+  //   }
+  // }, []);
 
   return (
     <>
-      <Flex justifyContent="center">
-        <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={14} paddingY="14" >
+      <Flex justifyContent="center" maxH="100vh">
+        <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={10} paddingY="14" >
+            <Text fontSize='lg'>Hi {currentUser ? <>{currentUser.displayName}</> : <>Guest</>}! Click 'START' to get started!</Text>
             {/* language dropdown and regenerate button */}
             <HStack gap={4}>
               <Menu>
@@ -67,7 +76,7 @@ export default function Home() {
             {/* code box and chatgpt explanations */}
             <Flex direction="row" gap={6}>
               <Box 
-                className="stats-box" 
+                className="code-box" 
                 borderRadius={30} 
                 w="60vw" 
                 h="md"
@@ -82,7 +91,7 @@ export default function Home() {
                 </pre>
               </Box>
               <Box 
-                className="stats-box" 
+                className="chatgpt-box" 
                 borderRadius={30} 
                 w="30vw" 
                 h="md" 
