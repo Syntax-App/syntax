@@ -10,7 +10,12 @@ export async function requestCreateUser(
       ? pic
       : "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
   });
-  return response
+  return response;
+}
+
+export async function requestGetUser(email: string) {
+  const response = await fetch("http://localhost:4000/user/get?email=" + email);
+  return await response.json();
 }
 
 // copied from https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
