@@ -12,6 +12,7 @@ import { FirebaseError } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase";
 import React, { useContext, createContext, useState, useEffect } from "react";
+import { requestCreateUser } from "@/helpers/user";
 
 export interface IAuthContext {
   currentUser: User | undefined;
@@ -97,6 +98,17 @@ export function AuthProvider({ children }: any) {
     return signInWithPopup(auth, googleProvider)
       .then((result) => {
         setCurrentUser(result.user);
+        if (
+          result.user.displayName &&
+          result.user.email &&
+          result.user.photoURL
+        ) {
+          requestCreateUser(
+            result.user.displayName,
+            result.user.email,
+            result.user.photoURL
+          );
+        }
       })
       .catch((error: FirebaseError) => {
         console.log(error.code);
