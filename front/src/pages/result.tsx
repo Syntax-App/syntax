@@ -14,9 +14,16 @@ import {
   useColorModeValue,
   Spacer,
   CircularProgress,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useAuth } from "@/contexts/AuthContext";
-import { RepeatIcon } from "@chakra-ui/icons";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
@@ -58,11 +65,12 @@ const myProp = {
 
 export default function Result(props: ResultProps) {
   const { currentUser, methods } = useAuth();
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
-      <Flex justifyContent="center" maxH="100vh">
-        <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={10} paddingY="14" >
+      <Flex justifyContent="center" maxH="100vh - 64">
+        <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={20} paddingY="14" >
             <Flex direction="row" w="100%">
               <Flex direction="column" alignItems="start" justifyContent="space-around">
                   <Stack alignItems="flex-start">
@@ -78,37 +86,47 @@ export default function Result(props: ResultProps) {
                   </Stack>
               </Flex>
               <Spacer/>
-              <Box 
-                className="code-box" 
-                borderRadius={30} 
-                w="50vw" 
-                h="sm"
-                padding={5} 
-                bg={useColorModeValue("light.lightblue", "dark.darkblue")}
-                overflowY="scroll"
-                >
-                <pre>
-                  <code>
-                    {code}
-                  </code>
-                </pre>
-              </Box>
+              <Stack alignItems="center" gap={8}>
+                {/* code display */}
+                <Box 
+                  className="code-box" 
+                  borderRadius={30} 
+                  w="50vw" 
+                  h="sm"
+                  padding={5} 
+                  bg={useColorModeValue("light.lightblue", "dark.darkblue")}
+                  overflowY="scroll"
+                  >
+                  <pre>
+                    <code>
+                      {code}
+                    </code>
+                  </pre>
+                </Box>
+                {/* button/modal for ChatGPT explanation */}
+                <Button 
+                  onClick={onOpen}
+                  bg={useColorModeValue("light.indigo", "dark.indigo")} 
+                  color={useColorModeValue("light.lightblue", "dark.extralight")} 
+                  w="70%" 
+                  borderRadius={15}
+                  >ChatGPT Says...</Button>
+
+                <Modal onClose={onClose} isOpen={isOpen} isCentered scrollBehavior="inside">
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>ChatGPT Says...</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      {gptSays}
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button onClick={onClose}>Close</Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+              </Stack>
             </Flex>
-            {/* <Flex direction="row" gap={6}>
-              <Box 
-                className="chatgpt-box" 
-                borderRadius={30} 
-                w="30vw" 
-                h="md" 
-                padding={5} 
-                bg={useColorModeValue("light.indigo", "dark.indigo")}
-                overflowY="scroll"
-                >
-                <Text fontSize="xl" fontWeight={600} textAlign="center" color="blue.100">ChatGPT Says...</Text>
-                <br />
-                <Text fontSize="md" fontWeight="medium" textAlign="justify" color="blue.200" px={4}>{gptSays}</Text>
-              </Box>
-            </Flex> */}
             {/* continue and skip buttons */}
             <HStack gap={4} alignItems="flex-end">
               <Stack alignItems="center" gap={4}>
