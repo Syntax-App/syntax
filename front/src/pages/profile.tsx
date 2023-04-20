@@ -4,11 +4,17 @@ import {
   Text,
   Button,
   Flex,
-  Icon,
+  Avatar,
   Spacer,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
 } from "@chakra-ui/react";
 import { useAuth } from "@/contexts/AuthContext";
-import { FaUser } from "react-icons/fa";
 import { useColorModeValue } from "@chakra-ui/react";
 import { SettingsIcon } from '@chakra-ui/icons';
 import StatsBox from "@/components/StatsBox";
@@ -24,12 +30,17 @@ let stats = {
 export default function Profile() {
     const {currentUser, methods} = useAuth();
     const icon_color = useColorModeValue("light.indigo", "dark.lightblue");
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
       <Flex justifyContent="center">
         <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={14} paddingY="14" >
             <Flex direction='row' alignContent="start" alignItems='center' w="95%" gap={8}>
-                <Icon as={FaUser} boxSize='12' color={icon_color} />
+                <Avatar
+                  size={'md'}
+                  name={currentUser?.displayName ? currentUser?.displayName : undefined}
+                  src={currentUser?.photoURL ? currentUser?.photoURL : undefined}
+                />
                 <Text fontSize='3xl'>Hi {currentUser ? <>{currentUser.displayName}</> : <>Guest</>}!</Text>
                 <Spacer />
                 <SettingsIcon boxSize="6" color={icon_color}/>
@@ -39,8 +50,24 @@ export default function Profile() {
             <StatsBox stats={stats} header="Today's Stats"/>
 
             {currentUser ?
-                <Button className="logout-btn" variant={"solid"} onClick={methods?.signout}>Logout</Button> :
-                <Button className="login-btn" variant={"solid"} onClick={methods?.googleLogin}>Google Login</Button> }
+                <Button variant={"solid"} onClick={onOpen}>Logout</Button> :
+                <Button variant={"solid"} onClick={onOpen}>Google Login</Button> }
+
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalCloseButton />
+                <ModalBody>
+                  Are you sure your want to logout?
+                </ModalBody>
+                <ModalFooter>
+                  {currentUser ?
+                    <Button variant={"solid"} onClick={methods?.signout} mr={3}>Logout</Button> :
+                    <Button variant={"solid"} onClick={methods?.googleLogin} mr={3}>Google Login</Button> }
+                  <Button variant='ghost' onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
         </Flex>
       </Flex>
     );
