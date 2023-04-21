@@ -5,14 +5,17 @@ import useTypings from "./useTypings";
 import { countErrors } from "../utils/typetesthelper";
 import { type } from "os";
 
+// SPEED-TYPING INTERFACE REFERENCED FROM: https://www.youtube.com/watch?v=oc7BMlIU3VY
+
 export type State = "start" | "run" | "finish";
 
 const NUMBER_WORDS = 20;
-const COUNTDOWN_SECONDS = 10;
+const COUNTDOWN_SECONDS = 30;
 
 const useEngine = () => {
-  const [state, setState] = useState<State>("start");
-  const { words, updateWords } = useWords(NUMBER_WORDS);
+  const [state, setState] = useState<State>("finish");
+  //const { words, updateWords } = useWords(NUMBER_WORDS);
+  const [words, updateWords] = useState<string>("");
   const { timeLeft, startCountdown, resetCountdown } =
     useCountdownTimer(COUNTDOWN_SECONDS);
 
@@ -66,14 +69,15 @@ const useEngine = () => {
     resetTotalTyped();
     setState("start");
     setErrors(0);
-    updateWords();
+    //updateWords();
     clearTyped();
 
-  }, [clearTyped, updateWords, resetCountdown, resetTotalTyped])
+  }, [clearTyped, resetCountdown, resetTotalTyped])
 
   return {
-    state,
+    setState,
     words,
+    updateWords,
     timeLeft,
     typed,
     errors,

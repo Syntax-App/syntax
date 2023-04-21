@@ -3,10 +3,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // determines if valid characater is typed
 const isKeyboardCodeAllowed = (code: string) => {
     return (
-        code.startsWith("Key") ||
-        code.startsWith("Digit") ||
-        code === "Backspace" ||
-        code === "Space"
+      // code.startsWith("Key") ||
+      // code.startsWith("Digit") ||
+      // code === "Backspace" ||
+      // code === "Space"
+      !code.startsWith("Meta") && 
+      !code.startsWith("F") && 
+      !code.startsWith("Num") &&
+      !code.startsWith("Scroll") &&
+      !code.startsWith("Shift") &&
+      !code.startsWith("Control") &&
+      !code.startsWith("Enter")
     );
 
 };

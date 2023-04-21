@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   Text,
@@ -26,7 +26,7 @@ import { calculateAccuracy } from "./TypingTestInterface/utils/typetesthelper";
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
-const code = `class Main { 
+const code: string = `class Main { 
   public static void main(String[] args) {
     Map<String, String> languages = new HashMap<>(); 
     languages.put("pos3", "JS");
@@ -51,12 +51,17 @@ export default function Home() {
   const { currentUser, methods } = useAuth();
   const [ currLang, setcurrLang ] = useState("PYTHON");
   const [typeMode, setMode] = useState(false);
-  const {state, words, timeLeft, typed, errors, restart, totalTyped} = useEngine();
+  const {setState, words, updateWords, timeLeft, typed, errors, restart, totalTyped} = useEngine();
 
-  const startTest = () => setMode(true);
+  const startTest = () => {
+    setMode(true);
+    setState("start");
+  }
+
+  useEffect(() => {
+    updateWords(code);
+  }, [words]);
   
-
-
   return (
     <>
       <Flex justifyContent="center">
@@ -88,7 +93,7 @@ export default function Home() {
               overflowY="scroll"
               
             >
-              <WordsContainer userInput={typed} code={words}/>
+              <WordsContainer userInput={typed} words={words} typeMode={typeMode}/>
             </Box>
             <Box
               display={typeMode ? "none" : "show"}
@@ -132,7 +137,8 @@ export default function Home() {
 
 interface WordsProps{
   userInput: string;
-  code: string;
+  words: string; // this props.code is for random generated
+  typeMode: boolean;
 }
 const WordsContainer = (props: WordsProps) => {
   return (
@@ -140,14 +146,14 @@ const WordsContainer = (props: WordsProps) => {
       <div className="usertyped">
         <pre>
           <code>
-            <UserType userInput={props.userInput} words={props.code} />
+            <UserType userInput={props.userInput} words={props.words} typeMode={props.typeMode}/>
           </code>
         </pre>
       </div>
       <div className="codesnippet">
         <pre>
           <code>
-            {props.code}
+            {props.words}
           </code>
         </pre>
       </div>
@@ -184,7 +190,10 @@ const ControlButtons = (props: ButtonsInterface) => {
       >
         SKIP
       </Button>
-      <RestartButton onRestart={props.restart}></RestartButton>
+      <RestartButton
+        typeMode={props.typeMode}
+        onRestart={props.restart}
+      ></RestartButton>
     </HStack>
   );
 }

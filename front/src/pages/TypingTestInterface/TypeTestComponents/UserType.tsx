@@ -4,10 +4,13 @@ import Caret from "./Caret";
 interface UserTypeProps{
     userInput: string;
     words: string;
+    typeMode: boolean;
 }
 
 const UserType = (props: UserTypeProps) => {
     const typedChars = props.userInput.split("");
+
+    if (!props.typeMode) return null;
 
     return (
         <div>
@@ -35,9 +38,11 @@ const Character = (props: CharacterProps) => {
 
 
     return (
-      <Text as="span" 
-            bg= {isWhiteSpace && !isCorrect? "red" : "none"}
-            color={isCorrect? "yellow" : "red"}>
+      <Text
+        as="span"
+        bg={isWhiteSpace && !isCorrect ? "#ee6f2a" : "none"}
+        color={isCorrect ? "#eac747" : "#ee6f2a"}
+      >
         {props.expected}
       </Text>
     ); 
