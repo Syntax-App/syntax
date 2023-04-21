@@ -40,26 +40,32 @@ const colors = {
 };
 
 const styles = {
-    global: () => ({
-        body: {
-            bg: useColorModeValue(colors.light.extralight, colors.dark.blue),
-        },
-        p: {
-            color: useColorModeValue(colors.light.blue, colors.dark.extralight),
-        },
-        h1: {
-            color: useColorModeValue(colors.light.blue, colors.dark.blue),
-        },
-        a: {
-            color: useColorModeValue(colors.light.blue, colors.dark.vibrantblue),
-        },
-    }),
+  global: () => ({
+    body: {
+      bg: useColorModeValue(colors.light.extralight, colors.dark.blue),
+    },
+    p: {
+      color: useColorModeValue(colors.light.blue, colors.dark.extralight),
+    },
+    h1: {
+      color: useColorModeValue(colors.light.blue, colors.dark.blue),
+    },
+    h2: {
+      color: useColorModeValue(colors.light.blue, colors.dark.mediumlightblue),
+    },
+    
+    
+    a: {
+      color: useColorModeValue(colors.light.blue, colors.dark.vibrantblue),
+    },
+  }),
 };
 
 const fonts = {
   heading: `"Inter", sans-serif`,
   body: `"Inter", sans-serif`,
-  code: `"Source Code Pro", monospace`
+  code: `"Source Code Pro", monospace`,
+  
 }
 
 const components = {

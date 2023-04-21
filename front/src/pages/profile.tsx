@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Text, Button, Flex, Icon, Spacer } from "@chakra-ui/react";
+import {
+  Text,
+  Button,
+  Flex,
+  Avatar,
+  Spacer,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
+} from "@chakra-ui/react";
 import { useAuth } from "@/contexts/AuthContext";
-import { FaUser } from "react-icons/fa";
 import { useColorModeValue } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import StatsBox from "@/components/StatsBox";
-import { requestGetUser } from "@/helpers/user";
 
 let defaultStats = {
   highlpm: 21,
@@ -27,6 +38,7 @@ export default function Profile() {
   const { currentUser, userInfo, methods } = useAuth();
   const [stats, setStats] = useState<UserStats>(defaultStats);
   const icon_color = useColorModeValue("light.indigo", "dark.lightblue");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     if (userInfo && userInfo.stats) {
@@ -35,64 +47,43 @@ export default function Profile() {
       setStats(defaultStats);
     }
   }, [userInfo])
-
-  // useEffect(() => {
-  //   if (currentUser && currentUser.email) {
-  //     requestGetUser(currentUser.email).then((r) => {
-  //       console.log(currentUser.email);
-  //       console.log(r);
-  //       setStats(r.data.user.stats);
-  //     });
-  //   } else {
-  //     setStats(defaultStats);
-  //   }
-  // }, [currentUser]);
-
+    
   return (
     <Flex justifyContent="center">
-      <Flex
-        direction="column"
-        alignContent="center"
-        alignItems="center"
-        w="80%"
-        gap={14}
-        paddingY="14"
-      >
-        <Flex
-          direction="row"
-          alignContent="start"
-          alignItems="center"
-          w="95%"
-          gap={8}
-        >
-          <Icon as={FaUser} boxSize="12" color={icon_color} />
-          <Text fontSize="3xl">
-            Hi {currentUser ? <>{currentUser.displayName}</> : <>Guest</>}!
-          </Text>
-          <Spacer />
-          <SettingsIcon boxSize="6" color={icon_color} />
-        </Flex>
+      <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={14} paddingY="14" >
+          <Flex direction='row' alignContent="start" alignItems='center' w="95%" gap={8}>
+              <Avatar
+                size={'md'}
+                name={userInfo.name ? userInfo.name : undefined}
+                src={userInfo.pic ? userInfo.pic : undefined}
+              />
+              <Text fontSize='3xl'>Hi {currentUser ? <>{currentUser.displayName}</> : <>Guest</>}!</Text>
+              <Spacer />
+              <SettingsIcon boxSize="6" color={icon_color}/>
+          </Flex>
 
-        <StatsBox stats={stats} header="All-time Stats" />
-        <StatsBox stats={stats} header="Today's Stats" />
+          <StatsBox stats={stats} header="All-time Stats"/>
+          <StatsBox stats={stats} header="Today's Stats"/>
 
-        {currentUser ? (
-          <Button
-            className="logout-btn"
-            variant={"solid"}
-            onClick={methods?.signout}
-          >
-            Logout
-          </Button>
-        ) : (
-          <Button
-            className="login-btn"
-            variant={"solid"}
-            onClick={methods?.googleLogin}
-          >
-            Google Login
-          </Button>
-        )}
+          {currentUser ?
+              <Button variant={"solid"} onClick={onOpen}>Logout</Button> :
+              <Button variant={"solid"} onClick={onOpen}>Google Login</Button> }
+
+          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalCloseButton />
+              <ModalBody>
+                Are you sure your want to logout?
+              </ModalBody>
+              <ModalFooter>
+                {currentUser ?
+                  <Button variant={"solid"} onClick={methods?.signout} mr={3}>Logout</Button> :
+                  <Button variant={"solid"} onClick={methods?.googleLogin} mr={3}>Google Login</Button> }
+                <Button variant='ghost' onClick={onClose}>Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
       </Flex>
     </Flex>
   );
