@@ -12,7 +12,6 @@ import {
   Th,
   Tr,
   Td,
-  Spacer
 } from "@chakra-ui/react";
 
 interface User {

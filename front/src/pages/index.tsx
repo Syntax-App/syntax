@@ -22,7 +22,7 @@ import TestResults from "./TypingTestInterface/TypeTestComponents/TestResults";
 import UserType from "./TypingTestInterface/TypeTestComponents/UserType";
 import useEngine from "./TypingTestInterface/hooks/useEngine";
 import { calculateAccuracy } from "./TypingTestInterface/utils/typetesthelper";
-
+import { useRouter } from "next/router";
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
@@ -128,7 +128,6 @@ export default function Home() {
           </Flex>
           {/* start, skip, restart buttons */}
           <ControlButtons typeMode={typeMode} startTest={startTest} restart={restart}/>
-          
         </Flex>
       </Flex>
     </>
