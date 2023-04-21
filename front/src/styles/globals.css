@@ -19,22 +19,13 @@ h1{
     color: "#3A496F";
 }
 
-h2{
-    font-family: "Inter", sans-serif;
-    font-weight: 700;
-    font-size: 4rem;
-}
+
 
 a{
     font-weight: bold;
     cursor: pointer;
 }
 
-h3{
-    font-size: .8rem;
-    text-transform: uppercase;
-    font-family: "Source Code Pro", monospace;
-}
 
 
 

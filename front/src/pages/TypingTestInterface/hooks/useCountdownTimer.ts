@@ -3,25 +3,25 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // input seconds: amount of time
 const useCountdownTimer = (seconds: number) => {
     const [timeLeft, setTimeLeft] = useState(seconds);
-    const intervalRef = useRef<NodeJS.Timer | null>(null);
+    const intervalRef = useRef<NodeJS.Timer | undefined>(undefined);
+    const hasTimerEnded = timeLeft <= 0;
+    const isRunning =
+      intervalRef.current != null || intervalRef.current != undefined;
 
     const startCountdown = useCallback(() => {
         console.log("starting countdown...");
 
-        // at every seconds, decrements time left
-        intervalRef.current = setInterval(() => {
-            setTimeLeft((timeLeft) => timeLeft - 1);
-        }, 1000)
-
-    }, [setTimeLeft]);
+        // decrement by 1 every second, if not already running
+        if (!hasTimerEnded && !isRunning){
+            intervalRef.current = setInterval(() => {
+                setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
+            }, 1000);
+        }
+    }, [setTimeLeft, hasTimerEnded, isRunning]);
 
     const resetCountdown = useCallback(() => {
-        console.log("resetting countdown...");
-
-        if (intervalRef.current){
-            clearInterval(intervalRef.current);
-        }
-
+        clearInterval(intervalRef.current);
+        intervalRef.current = undefined;
         // store original time left from starting amount of seconds
         setTimeLeft(seconds);
 
@@ -29,15 +29,18 @@ const useCountdownTimer = (seconds: number) => {
 
     // clear countdown when it reaches 0
     useEffect(() => {
-        if (!timeLeft && intervalRef.current){
-            console.log("clearing timer...");
-            clearInterval(intervalRef.current);
+        if (hasTimerEnded){
+            clearInterval(intervalRef.current!);
+            intervalRef.current = undefined;
         }
     }, [timeLeft, intervalRef])
 
+    // clear interval when component unmounts
+    useEffect(() => {
+        return () => clearInterval(intervalRef.current!);
+    }, []);
+
     return {timeLeft, startCountdown, resetCountdown};
-
-
 }
 
 export default useCountdownTimer;
