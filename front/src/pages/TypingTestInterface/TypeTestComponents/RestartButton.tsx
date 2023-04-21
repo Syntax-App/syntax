@@ -37,8 +37,9 @@ const RestartButton = (props: RestartProps) => {
           alignItems={"center"}
           icon={<VscDebugRestart />}
         ></IconButton>
-        <Text>
-          <h3>RESTART</h3>
+        <Text variant={"label"}>
+          
+          RESTART
         </Text>
       </Flex>
     );

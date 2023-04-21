@@ -9,6 +9,7 @@ interface UserTypeProps{
 
 const UserType = (props: UserTypeProps) => {
     const typedChars = props.userInput.split("");
+    const words = props.words.trim();
 
     if (!props.typeMode) return null;
 
@@ -19,7 +20,7 @@ const UserType = (props: UserTypeProps) => {
                     <Character 
                     key={`${char}_${i}`} 
                     actual={char}
-                    expected={props.words[i]}/> // expected is the character at words[i]
+                    expected={words[i]}/> // expected is the character at words[i]
                 );
             })}
             <Caret/>

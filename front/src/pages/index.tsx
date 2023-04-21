@@ -208,7 +208,14 @@ interface TopButtonsProps {
 }
 const TopButtons = (props: TopButtonsProps) => {
   const CountdownTimer = ({ timeLeft }: { timeLeft: number }) => {
-    return <Text>{timeLeft}</Text>;
+    return (
+      <Text
+        variant={"bigNumber"}
+        color={"useColorModeValue(colors.light.blue, colors.dark.lightblue)"}
+      >
+        {timeLeft}
+      </Text>
+    );
   };
 
   return (
@@ -224,35 +231,34 @@ const TopButtons = (props: TopButtonsProps) => {
         alignItems={"flex-end"}
       >
         {/* TIMER */}
-        <Text
-          color={useColorModeValue("light.lightblue", "dark.mediumlightblue")}
-          align={"center"}
-          lineHeight={"280%"}
-        >
-          <h3>timer</h3>
-          <h2>
+        
+          <Flex
+            flexDir={"column"}
+            alignItems={"center"}
+            justifyContent={"flex-end"}
+          >
+            <Text variant={"label"}> TIMER</Text>
             <CountdownTimer timeLeft={props.timeLeft}></CountdownTimer>
-          </h2>
-        </Text>
-        <Text
-          color={useColorModeValue("light.lightblue", "dark.mediumlightblue")}
-          align={"center"}
-          lineHeight={"280%"}
+          </Flex>
+        <Flex
+          flexDir={"column"}
+          alignItems={"center"}
+          justifyContent={"flex-end"}
         >
-          <h3>accuracy</h3>
-          <h2>{calculateAccuracy(props.errors, props.totalTyped)}</h2>
-        </Text>
-        <Text
-          color={useColorModeValue("light.lightblue", "dark.mediumlightblue")}
-          align={"center"}
-          lineHeight={"280%"}
+          <Text variant={"label"}> ACCURACY</Text>
+          <Text variant={"bigNumber"}>
+            {calculateAccuracy(props.errors, props.totalTyped)}
+          </Text>
+        </Flex>
+        <Flex
+          flexDir={"column"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
         >
-          <h3>errors</h3>
-          <h2>{props.errors}</h2>
-        </Text>
+          <Text variant={"label"}> ERRORS</Text>
+          <Text variant={"bigNumber"}> {props.errors}</Text>
+        </Flex>
       </Flex>
-      {/* <TestResults errors={props.errors} total={props.totalTyped}></TestResults> */}
-
       <HStack gap={4}>
         <Menu>
           <MenuButton
@@ -265,9 +271,9 @@ const TopButtons = (props: TopButtonsProps) => {
             {props.currLang}
           </MenuButton>
           <MenuList>
-            {languages.map((lang) => {
+            {languages.map((lang, key) => {
               return (
-                <MenuItem onClick={() => props.setcurrLang(lang)}>
+                <MenuItem key={key} onClick={() => props.setcurrLang(lang)}>
                   {lang}
                 </MenuItem>
               );
