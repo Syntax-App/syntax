@@ -1,0 +1,36 @@
+.codesnippet {
+    background-color: "green";
+    color: #656565;
+    position: absolute;
+    font-size: 1.2rem;
+    word-wrap: break-word;
+  
+
+}
+   
+
+
+.usertyped{
+    z-index: 999;
+    position: absolute;
+    font-size: 1.2rem;
+
+
+}
+
+
+.typetest {
+
+    position: relative;
+    inline-size: 50px;
+    background: green;
+    overflow-wrap: break-all;
+    
+}
+
+.caret{
+    display: inline-block;
+    background: orange;
+    width: .3rem;
+    height: 1rem;
+}

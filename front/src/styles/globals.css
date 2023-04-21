@@ -19,11 +19,34 @@ h1{
     color: "#3A496F";
 }
 
+h2{
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 4rem;
+}
+
 a{
     font-weight: bold;
     cursor: pointer;
 }
 
-.h7{
-    color: "#7786AE";
+h3{
+    font-size: .8rem;
+    text-transform: uppercase;
+    font-family: "Source Code Pro", monospace;
+}
+
+
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar-thumb:vertical {
+    background: rgb(202, 202, 202);
+    border-radius: 20px;
+    height: 10%;
+}
+
+::-webkit-scrollbar {
+    height: 5px;
+    width: 3px;
 }
