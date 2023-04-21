@@ -16,7 +16,7 @@ import { requestCreateUser, requestGetUser } from "@/helpers/user";
 
 export interface IAuthContext {
   currentUser: User | undefined;
-  // userInfo: any | undefined;
+  userInfo: any | undefined;
   methods: IAuthMethods | undefined;
 }
 
@@ -33,7 +33,7 @@ const emptyFunc = async () => {
 
 const defaultState: IAuthContext = {
   currentUser: undefined,
-  // userInfo: undefined,
+  userInfo: undefined,
   methods: {
     emailLogin: emptyFunc,
     emailSignup: emptyFunc,
@@ -58,13 +58,27 @@ export function AuthProvider({ children }: any) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
-        // if (user.email)
-        //   requestGetUser(user.email).then((userInf) =>
-        //     setUserInfo(userInf.data.user)
-        //   );
+        if (user.email) {
+          // There are two main cases where this will be called:
+          //  1. The account already exists - requestGetUser will take care of getting its info.
+          //  We verify, via the status field, that the account was obtained successfully.
+          //  If it is, then we know we can update the userInfo state. We're all good.
+          
+          //  2. The most confusing state. Cost about two hours of debugging for Dan & Ayman
+          //  The user signed up FOR THE FIRST TIME. onAuthStateChanged gets triggered AS SOON
+          //  as the FIREBASE STATE gets updated. However, when it is, the handler for creating
+          //  a new account WOULDN'T HAVE CALLED THE FUNCTION TO CREATE THE ACCOUNT ON THE DB YET!
+          //  Therefore, requestGetUser WILL RETURN AN ERROR. If so, nothing happens, and we patiently
+          //  wait for the handler to finish its job AND UPDATE USERINFO ITSELF. 
+          requestGetUser(user.email)
+          .then((r) => {
+            if (r.status === "success") {
+              setUserInfo(r.data.user);
+            }
+          })
+        }
       } else {
         setCurrentUser(undefined);
-        // setUserInfo(undefined);
       }
     });
     return unsubscribe;
@@ -105,7 +119,6 @@ export function AuthProvider({ children }: any) {
   async function googleLogin() {
     return signInWithPopup(auth, googleProvider)
       .then((result) => {
-        setCurrentUser(result.user);
         if (
           result.user.displayName &&
           result.user.email &&
@@ -115,11 +128,12 @@ export function AuthProvider({ children }: any) {
             result.user.displayName,
             result.user.email,
             result.user.photoURL
-          )
-          // ).then((userInf) => {
-          //   setUserInfo(userInf.data.user);
-          // });
+          ).then((userInf) => {
+            console.log(userInf);
+            setUserInfo(userInf.data.user);
+          });
         }
+        //setCurrentUser(result.user);
       })
       .catch((error: FirebaseError) => {
         console.log(error.code);
@@ -134,7 +148,7 @@ export function AuthProvider({ children }: any) {
 
   const value: IAuthContext = {
     currentUser: currentUser,
-    // userInfo: userInfo,
+    userInfo: userInfo,
     methods: { emailLogin, emailSignup, googleLogin, signout },
   };
 

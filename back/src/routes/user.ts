@@ -21,6 +21,7 @@ export const createUser = async (req: any, res: any) => {
     return res.status(200).send({
       status: "error",
       message: "User with given email already exists!",
+      data: { user: querySnapshot.docs[0].data() },
     });
   }
 
@@ -41,7 +42,7 @@ export const createUser = async (req: any, res: any) => {
     .then(() => {
       return res.status(200).send({
         status: "success",
-        user: userObject,
+        data: { user: userObject },
       });
     })
     .catch((e: Error) => {
@@ -62,12 +63,10 @@ export const getUser = async (req: any, res: any) => {
       message: "User with given email does not exist!",
     });
   } else {
-    return res
-      .status(200)
-      .send({
-        status: "success",
-        data: { user: querySnapshot.docs[0].data() },
-      });
+    return res.status(200).send({
+      status: "success",
+      data: { user: querySnapshot.docs[0].data() },
+    });
   }
 
   // todo - check for existence

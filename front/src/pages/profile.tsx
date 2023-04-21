@@ -24,20 +24,29 @@ type UserStats = {
 };
 
 export default function Profile() {
-  const { currentUser, methods } = useAuth();
+  const { currentUser, userInfo, methods } = useAuth();
   const [stats, setStats] = useState<UserStats>(defaultStats);
   const icon_color = useColorModeValue("light.indigo", "dark.lightblue");
 
   useEffect(() => {
-    if (currentUser && currentUser.email) {
-      requestGetUser(currentUser.email).then((r) => {
-        console.log(r);
-        setStats(r.data.user.stats);
-      });
+    if (userInfo && userInfo.stats) {
+      setStats(userInfo.stats);
     } else {
       setStats(defaultStats);
     }
-  }, [currentUser]);
+  }, [userInfo])
+
+  // useEffect(() => {
+  //   if (currentUser && currentUser.email) {
+  //     requestGetUser(currentUser.email).then((r) => {
+  //       console.log(currentUser.email);
+  //       console.log(r);
+  //       setStats(r.data.user.stats);
+  //     });
+  //   } else {
+  //     setStats(defaultStats);
+  //   }
+  // }, [currentUser]);
 
   return (
     <Flex justifyContent="center">
