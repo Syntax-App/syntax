@@ -12,10 +12,11 @@ import { FirebaseError } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase";
 import React, { useContext, createContext, useState, useEffect } from "react";
-import { requestCreateUser } from "@/helpers/user";
+import { requestCreateUser, requestGetUser } from "@/helpers/user";
 
 export interface IAuthContext {
   currentUser: User | undefined;
+  // userInfo: any | undefined;
   methods: IAuthMethods | undefined;
 }
 
@@ -32,6 +33,7 @@ const emptyFunc = async () => {
 
 const defaultState: IAuthContext = {
   currentUser: undefined,
+  // userInfo: undefined,
   methods: {
     emailLogin: emptyFunc,
     emailSignup: emptyFunc,
@@ -49,14 +51,20 @@ export function useAuth() {
 export function AuthProvider({ children }: any) {
   const auth = getAuth(app);
   const [currentUser, setCurrentUser] = useState<User>();
+  const [userInfo, setUserInfo] = useState<any>();
   const googleProvider = new GoogleAuthProvider();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
+        // if (user.email)
+        //   requestGetUser(user.email).then((userInf) =>
+        //     setUserInfo(userInf.data.user)
+        //   );
       } else {
         setCurrentUser(undefined);
+        // setUserInfo(undefined);
       }
     });
     return unsubscribe;
@@ -107,7 +115,10 @@ export function AuthProvider({ children }: any) {
             result.user.displayName,
             result.user.email,
             result.user.photoURL
-          );
+          )
+          // ).then((userInf) => {
+          //   setUserInfo(userInf.data.user);
+          // });
         }
       })
       .catch((error: FirebaseError) => {
@@ -117,11 +128,13 @@ export function AuthProvider({ children }: any) {
   }
 
   async function signout() {
+    setUserInfo(undefined);
     return signOut(auth);
   }
 
   const value: IAuthContext = {
     currentUser: currentUser,
+    // userInfo: userInfo,
     methods: { emailLogin, emailSignup, googleLogin, signout },
   };
 

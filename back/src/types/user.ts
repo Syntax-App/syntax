@@ -7,9 +7,9 @@ export type UserInfo = {
 }
 
 export type UserStats = {
-    highestLPM: number,
-    highestAccuracy: number,
-    totalRaces: number,
-    avgLPM: number,
-    avgAccuracy: number
+    highlpm: number,
+    highacc: number,
+    numraces: number,
+    avglpm: number,
+    avgacc: number
 }

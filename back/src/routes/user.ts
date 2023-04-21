@@ -30,11 +30,11 @@ export const createUser = async (req: any, res: any) => {
     email: req.body.email,
     pic: req.body.pic,
     stats: {
-      highestLPM: 0,
-      highestAccuracy: 0,
-      avgAccuracy: 0,
-      avgLPM: 0,
-      totalRaces: 0,
+      highlpm: 0,
+      highacc: 0,
+      avgacc: 0,
+      avglpm: 0,
+      numraces: 0,
     },
   };
   addDoc(usersRef, userObject)
@@ -64,7 +64,10 @@ export const getUser = async (req: any, res: any) => {
   } else {
     return res
       .status(200)
-      .send({ status: "success", user: querySnapshot.docs[0].data() });
+      .send({
+        status: "success",
+        data: { user: querySnapshot.docs[0].data() },
+      });
   }
 
   // todo - check for existence

@@ -30,11 +30,14 @@ export default function Profile() {
 
   useEffect(() => {
     if (currentUser && currentUser.email) {
-      const userJson = requestGetUser(currentUser.email).then((r) => {
+      requestGetUser(currentUser.email).then((r) => {
+        console.log(r);
         setStats(r.data.user.stats);
       });
+    } else {
+      setStats(defaultStats);
     }
-  }, []);
+  }, [currentUser]);
 
   return (
     <Flex justifyContent="center">
