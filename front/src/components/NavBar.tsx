@@ -18,7 +18,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function NavBar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const icon_color = useColorModeValue("light.indigo", "dark.lightblue");
-  const {currentUser, methods} = useAuth();
+  const {currentUser, userInfo, methods} = useAuth();
 
   return (
     <>
@@ -37,8 +37,8 @@ export default function NavBar() {
               <Button  as='a' href='/profile' bg={"transparent"}>
                 <Avatar
                   size={'sm'}
-                  name={currentUser?.displayName ? currentUser?.displayName : undefined}
-                  src={currentUser?.photoURL ? currentUser?.photoURL : undefined}
+                  name={userInfo?.name ? userInfo?.name : undefined}
+                  src={userInfo?.pic ? userInfo?.pic : undefined}
                 />
               </Button>
             </Stack>
