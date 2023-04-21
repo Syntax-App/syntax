@@ -13,10 +13,11 @@ import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase";
 import React, { useContext, createContext, useState, useEffect } from "react";
 import { requestCreateUser, requestGetUser } from "@/helpers/user";
+import { UserStats } from "@/pages/profile";
 
 export interface IAuthContext {
   currentUser: User | undefined;
-  userInfo: any | undefined;
+  userInfo: IUserInfo | undefined;
   methods: IAuthMethods | undefined;
 }
 
@@ -25,6 +26,14 @@ export interface IAuthMethods {
   emailSignup: () => Promise<void>;
   googleLogin: () => Promise<void>;
   signout: () => Promise<void>;
+}
+
+export interface IUserInfo {
+  uuid: string,
+  name: string,
+  email: string,
+  pic: string,
+  stats: UserStats
 }
 
 const emptyFunc = async () => {

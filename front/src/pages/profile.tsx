@@ -26,7 +26,7 @@ let defaultStats = {
   avgacc: 85,
 };
 
-type UserStats = {
+export type UserStats = {
   highlpm: number;
   highacc: number;
   numraces: number;
@@ -54,10 +54,10 @@ export default function Profile() {
           <Flex direction='row' alignContent="start" alignItems='center' w="95%" gap={8}>
               <Avatar
                 size={'md'}
-                name={userInfo.name ? userInfo.name : undefined}
-                src={userInfo.pic ? userInfo.pic : undefined}
+                name={userInfo?.name ? userInfo?.name : undefined}
+                src={userInfo?.pic ? userInfo?.pic : undefined}
               />
-              <Text fontSize='3xl'>Hi {currentUser ? <>{currentUser.displayName}</> : <>Guest</>}!</Text>
+              <Text fontSize='3xl'>Hi {userInfo ? <>{userInfo.name}</> : <>Guest</>}!</Text>
               <Spacer />
               <SettingsIcon boxSize="6" color={icon_color}/>
           </Flex>
