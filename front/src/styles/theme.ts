@@ -50,11 +50,6 @@ const styles = {
     h1: {
       color: useColorModeValue(colors.light.blue, colors.dark.blue),
     },
-    h2: {
-      color: useColorModeValue(colors.light.blue, colors.dark.mediumlightblue),
-    },
-    
-    
     a: {
       color: useColorModeValue(colors.light.blue, colors.dark.vibrantblue),
     },
@@ -69,52 +64,87 @@ const fonts = {
 }
 
 const components = {
-    Button: {
-        variants: {
-            solid: () => ({
-                bg: useColorModeValue(colors.light.indigo, colors.dark.lightblue),
-                color: useColorModeValue(colors.light.extralight, colors.dark.blue),
-                _hover: {
-                    bg: useColorModeValue(colors.light.blue, colors.dark.extralight),
-                },
-            }),
-            outline: () => ({
-                color: useColorModeValue(colors.light.blue, colors.dark.lightblue),
-                outline: "1px solid",
-                _hover: {
-                    bg: useColorModeValue(colors.blue[300], colors.blue[500]),
-                },
-            }),
+  Button: {
+    variants: {
+      solid: () => ({
+        bg: useColorModeValue(colors.light.indigo, colors.dark.lightblue),
+        color: useColorModeValue(colors.light.extralight, colors.dark.blue),
+        _hover: {
+          bg: useColorModeValue(colors.light.blue, colors.dark.extralight),
         },
-    },
-    Input: {
-        variants: {
-            solid: () => ({
-            variant: "unstyled",
-            _placeholder: {
-                color: colors.dark.dullblue,
-                fontSize: ".3rem",
-            },
-            color: colors.dark.dullblue,
-            p: "1rem",
-            size: "md",
-            bgColor: useColorModeValue(colors.light.extralight, colors.dark.blue),
-            borderRadius: "2rem",
-            }),
+      }),
+      outline: () => ({
+        color: useColorModeValue(colors.light.blue, colors.dark.lightblue),
+        outline: "1px solid",
+        _hover: {
+          bg: useColorModeValue(colors.blue[300], colors.blue[500]),
         },
+      }),
     },
-    Divider: {
-        variants: {
-            thick: () => ({
-                borderWidth: "3px", // change the width of the border
-                borderStyle: "solid", // change the style of the border
-                borderRadius: 10,
-                bg: useColorModeValue(colors.light.extralight, colors.dark.blue),
-                width: "10%",
-            }),
+  },
+  Input: {
+    variants: {
+      solid: () => ({
+        variant: "unstyled",
+        _placeholder: {
+          color: colors.dark.dullblue,
+          fontSize: ".3rem",
         },
+        color: colors.dark.dullblue,
+        p: "1rem",
+        size: "md",
+        bgColor: useColorModeValue(colors.light.extralight, colors.dark.blue),
+        borderRadius: "2rem",
+      }),
     },
-}
+  },
+  Divider: {
+    variants: {
+      thick: () => ({
+        borderWidth: "3px", // change the width of the border
+        borderStyle: "solid", // change the style of the border
+        borderRadius: 10,
+        bg: useColorModeValue(colors.light.extralight, colors.dark.blue),
+        width: "10%",
+      }),
+    },
+  },
+
+  Text: {
+    variants: {
+      label: () => ({
+        fontFamily: fonts.code,
+        fontSize: ".8rem",
+        textTransform: "uppercase",
+      }),
+      // for numbers
+      bigNumber: () => ({
+        fontFamily: fonts.heading,
+        fontWeight: "700",
+        fontSize: "4rem",
+        color: useColorModeValue(
+          colors.light.blue,
+          colors.dark.mediumlightblue
+        ),
+        height: "4rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }),
+    },
+  },
+
+  // Flex: {
+  //   variants: {
+  //     numberDisplay: () => ({
+  //       flexDir: "column",
+  //       alignItems: "center",
+  //       justifyContent: "flex-end",
+  //       bg: "blue"
+  //     })
+  //   }
+  // }
+};
 
 const customTheme = {
   config,
