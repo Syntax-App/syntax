@@ -1,7 +1,7 @@
 import express from "express";
 import bp from "body-parser";
 import { createUser, getUser } from "./routes/user";
-import { startRace } from "./routes/race";
+import { endRace, startRace } from "./routes/race";
 
 const app = express();
 app.use(bp.json());
@@ -25,5 +25,6 @@ app.get("/", async (req, res) => {
 app.get("/user/get", getUser);
 app.post("/user/create", createUser);
 app.get("/race/start", startRace);
+app.get("/race/end", endRace);
 
 app.listen(4000, () => console.log("listening on port " + 4000));
