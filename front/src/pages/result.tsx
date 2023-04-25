@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction, useState } from "react";
 import {
   Text,
   Flex,
@@ -26,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "@/contexts/AuthContext";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { useRouter } from "next/router";
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
@@ -50,13 +50,6 @@ const code = `class Main {
 
 const gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
 
-interface ResultProps {
-  lpm: number;
-  acc: number;
-  currLang: string;
-  setCurrLang: Dispatch<SetStateAction<string>>;
-}
-
 // TODO: replace this instance w real prop
 const myProp = {
   lpm: 16,
@@ -77,9 +70,12 @@ const ChatGPTIcon = createIcon({
   ),
 })
 
-export default function Result(props: ResultProps) {
+// TODO: remove props!
+export default function Result(props: any) {
   const { currentUser, methods } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const router = useRouter();
+  const { lpm, acc, currLang } = router.query
 
   return (
     <>
@@ -155,6 +151,7 @@ export default function Result(props: ResultProps) {
                   <MenuList>
                     {languages.map((lang) => {
                         return (
+                          // TODO: setCurrLang(lang) HOW TO GET ACCESS TO THIS??
                           <MenuItem onClick={() => props.setCurrLang(lang)}>{lang}</MenuItem>
                         );
                       })}

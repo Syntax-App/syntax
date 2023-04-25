@@ -65,7 +65,7 @@ export default function Profile() {
           <StatsBox stats={stats} header="All-time Stats"/>
           <StatsBox stats={stats} header="Today's Stats"/>
 
-          {currentUser ?
+          {userInfo ?
               <Button variant={"solid"} onClick={onOpen}>Logout</Button> :
               <Button variant={"solid"} onClick={methods?.googleLogin}>Google Login</Button> }
 
