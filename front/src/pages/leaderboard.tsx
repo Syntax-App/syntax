@@ -45,9 +45,9 @@ export default function Leaderboard() {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {ranking.map((user, key) => (
-                            <Tr>
-                                <Td>{key + 1}</Td>
+                        {ranking.map((user, index) => (
+                            <Tr key={index}>
+                                <Td>{index + 1}</Td>
                                 <Td>{user.username}</Td>
                                 <Td isNumeric>{user.lpm}</Td>
                             </Tr>

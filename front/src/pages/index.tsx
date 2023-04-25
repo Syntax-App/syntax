@@ -48,10 +48,11 @@ const code: string = `class Main {
 const gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
 
 export default function Home() {
+  const router = useRouter();
   const { currentUser, methods } = useAuth();
   const [ currLang, setcurrLang ] = useState("PYTHON");
   const [typeMode, setMode] = useState(false);
-  const {setState, words, updateWords, timeLeft, typed, errors, restart, totalTyped} = useEngine();
+  const {state, setState, words, updateWords, timeLeft, typed, errors, restart, totalTyped} = useEngine();
 
   const startTest = () => {
     setMode(true);
@@ -61,6 +62,15 @@ export default function Home() {
   useEffect(() => {
     updateWords(code);
   }, [words]);
+
+  // TODO: won't wrk cuz state starts at finish -> create a separate state?
+  useEffect(() => {
+    if (state == "finish") {
+      router.push({
+        pathname: '/result'
+      })
+    }
+  }, [state])
   
   return (
     <>
@@ -205,6 +215,7 @@ interface TopButtonsProps {
   errors: number;
   totalTyped: number;
 }
+
 const TopButtons = (props: TopButtonsProps) => {
   const CountdownTimer = ({ timeLeft }: { timeLeft: number }) => {
     return (

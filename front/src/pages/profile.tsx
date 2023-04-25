@@ -65,9 +65,9 @@ export default function Profile() {
           <StatsBox stats={stats} header="All-time Stats"/>
           <StatsBox stats={stats} header="Today's Stats"/>
 
-          {currentUser ?
+          {userInfo ?
               <Button variant={"solid"} onClick={onOpen}>Logout</Button> :
-              <Button variant={"solid"} onClick={onOpen}>Google Login</Button> }
+              <Button variant={"solid"} onClick={methods?.googleLogin}>Google Login</Button> }
 
           <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
@@ -77,9 +77,7 @@ export default function Profile() {
                 Are you sure your want to logout?
               </ModalBody>
               <ModalFooter>
-                {currentUser ?
-                  <Button variant={"solid"} onClick={methods?.signout} mr={3}>Logout</Button> :
-                  <Button variant={"solid"} onClick={methods?.googleLogin} mr={3}>Google Login</Button> }
+                <Button variant={"solid"} onClick={methods?.signout} mr={3}>Logout</Button>
                 <Button variant='ghost' onClick={onClose}>Cancel</Button>
               </ModalFooter>
             </ModalContent>
