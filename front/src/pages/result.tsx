@@ -75,7 +75,6 @@ export default function Result(props: any) {
   const { currentUser, methods } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const router = useRouter();
-  const { lpm, acc, currLang } = router.query
 
   return (
     <>
