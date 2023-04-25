@@ -26,10 +26,7 @@ import { useRouter } from "next/router";
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
-const code: string = `class Main { 
-  public static void main(String[] args) {
-    Map<String, String> languages = new HashMap<>(); 
-    languages.put("pos3", "JS");
+const code: string = `class Main {\npublic static void main(String[] args) {\n\tMap<String, String> languages = new HashMap<>();\nlanguages.put("pos3", "JS");
     languages.put("pos1", "Java");
     languages.put("pos2", "Python");
     System.out.println("Map: " + languages);
@@ -151,19 +148,33 @@ interface WordsProps{
 }
 const WordsContainer = (props: WordsProps) => {
   return (
-    <div className="typetest">
-      <div className="usertyped">
+    <div
+      className="typetest"
+      autoFocus={true}
+      onBlur={({ target }) => target.focus()}
+    >
+      <div
+        className="usertyped"
+        onKeyDown={(e) => {
+          if (e.code === "Tab") {
+            e.preventDefault();
+            console.log("tabbed");
+          }
+        }}
+      >
         <pre>
           <code>
-            <UserType userInput={props.userInput} words={props.words} typeMode={props.typeMode}/>
+            <UserType
+              userInput={props.userInput}
+              words={props.words}
+              typeMode={props.typeMode}
+            />
           </code>
         </pre>
       </div>
       <div className="codesnippet">
         <pre>
-          <code>
-            {props.words}
-          </code>
+          <code>{props.words}</code>
         </pre>
       </div>
     </div>

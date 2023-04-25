@@ -35,6 +35,7 @@ interface CharacterProps{
 const Character = (props: CharacterProps) => {
     // checks if typed char matches expected char
     const isCorrect = (props.actual === props.expected);
+    //console.log("expected:" + props.expected)
     const isWhiteSpace = (props.expected === " ");
 
 
