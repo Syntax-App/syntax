@@ -12,8 +12,7 @@ const isKeyboardCodeAllowed = (code: string) => {
       !code.startsWith("Num") &&
       !code.startsWith("Scroll") &&
       !code.startsWith("Shift") &&
-      !code.startsWith("Control") &&
-      !code.startsWith("Enter")
+      !code.startsWith("Control") 
     );
 
 };
@@ -27,16 +26,24 @@ const useTypings = (enabled: boolean) => {
     const keydownHandler = useCallback(({key, code}: KeyboardEvent) => {
         if (!enabled || !isKeyboardCodeAllowed(code)) return;
 
-        switch(key){
-            case "Backspace":
-                setTyped((prev) => prev.slice(0,-1)); // remove from typed string
-                setCursor(cursor - 1); // set cursor back by 1
-                totalTyped.current -= 1;
-                break;
-            default:
-                setTyped((prev) => prev.concat(key)); // otherwise add character to typed string
-                setCursor(cursor + 1);
-                totalTyped.current += 1;
+        switch (key) {
+          case "Backspace":
+            setTyped((prev) => prev.slice(0, -1)); // remove from typed string
+            setCursor(cursor - 1); // set cursor back by 1
+            totalTyped.current -= 1;
+            break;
+          case "Enter":
+            setTyped((prev) => prev.concat("\n"));
+            break;
+          case "Tab":
+            setTyped((prev) => prev.concat("\t"));
+            
+          break;
+          default:
+            setTyped((prev) => prev.concat(key)); // otherwise add character to typed string
+            setCursor(cursor + 1);
+            totalTyped.current += 1;
+           break;
         }
 
 
