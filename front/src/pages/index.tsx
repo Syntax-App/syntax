@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import useEngine from "./TypingTestInterface/hooks/useEngine";
-import { useRouter } from "next/router";
 import Result from "@/components/result";
 import TypeTest from "@/components/TypeTest";
 
@@ -23,9 +21,10 @@ const code: string = `class Main {\npublic static void main(String[] args) {\n\t
 }`;
 
 export default function Home() {
-  const [ currLang, setcurrLang ] = useState("PYTHON");
+  const [ currLang, setCurrLang ] = useState("PYTHON");
   const [typeMode, setMode] = useState(false);
   const {state, setState, words, updateWords, timeLeft, typed, errors, restart, totalTyped} = useEngine();
+  const [stats, setStats] = useState({acc: 0, lpm: 0});
 
   const startTest = () => {
     setMode(true);
@@ -39,19 +38,25 @@ export default function Home() {
   }, [words]);
   
   if (state == "finish") {
-    return <Result/>
+    return <Result
+            stats={stats}
+            currLang={currLang}
+            setCurrLang={setCurrLang}
+            />
   } else {
     return <TypeTest
-              typeMode={typeMode}
-              currLang={currLang}
-              setcurrLang={setcurrLang}
-              timeLeft={timeLeft}
-              errors={errors}
-              typed={typed}
-              totalTyped={totalTyped}
-              words={words}
-              startTest={startTest}
-              restart={restart}
+            typeMode={typeMode}
+            currLang={currLang}
+            setCurrLang={setCurrLang}
+            timeLeft={timeLeft}
+            errors={errors}
+            typed={typed}
+            totalTyped={totalTyped}
+            words={words}
+            startTest={startTest}
+            restart={restart}
+            stats={stats}
+            setStats={setStats}
             />
   }
 }

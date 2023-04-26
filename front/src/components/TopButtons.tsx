@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Text,
   Flex,
@@ -19,10 +19,12 @@ const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 interface TopButtonsProps {
     typeMode: boolean;
     currLang: string;
-    setcurrLang: (lang: string) => void;
+    setCurrLang: React.Dispatch<React.SetStateAction<string>>;
     timeLeft: number;
     errors: number;
     totalTyped: number;
+    stats: {acc: number, lpm: number};
+    setStats: React.Dispatch<React.SetStateAction<{acc: number, lpm: number}>>;
 }
   
 export default function TopButtons(props: TopButtonsProps) {
@@ -36,6 +38,14 @@ export default function TopButtons(props: TopButtonsProps) {
         </Text>
         );
     };
+
+    useEffect(() => {
+        props.setStats({
+            acc: calculateAccuracy(props.errors, props.totalTyped),
+            lpm: 0,
+            // lpm: calculateLPM(),
+        });
+    }, [props.errors, props.totalTyped, props.timeLeft]);
 
     return (
         <Flex
@@ -66,7 +76,7 @@ export default function TopButtons(props: TopButtonsProps) {
             >
             <Text variant={"label"}> ACCURACY</Text>
             <Text variant={"bigNumber"}>
-                {calculateAccuracy(props.errors, props.totalTyped)}
+                {props.stats.acc}
             </Text>
             </Flex>
             <Flex
@@ -92,7 +102,7 @@ export default function TopButtons(props: TopButtonsProps) {
             <MenuList>
                 {languages.map((lang, key) => {
                 return (
-                    <MenuItem key={key} onClick={() => props.setcurrLang(lang)}>
+                    <MenuItem key={key} onClick={() => props.setCurrLang(lang)}>
                     {lang}
                     </MenuItem>
                 );

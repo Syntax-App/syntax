@@ -14,7 +14,7 @@ const gptSays = `This Java program starts by creating a HashMap named "languages
 interface TypeTestProps {
     typeMode: boolean;
     currLang: string;
-    setcurrLang: (lang: string) => void;
+    setCurrLang: React.Dispatch<React.SetStateAction<string>>;
     timeLeft: number;
     errors: number;
     typed: string;
@@ -22,6 +22,8 @@ interface TypeTestProps {
     words: string;
     startTest: () => void;
     restart: () => void;
+    stats: {acc: number, lpm: number};
+    setStats: React.Dispatch<React.SetStateAction<{acc: number, lpm: number}>>;
 }
 
 export default function TypeTest(props: TypeTestProps) {
@@ -39,10 +41,12 @@ export default function TypeTest(props: TypeTestProps) {
             >
                 {/* language dropdown and regenerate button // accuracy and lpm in type mode */}
                 <TopButtons typeMode={props.typeMode} 
-                currLang={props.currLang} 
-                setcurrLang={props.setcurrLang} timeLeft={props.timeLeft}
-                errors={props.errors}
-                totalTyped={props.totalTyped}/>
+                    currLang={props.currLang} 
+                    setCurrLang={props.setCurrLang} timeLeft={props.timeLeft}
+                    errors={props.errors}
+                    totalTyped={props.totalTyped}
+                    stats={props.stats}
+                    setStats={props.setStats}/>
                 
                 {/* code box and chatgpt explanations */}
                 <Flex direction="row" gap={6}>
