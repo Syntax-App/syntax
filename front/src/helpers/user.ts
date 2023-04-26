@@ -19,7 +19,7 @@ export async function requestGetUser(email: string) {
 }
 
 // copied from https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-async function postData(url = "", data = {}) {
+export async function postData(url = "", data = {}) {
   // Default options are marked with *
   const response = await fetch(url, {
     method: "POST", // *GET, POST, PUT, DELETE, etc.
