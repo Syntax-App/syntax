@@ -11,17 +11,21 @@ import { type } from "os";
 export type State = "init" | "start" | "run" | "finish";
 
 const NUMBER_WORDS = 20;
-const COUNTDOWN_SECONDS = 15;
+const COUNTDOWN_SECONDS = 30;
 
 const useEngine = () => {
   const [state, setState] = useState<State>("init");
   const [words, updateWords] = useState<string>("");
-  const { timeLeft, startCountdown, resetCountdown } = useCountdownTimer(COUNTDOWN_SECONDS);
+  const { timeLeft, startCountdown, resetCountdown } =
+    useCountdownTimer(COUNTDOWN_SECONDS);
   // record keyboard strokes during start or run
   const { typed, cursor, clearTyped, resetTotalTyped, totalTyped } = useTypings(
     ((state !== "finish") && (state !== "init"))
   );
+
+  const [timeElapsed, setTimeElapsed] = useState(1);
   const [errors, setErrors] = useState(0);
+  const [linesCompleted, setLinesCompleted] = useState(0);
   const isStarting = state === "start" && cursor > 0;
   const finishedTyping = cursor === words.length;
 
@@ -43,8 +47,12 @@ const useEngine = () => {
   useEffect(() => {
     const wordsReached = words.substring(0, cursor);
     setErrors(countErrors(typed, wordsReached));
+    //setLinesCompleted(countCompletedLines(wordsReached));
   }, [errors, countErrors, typed]);
 
+  useEffect(() => {
+    setTimeElapsed(COUNTDOWN_SECONDS - timeLeft);
+  }, [timeLeft]);
 
   const restart = useCallback(() => {
     console.log("restarting..");
@@ -53,7 +61,7 @@ const useEngine = () => {
     setState("start");
     setErrors(0);
     clearTyped();
-  }, [clearTyped, resetCountdown, resetTotalTyped])
+  }, [clearTyped, resetCountdown, resetTotalTyped]);
 
   return {
     state,
@@ -64,7 +72,9 @@ const useEngine = () => {
     typed,
     errors,
     totalTyped,
-    restart
+    restart,
+    COUNTDOWN_SECONDS,
+    timeElapsed
   };
 };
 
