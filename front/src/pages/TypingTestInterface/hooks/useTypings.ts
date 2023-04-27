@@ -37,13 +37,12 @@ const useTypings = (enabled: boolean) => {
             break;
           case "Tab":
             setTyped((prev) => prev.concat("\t"));
-            
-          break;
+            break;
           default:
             setTyped((prev) => prev.concat(key)); // otherwise add character to typed string
             setCursor(cursor + 1);
             totalTyped.current += 1;
-           break;
+            break;
         }
 
 

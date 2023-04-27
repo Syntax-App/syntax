@@ -14,9 +14,18 @@ export const countErrors = (actual: string, expected: string) => {
 
 export const calculateAccuracy = (errors: number, totalChars: number) => {
     if (totalChars > 0){
-        const correct = totalChars-errors;
-        return ((correct / totalChars) * 100).toFixed(1) + "%";
+        const correct = totalChars - errors;
+        return Math.round((correct / totalChars) * 100);
     }
 
-    return 100 + "%";
+    return 100;
 }
+
+// export const calculateAccuracy = (errors: number, totalChars: number) => {
+//     if (totalChars > 0){
+//         const correct = totalChars-errors;
+//         return ((correct / totalChars) * 100).toFixed(1) + "%";
+//     }
+
+//     return 100 + "%";
+// }

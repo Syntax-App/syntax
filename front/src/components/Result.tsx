@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction, useState } from "react";
 import {
   Text,
   Flex,
@@ -26,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "@/contexts/AuthContext";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { useRouter } from "next/router";
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
@@ -50,20 +50,6 @@ const code = `class Main {
 
 const gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
 
-interface ResultProps {
-  lpm: number;
-  acc: number;
-  currLang: string;
-  setCurrLang: Dispatch<SetStateAction<string>>;
-}
-
-// TODO: replace this instance w real prop
-const myProp = {
-  lpm: 16,
-  acc: 85,
-  currLang: "PYTHON",
-}
-
 const ChatGPTIcon = createIcon({
   displayName: 'ChatGPTIcon',
   viewBox: '0 0 340 342',
@@ -77,9 +63,17 @@ const ChatGPTIcon = createIcon({
   ),
 })
 
+interface ResultProps {
+  stats: {acc: number, lpm: number};
+  currLang: string,
+  setCurrLang: React.Dispatch<React.SetStateAction<string>>;
+}
+
+// TODO: remove props!
 export default function Result(props: ResultProps) {
   const { currentUser, methods } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const router = useRouter();
 
   return (
     <>
@@ -89,13 +83,13 @@ export default function Result(props: ResultProps) {
               <Flex direction="column" alignItems="start" justifyContent="space-around">
                   <Stack alignItems="flex-start">
                     <Text fontFamily="code" fontSize="s" fontWeight="regular">LINES/MIN</Text>
-                    <Text fontSize="8xl" fontWeight="bold">{myProp.lpm}</Text>
+                    <Text fontSize="8xl" fontWeight="bold">{props.stats.lpm}</Text>
                   </Stack>
                   <Stack alignItems="flex-start">
                     <Text fontFamily="code" fontSize="s" fontWeight="regular">ACCURACY</Text>
                     <HStack>
-                        <Text fontSize="8xl" fontWeight="bold">{myProp.acc}%</Text>
-                        <CircularProgress value={myProp.acc} size="75px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
+                        <Text fontSize="8xl" fontWeight="bold">{props.stats.acc}%</Text>
+                        <CircularProgress value={props.stats.acc} size="75px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
                     </HStack>
                   </Stack>
               </Flex>
@@ -150,11 +144,12 @@ export default function Result(props: ResultProps) {
               <Stack alignItems="center" gap={4}>
                 <Menu>
                   <MenuButton as={Button} fontSize="sm" borderRadius={30} height={6} width={36} leftIcon={<Icon as={IoIosArrowDropdownCircle}/>}>
-                    {myProp.currLang}
+                    {props.currLang}
                   </MenuButton>
                   <MenuList>
                     {languages.map((lang) => {
                         return (
+                          // TODO: setCurrLang(lang) HOW TO GET ACCESS TO THIS??
                           <MenuItem onClick={() => props.setCurrLang(lang)}>{lang}</MenuItem>
                         );
                       })}

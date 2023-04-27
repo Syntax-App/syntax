@@ -1,30 +1,8 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import {
-  Text,
-  Flex,
-  Button,
-  HStack,
-  VStack,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Icon,
-  Box,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { useAuth } from "@/contexts/AuthContext";
-import { RepeatIcon } from "@chakra-ui/icons";
-import { IoIosArrowDropdownCircle } from "react-icons/io";
-import RestartButton from "./TypingTestInterface/TypeTestComponents/RestartButton";
-import TestResults from "./TypingTestInterface/TypeTestComponents/TestResults";
-import UserType from "./TypingTestInterface/TypeTestComponents/UserType";
 import useEngine from "./TypingTestInterface/hooks/useEngine";
-import { calculateAccuracy } from "./TypingTestInterface/utils/typetesthelper";
-import { useRouter } from "next/router";
-
-const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
+import Result from "@/components/result";
+import TypeTest from "@/components/TypeTest";
 
 const code: string = `class Main {\npublic static void main(String[] args) {\n\tMap<String, String> languages = new HashMap<>();\nlanguages.put("pos3", "JS");
     languages.put("pos1", "Java");
@@ -42,19 +20,19 @@ const code: string = `class Main {\npublic static void main(String[] args) {\n\t
   } 
 }`;
 
-const gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
-
 export default function Home() {
-  const { currentUser, methods } = useAuth();
-  const [ currLang, setcurrLang ] = useState("PYTHON");
+  const [ currLang, setCurrLang ] = useState("PYTHON");
   const [typeMode, setMode] = useState(false);
-  const {setState, words, updateWords, timeLeft, typed, errors, restart, totalTyped} = useEngine();
+  const {state, setState, words, updateWords, timeLeft, typed, errors, restart, totalTyped} = useEngine();
+  const [stats, setStats] = useState({acc: 0, lpm: 0});
 
   const startTest = () => {
     setMode(true);
     setState("start");
   }
 
+  // TODO: change this later
+  // update words w hardcoded code
   useEffect(() => {
     updateWords(code);
   }, [words]);
@@ -152,8 +130,6 @@ const WordsContainer = (props: WordsProps) => {
           }
         }}
       >
-        <input>
-        />
         <pre>
           <code>
             <UserType
@@ -161,147 +137,5 @@ const WordsContainer = (props: WordsProps) => {
               words={props.words}
               typeMode={props.typeMode}
             />
-          </code>
-        </pre>
-      </div>
-      <div className="codesnippet">
-        <pre>
-          <code>{props.words}</code>
-        </pre>
-      </div>
-    </div>
-  );
-}
-
-interface ButtonsInterface{
-  startTest: () => void;
-  typeMode: boolean;
-  restart: () => void;
-}
-const ControlButtons = (props: ButtonsInterface) => {
-  return (
-    <HStack gap={4}>
-      <Button
-        borderRadius={30}
-        height={10}
-        width={32}
-        variant="solid"
-        bgColor="green.200"
-        onClick={props.startTest}
-        display={props.typeMode ? "none" : "show"}
-      >
-        START
-      </Button>
-      <Button
-        borderRadius={30}
-        height={8}
-        width={28}
-        variant="outline"
-        onClick={props.startTest}
-        display={props.typeMode ? "none" : "show"}
-      >
-        SKIP
-      </Button>
-      <RestartButton
-        typeMode={props.typeMode}
-        onRestart={props.restart}
-      ></RestartButton>
-    </HStack>
-  );
-}
-
-interface TopButtonsProps {
-  typeMode: boolean;
-  currLang: string;
-  setcurrLang: (lang: string) => void;
-  timeLeft: number;
-  errors: number;
-  totalTyped: number;
-}
-const TopButtons = (props: TopButtonsProps) => {
-  const CountdownTimer = ({ timeLeft }: { timeLeft: number }) => {
-    return (
-      <Text
-        variant={"bigNumber"}
-        color={"useColorModeValue(colors.light.blue, colors.dark.lightblue)"}
-      >
-        {timeLeft}
-      </Text>
-    );
-  };
-
-  return (
-    <Flex
-      justifyContent={props.typeMode ? "space-between" : "center"}
-      alignItems={props.typeMode ? "flex-end" : "center"}
-      width="100%"
-    >
-      <Flex
-        display={props.typeMode ? "flex" : "none"}
-        width="30%"
-        justifyContent={"space-between"}
-        alignItems={"flex-end"}
-      >
-        {/* TIMER */}
-        
-          <Flex
-            flexDir={"column"}
-            alignItems={"center"}
-            justifyContent={"flex-end"}
-          >
-            <Text variant={"label"}> TIMER</Text>
-            <CountdownTimer timeLeft={props.timeLeft}></CountdownTimer>
-          </Flex>
-        <Flex
-          flexDir={"column"}
-          alignItems={"center"}
-          justifyContent={"flex-end"}
-        >
-          <Text variant={"label"}> ACCURACY</Text>
-          <Text variant={"bigNumber"}>
-            {calculateAccuracy(props.errors, props.totalTyped)}
-          </Text>
-        </Flex>
-        <Flex
-          flexDir={"column"}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-        >
-          <Text variant={"label"}> ERRORS</Text>
-          <Text variant={"bigNumber"}> {props.errors}</Text>
-        </Flex>
-      </Flex>
-      <HStack gap={4}>
-        <Menu>
-          <MenuButton
-            as={Button}
-            borderRadius={30}
-            height={8}
-            width={40}
-            leftIcon={<Icon as={IoIosArrowDropdownCircle} />}
-          >
-            {props.currLang}
-          </MenuButton>
-          <MenuList>
-            {languages.map((lang, key) => {
-              return (
-                <MenuItem key={key} onClick={() => props.setcurrLang(lang)}>
-                  {lang}
-                </MenuItem>
-              );
-            })}
-          </MenuList>
-        </Menu>
-        <Button
-          borderRadius={30}
-          height={8}
-          width={40}
-          variant="outline"
-          leftIcon={<RepeatIcon />}
-        >
-          REGENERATE
-        </Button>
-      </HStack>
-    </Flex>
-  );
+  }
 }
