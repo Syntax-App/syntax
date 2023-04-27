@@ -152,6 +152,8 @@ const WordsContainer = (props: WordsProps) => {
           }
         }}
       >
+        <input>
+        />
         <pre>
           <code>
             <UserType
