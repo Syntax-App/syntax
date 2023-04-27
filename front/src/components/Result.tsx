@@ -147,10 +147,15 @@ export default function Result(props: ResultProps) {
                     {props.currLang}
                   </MenuButton>
                   <MenuList>
-                    {languages.map((lang) => {
+                    {languages.map((lang, i) => {
                         return (
                           // TODO: setCurrLang(lang) HOW TO GET ACCESS TO THIS??
-                          <MenuItem onClick={() => props.setCurrLang(lang)}>{lang}</MenuItem>
+                          <MenuItem
+                            key={i}
+                            onClick={() => props.setCurrLang(lang)}
+                          >
+                            {lang}
+                          </MenuItem>
                         );
                       })}
                   </MenuList>

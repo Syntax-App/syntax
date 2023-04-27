@@ -25,6 +25,7 @@ interface TopButtonsProps {
     totalTyped: number;
     stats: {acc: number, lpm: number};
     setStats: React.Dispatch<React.SetStateAction<{acc: number, lpm: number}>>;
+    lpm: number;
 }
   
 export default function TopButtons(props: TopButtonsProps) {
@@ -42,84 +43,89 @@ export default function TopButtons(props: TopButtonsProps) {
     useEffect(() => {
         props.setStats({
             acc: calculateAccuracy(props.errors, props.totalTyped),
-            lpm: 0,
-            // lpm: calculateLPM(),
+            lpm: props.lpm,
         });
-    }, [props.errors, props.totalTyped, props.timeLeft]);
+    }, [props.errors, props.totalTyped, props.timeLeft, props.lpm]);
 
     return (
-        <Flex
+      <Flex
         justifyContent={props.typeMode ? "space-between" : "center"}
         alignItems={props.typeMode ? "flex-end" : "center"}
         width="100%"
-        >
+      >
         <Flex
-            display={props.typeMode ? "flex" : "none"}
-            width="30%"
-            justifyContent={"space-between"}
-            alignItems={"flex-end"}
+          display={props.typeMode ? "flex" : "none"}
+          width="30%"
+          justifyContent={"space-between"}
+          alignItems={"flex-end"}
         >
-            {/* TIMER */}
-            
-            <Flex
-                flexDir={"column"}
-                alignItems={"center"}
-                justifyContent={"flex-end"}
-            >
-                <Text variant={"label"}> TIMER</Text>
-                <CountdownTimer timeLeft={props.timeLeft}></CountdownTimer>
-            </Flex>
-            <Flex
+          {/* TIMER */}
+
+          <Flex
             flexDir={"column"}
             alignItems={"center"}
             justifyContent={"flex-end"}
-            >
+          >
+            <Text variant={"label"}> TIMER</Text>
+            <CountdownTimer timeLeft={props.timeLeft}></CountdownTimer>
+          </Flex>
+          <Flex
+            flexDir={"column"}
+            alignItems={"center"}
+            justifyContent={"flex-end"}
+          >
             <Text variant={"label"}> ACCURACY</Text>
-            <Text variant={"bigNumber"}>
-                {props.stats.acc}
-            </Text>
-            </Flex>
-            <Flex
+            <Text variant={"bigNumber"}>{props.stats.acc}</Text>
+          </Flex>
+          <Flex
             flexDir={"column"}
             alignItems={"center"}
             justifyContent={"space-between"}
-            >
+          >
             <Text variant={"label"}> ERRORS</Text>
             <Text variant={"bigNumber"}> {props.errors}</Text>
-            </Flex>
+          </Flex>
+          <Flex
+            flexDir={"column"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+          >
+            <Text variant={"label"}> LPM</Text>
+            <Text variant={"bigNumber"}> {props.stats.lpm}</Text>
+          </Flex>
         </Flex>
         <HStack gap={4}>
-            <Menu>
+          <Menu>
             <MenuButton
-                as={Button}
-                borderRadius={30}
-                height={8}
-                width={40}
-                leftIcon={<Icon as={IoIosArrowDropdownCircle} />}
+              as={Button}
+              borderRadius={30}
+              height={8}
+              width={40}
+              leftIcon={<Icon as={IoIosArrowDropdownCircle} />}
             >
-                {props.currLang}
+              {props.currLang}
             </MenuButton>
             <MenuList>
-                {languages.map((lang, key) => {
+              {languages.map((lang, key) => {
                 return (
-                    <MenuItem key={key} onClick={() => props.setCurrLang(lang)}>
+                  <MenuItem key={key} onClick={() => props.setCurrLang(lang)}>
                     {lang}
-                    </MenuItem>
+                  </MenuItem>
                 );
-                })}
+              })}
             </MenuList>
-            </Menu>
-            <Button
+          </Menu>
+          <Button
             borderRadius={30}
             height={8}
             width={40}
             variant="outline"
             leftIcon={<RepeatIcon />}
-            >
+          >
             REGENERATE
-            </Button>
+          </Button>
         </HStack>
-        </Flex>
+      </Flex>
     );
 }
   
