@@ -9,5 +9,8 @@
         <module name="moshi" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="moshi" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

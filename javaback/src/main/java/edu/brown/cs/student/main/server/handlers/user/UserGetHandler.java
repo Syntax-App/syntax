@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.server.user;
+package edu.brown.cs.student.main.server.handlers.user;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;

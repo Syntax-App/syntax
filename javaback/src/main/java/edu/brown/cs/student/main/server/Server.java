@@ -2,9 +2,9 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
-import edu.brown.cs.student.main.server.config.FirebaseConfig;
 import edu.brown.cs.student.main.server.csvHandlers.*;
-import edu.brown.cs.student.main.server.user.UserGetHandler;
+import edu.brown.cs.student.main.server.handlers.user.UserCreateHandler;
+import edu.brown.cs.student.main.server.handlers.user.UserGetHandler;
 import edu.brown.cs.student.main.server.weather.WeatherHandler;
 import spark.Spark;
 
@@ -32,7 +32,11 @@ public class Server {
         Spark.get("viewcsv", new ViewHandler(states));
         Spark.get("searchcsv", new SearchHandler(states));
         Spark.get("weather", new WeatherHandler());
+
+        // User routes!
         Spark.get("user/get", new UserGetHandler(states));
+        Spark.post("user/create", new UserCreateHandler(states));
+
         Spark.init();
         Spark.awaitInitialization();
         System.out.println("Server started at http://localhost:" + Spark.port());
