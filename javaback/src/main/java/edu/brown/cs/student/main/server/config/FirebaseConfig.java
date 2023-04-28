@@ -21,7 +21,7 @@ public class FirebaseConfig {
 
     public void initializeFirebase() {
         try {
-            FileInputStream refreshToken = new FileInputStream("src/main/java/edu/brown/cs/student/main/server/config/syntax-dev-17de4-firebase-adminsdk-kxsst-8d4c8fbae3.json");
+            FileInputStream refreshToken = new FileInputStream("firebase_credentials.json");
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(refreshToken))
                     .build();
