@@ -4,6 +4,8 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -39,13 +41,10 @@ public class UserGetHandler implements Route {
         Query query = users.whereEqualTo("email", email);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
-        if (querySnapshot.get().getDocuments().isEmpty()) {
-            return new GetUserFailureResponse("error", "User with given email does not exist!").serialize();
-        }
-
+        this.checkEmpty(querySnapshot.get().getDocuments());
         response.status(200);
-        return new GetUserSuccessResponse("success", querySnapshot.get().getDocuments().get(0).getData()).serialize();
-
+        return this.getSerializedSuccess("success", querySnapshot.get().getDocuments().get(0).getData());
+        // return new GetUserSuccessResponse("success", querySnapshot.get().getDocuments().get(0).getData()).serialize();
 
 //        String filepath = request.queryParams("filepath");
 //        String hasHeader = request.queryParams("hasHeader");
@@ -76,6 +75,20 @@ public class UserGetHandler implements Route {
 //        }
     }
 
+    public <T> Object checkEmpty(List<T> docs) {
+        if (docs.isEmpty()) {
+            return this.getSerializedFailure("error", "user with given email does not exist!");
+        }
+        return null;
+    }
+
+    public String getSerializedSuccess(String status, Map<String, Object> data) {
+        return new GetUserSuccessResponse(status, data).serialize();
+    }
+
+    public String getSerializedFailure(String status, String errorMessage) {
+        return new GetUserFailureResponse(status, errorMessage).serialize();
+    }
 
     /**
      * Success response for loading. Serializes the result ("success") and the filepath of file loaded.
@@ -114,7 +127,7 @@ public class UserGetHandler implements Route {
         public String serialize() {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "error");
-            responseMap.put("error_message", error_message());
+            responseMap.put("error_message", error_message);
             return SerializeHelper.helpSerialize(responseMap);
         }
     }
