@@ -55,44 +55,47 @@ export default function TopButtons(props: TopButtonsProps) {
       >
         <Flex
           display={props.typeMode ? "flex" : "none"}
-          width="30%"
+          width="38%"
           justifyContent={"space-between"}
           alignItems={"flex-end"}
         >
           {/* TIMER */}
-
           <Flex
             flexDir={"column"}
             alignItems={"center"}
             justifyContent={"flex-end"}
+            width="30%"
           >
-            <Text variant={"label"}> TIMER</Text>
+            <Text variant={"label"}>TIMER</Text>
             <CountdownTimer timeLeft={props.timeLeft}></CountdownTimer>
           </Flex>
+          {/* STATS */}
           <Flex
             flexDir={"column"}
             alignItems={"center"}
             justifyContent={"flex-end"}
+            width="30%"
           >
-            <Text variant={"label"}> ACCURACY</Text>
+            <Text variant={"label"}>ACCURACY</Text>
             <Text variant={"bigNumber"}>{props.stats.acc}</Text>
           </Flex>
           <Flex
             flexDir={"column"}
             alignItems={"center"}
             justifyContent={"space-between"}
+            width="30%"
           >
-            <Text variant={"label"}> ERRORS</Text>
-            <Text variant={"bigNumber"}> {props.errors}</Text>
+            <Text variant={"label"}>LPM</Text>
+            <Text variant={"bigNumber"}>{props.stats.lpm}</Text>
           </Flex>
-          <Flex
+          {/* <Flex
             flexDir={"column"}
             alignItems={"center"}
             justifyContent={"space-between"}
           >
-            <Text variant={"label"}> LPM</Text>
-            <Text variant={"bigNumber"}> {props.stats.lpm}</Text>
-          </Flex>
+            <Text variant={"label"}> ERRORS</Text>
+            <Text variant={"bigNumber"}> {props.errors}</Text>
+          </Flex> */}
         </Flex>
         <HStack gap={4}>
           <Menu>
