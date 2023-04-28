@@ -7,15 +7,7 @@
     <list default="true" id="65a76ced-f087-41dc-8d9d-93ab92c4e1b5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/utils/JSONUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/utils/JSONUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/Server.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler$CreateFailureResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler$CreateSuccessResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler$GetUserFailureResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler$GetUserSuccessResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/utils/JSONUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/utils/JSONUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/handlers/race/EndHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/handlers/race/EndHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,15 +24,16 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="useMavenConfig" value="true" />
-      </MavenGeneralSettings>
-    </option>
   </component>
   <component name="ProjectId" id="2P2CxJ9JykvQ6DuXYjodg0JroBf" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -52,7 +45,10 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -95,6 +91,7 @@
       <workItem from="1682646055035" duration="11000" />
       <workItem from="1682646154781" duration="26000" />
       <workItem from="1682646229981" duration="3735000" />
+      <workItem from="1682650188028" duration="1927000" />
     </task>
     <servers />
   </component>
@@ -111,5 +108,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
