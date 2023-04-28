@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: edu.brown.cs.student.main.TestSearcher
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 s - in edu.brown.cs.student.main.TestSearcher
