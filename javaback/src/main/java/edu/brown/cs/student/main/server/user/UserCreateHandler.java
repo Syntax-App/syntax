@@ -40,6 +40,7 @@ public class UserCreateHandler implements Route {
         // get params
         String filepath = request.queryParams("filepath");
         String hasHeader = request.queryParams("hasHeader");
+        request.body().
 
         // check that hasHeader is a valid boolean
         if (hasHeader != null && !hasHeader.equals("true") && !hasHeader.equals("false")) {
