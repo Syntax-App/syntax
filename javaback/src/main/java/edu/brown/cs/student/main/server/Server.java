@@ -3,6 +3,7 @@ package edu.brown.cs.student.main.server;
 import static spark.Spark.after;
 
 import edu.brown.cs.student.main.server.csvHandlers.*;
+import edu.brown.cs.student.main.server.handlers.race.StartHandler;
 import edu.brown.cs.student.main.server.handlers.user.UserCreateHandler;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler;
 import edu.brown.cs.student.main.server.weather.WeatherHandler;
@@ -36,6 +37,9 @@ public class Server {
         // User routes!
         Spark.get("user/get", new UserGetHandler(states));
         Spark.post("user/create", new UserCreateHandler(states));
+
+        // Race routes!
+        Spark.get("race/start", new StartHandler(states));
 
         Spark.init();
         Spark.awaitInitialization();

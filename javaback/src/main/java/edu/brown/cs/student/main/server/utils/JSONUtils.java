@@ -6,6 +6,7 @@ import com.squareup.moshi.Types;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class JSONUtils {

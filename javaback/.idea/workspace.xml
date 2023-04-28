@@ -5,24 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="65a76ced-f087-41dc-8d9d-93ab92c4e1b5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/config/FirebaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/config/FirebaseConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/config/syntax-dev-45ff7-firebase-adminsdk-teq2z-d27d5ddb5c.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/user/UserCreateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/user/UserCreateHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/utils/JSONUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/utils/JSONUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/Server.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/config/FirebaseConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/config/FirebaseConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler$LoadFailureResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler$LoadSuccessResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler$GetUserFailureResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler$GetUserFailureResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler$GetUserSuccessResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler$GetUserSuccessResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler$CreateFailureResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler$CreateSuccessResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserCreateHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler$GetUserFailureResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler$GetUserSuccessResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/user/UserGetHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/utils/JSONUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edu/brown/cs/student/main/server/utils/JSONUtils.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +56,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/syntax-algo" />
       <recent name="$PROJECT_DIR$/src/main/java/edu/brown/cs/student/main/server/config" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="edu.brown.cs.student.main.server.handlers.race" />
     </key>
   </component>
   <component name="RunManager">
@@ -97,7 +94,7 @@
       <workItem from="1682646036062" duration="4000" />
       <workItem from="1682646055035" duration="11000" />
       <workItem from="1682646154781" duration="26000" />
-      <workItem from="1682646229981" duration="2049000" />
+      <workItem from="1682646229981" duration="3735000" />
     </task>
     <servers />
   </component>
