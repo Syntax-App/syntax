@@ -2,6 +2,8 @@ package edu.brown.cs.student.main.mocks;
 
 public class MockJSON {
 
+    public static final String mockRequestBody = "{name: Daniel Liu, email: daniel_liu2@brown.edu, pic: google.com}";
+
     // Mock "/points" result for Providence coordinates.
     public static final String mockProvidenceURLs = "{\n" +
             "    \"@context\": [\n" +
