@@ -8,9 +8,10 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
+import { useState } from "react";
 
 import { MdBuild, MdCall } from "react-icons/md";
-import { Button, Box, Flex, Input, InputGroup, InputRightElement, Divider, ButtonGroup, ChakraProvider } from "@chakra-ui/react";
+import { Button, Box, Flex, Input, InputGroup, InputRightElement, Divider, ButtonGroup, ChakraProvider, useColorModeValue } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { IAuthContext, useAuth } from "@/contexts/AuthContext";
@@ -20,16 +21,29 @@ import Link from "next/link";
 
 export default function Login() {
   const { currentUser, methods } = useAuth();
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
+  const [pass, setPass] = useState("");
+  const [emptyFields, setEmptyFields] = useState(false);
+  const [email, setEmail] = useState("");
+
 
   const router = useRouter();
-
   const handleClick = () => setShow(!show)
-
+  
   async function login(isGoogle: boolean) {
     isGoogle ? await methods?.googleLogin() : methods?.emailLogin();
     await router.push("/");
   }
+
+  async function handleLogin() {
+    if (email !== "" && pass !== "") {
+      setEmptyFields(false);
+      await login(false);
+    } else {
+      setEmptyFields(true);
+    }
+  }
+
   return (
     <Flex
       justifyContent="center"
@@ -52,15 +66,46 @@ export default function Login() {
         mt="8%"
         borderRadius="1.7rem"
       >
-        <Flex height="9rem" mt=".5rem" alignItems="center" justifyContent="center">
-          <h1>Welcome</h1>
+        <Flex
+          height="9rem"
+          mt=".5rem"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text
+            variant="header"
+            color={useColorModeValue("light.lightblue", "dark.darkblue")}
+          >
+            Welcome
+          </Text>
         </Flex>
-        <Input placeholder="EMAIL" variant={"solid"} />
+        <Input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          variant={"solid"}
+          placeholder="USERNAME"
+          _placeholder={{
+            fontFamily: "source code pro",
+            color: useColorModeValue("light.lightblue", "dark.dullblue"),
+          }}
+          color={useColorModeValue("light.lightblue", "dark.dullblue")}
+          bg={useColorModeValue("light.lightblue", "dark.blue")}
+          isRequired={true}
+        />
         <InputGroup size="md" mt="1rem" mb=".3rem">
           <Input
             type={show ? "text" : "password"}
-            placeholder="PASSWORD"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
             variant={"solid"}
+            placeholder="PASSWORD"
+            _placeholder={{
+              fontFamily: "source code pro",
+              color: useColorModeValue("light.lightblue", "dark.dullblue"),
+            }}
+            color={useColorModeValue("light.lightblue", "dark.dullblue")}
+            bg={useColorModeValue("light.lightblue", "dark.blue")}
+            isRequired={true}
           />
           <InputRightElement width="2.8rem">
             {show ? (
@@ -84,7 +129,6 @@ export default function Login() {
                 {show ? "Hide" : "Show"}
               </AiFillEyeInvisible>
             )}
-            
           </InputRightElement>
         </InputGroup>
         <Flex justifyContent={"flex-start"} alignItems={"flex-start"}>
@@ -97,7 +141,20 @@ export default function Login() {
             Forgot Password?
           </Text>
         </Flex>
-        <Button width="100%" borderRadius="3rem" bg="#83BFF6" my="1.8rem">
+        <Text
+          display={emptyFields ? "show" : "none"}
+          color="#fff"
+          fontSize={".8rem"}
+        >
+          * Please enter all fields.
+        </Text>
+        <Button
+          width="100%"
+          borderRadius="3rem"
+          bg="#83BFF6"
+          my="1.8rem"
+          onClick={() => handleLogin()}
+        >
           Sign In
         </Button>
 
