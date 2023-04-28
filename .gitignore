@@ -2,3 +2,4 @@
 node_modules
 javaback/src/main/java/edu/brown/cs/student/main/server/config/firebase_credentials.json
 javaback/target/
+javaback/.idea/

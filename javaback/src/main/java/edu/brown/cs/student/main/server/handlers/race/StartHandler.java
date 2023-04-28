@@ -47,11 +47,7 @@ public class StartHandler implements Route {
     @Override
     public Object handle(Request request, Response response) {
         // this is where we will call our algorithm!
-        File file = new File("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt");
-
         try {
-            FileReader reader = new FileReader(file);
-//            JSONUtils jsonUtils = new JSONUtils();
             String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
             return new StartSuccessResponse("success", snippet).serialize();
         } catch (FileNotFoundException e) {
