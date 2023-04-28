@@ -1,5 +1,3 @@
-@import "fonts.css";
-
 
 .logo {
     font-family: var(--chakra-fonts-code);
@@ -7,27 +5,10 @@
     font-size: 1.2rem;
 }
 
-body{
-    font-family: "Inter", sans-serif;
-    font-size: 1rem;
-}
-
-h1{
-    font-family: "Inter", sans-serif;
-    font-weight: 700;
-    font-size: 2.3rem;
-    color: "#3A496F";
-}
-
-
-
 a{
     font-weight: bold;
     cursor: pointer;
 }
-
-
-
 
 /* SCROLLBAR */
 
