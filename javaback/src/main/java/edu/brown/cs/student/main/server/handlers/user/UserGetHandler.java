@@ -43,6 +43,7 @@ public class UserGetHandler implements Route {
             return new GetUserFailureResponse("error", "User with given email does not exist!").serialize();
         }
 
+        response.status(200);
         return new GetUserSuccessResponse("success", querySnapshot.get().getDocuments().get(0).getData()).serialize();
 
 
