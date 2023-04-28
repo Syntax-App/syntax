@@ -1,24 +1,25 @@
-package edu.brown.cs.student.main.server;
+package edu.brown.cs.student.main.mocks;
 
 import com.google.cloud.firestore.Firestore;
+import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.config.FirebaseConfig;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class States {
-    private Firestore db;
+public class MockStates extends States {
     private List<String> activeFileHeader;
     private List<List<String>> activeFileContent;
 
     /**
      * Constructor for the class, which initializes both shared lists.
      */
-    public States() {
+    public MockStates() {
         this.activeFileHeader = new ArrayList<>();
         this.activeFileContent = new ArrayList<>();
-        this.setupFirebase();
     }
+
+    @Override
+    public void setupFirebase() {}
 
     /**
      * Gets the active CSV's data.
@@ -54,15 +55,5 @@ public class States {
     public void resetAll() {
         this.activeFileHeader = new ArrayList<>();
         this.activeFileContent = new ArrayList<>();
-    }
-
-    public void setupFirebase() {
-        FirebaseConfig firebaseConfig = new FirebaseConfig();
-        firebaseConfig.initializeFirebase();
-        this.db = firebaseConfig.getDb();
-    }
-
-    public Firestore getDb() {
-        return db;
     }
 }

@@ -79,6 +79,8 @@ public class EndHandler implements Route {
         if (runStats.get("acc") > userStats.get("highacc")) {
             userStats.put("highacc", runStats.get("acc"));
         }
+
+        return new GetUserFailureResponse("error", "Not yet implemented!");
     }
 
 
