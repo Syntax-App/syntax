@@ -84,6 +84,7 @@ public class UserCreateHandler implements Route {
         stats.put("avgacc", 0);
         stats.put("avglpm", 0);
         stats.put("numraces", 0);
+        stats.put("exp", 0);
         userObject.put("stats", stats);
 
         return userObject;

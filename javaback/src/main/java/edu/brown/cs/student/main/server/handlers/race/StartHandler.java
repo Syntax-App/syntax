@@ -5,10 +5,13 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
+import edu.brown.cs.student.main.algo.graph.Graph;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler;
 import edu.brown.cs.student.main.server.utils.JSONUtils;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -48,12 +51,21 @@ public class StartHandler implements Route {
     public Object handle(Request request, Response response) {
         // this is where we will call our algorithm!
         try {
-            String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
+            String email = request.queryParams("email");
+
+            Graph graph = new Graph();
+            graph.constructGraph(this.db, email);
+
+//            String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
             return new StartSuccessResponse("success", snippet).serialize();
         } catch (FileNotFoundException e) {
             return new StartFailureResponse("error", "Snippet file not found!").serialize();
         } catch (IOException e) {
             return new StartFailureResponse("error", "Could not open snippet file").serialize();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

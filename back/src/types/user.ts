@@ -11,5 +11,6 @@ export type UserStats = {
     highacc: number,
     numraces: number,
     avglpm: number,
-    avgacc: number
+    avgacc: number,
+    exp: number
 }

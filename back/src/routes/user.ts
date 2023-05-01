@@ -36,6 +36,7 @@ export const createUser = async (req: any, res: any) => {
       avgacc: 0,
       avglpm: 0,
       numraces: 0,
+      exp: 0,
     },
   };
   addDoc(usersRef, userObject)
