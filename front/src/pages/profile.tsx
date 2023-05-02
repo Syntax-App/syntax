@@ -49,7 +49,7 @@ export default function Profile() {
   }, [userInfo])
     
   return (
-    <Flex justifyContent="center">
+    <Flex justifyContent="center" data-testid="profile-page">
       <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={14} paddingY="14" >
           <Flex direction='row' alignContent="start" alignItems='center' w="95%" gap={8}>
               <Avatar

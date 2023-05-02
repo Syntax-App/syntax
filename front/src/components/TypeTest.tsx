@@ -41,7 +41,7 @@ export default function TypeTest(props: TypeTestProps) {
       
     return (
       <>
-        <Flex justifyContent="center">
+        <Flex justifyContent="center" data-testid="typetest">
           <Flex
             direction="column"
             alignContent="center"

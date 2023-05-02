@@ -14,6 +14,9 @@ import { Icon } from "@chakra-ui/react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
+export const TEXT_profile_accessible_name = "Profile Button";
+export const TEXT_ranking_accessible_name = "Leaderboard Button";
+
 // NavBar component
 export default function NavBar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -28,13 +31,13 @@ export default function NavBar() {
 
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={6}>
-              <Button  as='a' href='/leaderboard' bg={"transparent"}>
+              <Button as='a' href='/leaderboard' bg={"transparent"} aria-label={TEXT_ranking_accessible_name}>
                   <Icon as={IoIosStats} color={icon_color} />
               </Button>
               <Button onClick={toggleColorMode} bg={"transparent"}>
                 {colorMode === "dark" ? <SunIcon color={icon_color}/> : <MoonIcon color={icon_color}/>}
               </Button>
-              <Button  as='a' href='/profile' bg={"transparent"}>
+              <Button as='a' href='/profile' bg={"transparent"} aria-label={TEXT_profile_accessible_name}>
                 <Avatar
                   size={'sm'}
                   name={userInfo?.name ? userInfo?.name : undefined}
