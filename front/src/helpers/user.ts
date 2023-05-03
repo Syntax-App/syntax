@@ -6,7 +6,9 @@ export async function requestCreateUser(
   const response = await postData("http://localhost:4000/user/create", {
     name: name,
     email: email,
-    pic: pic ? pic : "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
+    pic: pic
+      ? pic
+      : "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
   });
 
   return response.json();
@@ -24,6 +26,20 @@ export async function requestCreateUser(
   // });
   // return response.json();
   //console.log("hello")
+}
+
+export async function requestUpdateUserStats(
+  email: String,
+  recentlpm: number,
+  recentacc: number
+) {
+  const response = await postData("http://localhost:4000/race/end", {
+    email: email,
+    recentlpm: recentlpm,
+    recentacc: recentacc,
+  });
+
+  return response.json();
 }
 
 export async function requestGetUser(email: string) {

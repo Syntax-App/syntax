@@ -54,9 +54,10 @@ public class Graph {
                 }
             }
         // base case: end of graph
-        } else {
-            return this.snippetIDs;
         }
+
+        return this.snippetIDs;
+
     }
 
     public void constructGraph(Firestore db, String email)
