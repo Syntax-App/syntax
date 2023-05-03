@@ -5,6 +5,10 @@ import {
 } from "@chakra-ui/react";
 import RestartButton from "../pages/TypingTestInterface/TypeTestComponents/RestartButton";
 
+export const TEXT_start_accessible_name = "start-button";
+export const TEXT_skip_accessible_name = "skip-button";
+export const TEXT_restart_accessible_name = "restart-button";
+
 interface ButtonsInterface{
     typeMode: boolean;
     startTest: () => void;
@@ -22,6 +26,7 @@ export default function ControlButtons(props: ButtonsInterface) {
             bgColor="green.200"
             onClick={props.startTest}
             display={props.typeMode ? "none" : "show"}
+            aria-label={TEXT_start_accessible_name}
         >
             START
         </Button>
@@ -32,12 +37,14 @@ export default function ControlButtons(props: ButtonsInterface) {
             variant="outline"
             onClick={props.startTest}
             display={props.typeMode ? "none" : "show"}
+            aria-label={TEXT_skip_accessible_name}
         >
             SKIP
         </Button>
         <RestartButton
             typeMode={props.typeMode}
             onRestart={props.restart}
+            aria-label={TEXT_restart_accessible_name}
         ></RestartButton>
         </HStack>
     );

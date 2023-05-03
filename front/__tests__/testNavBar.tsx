@@ -3,6 +3,7 @@ import { RouterContext } from 'next/dist/shared/lib/router-context';
 import Home from '@/pages/index'
 import App from '@/pages/_app';
 import { screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
 import { createMockRouter } from '../__mocks__/routerMock';
 import NavBar from '@/components/NavBar';
 import TypeTest from '@/components/TypeTest';
@@ -38,8 +39,8 @@ it('should navigate to the profile page', () => {
   );
   
   const profileButton = screen.getByRole("link", { name: TEXT_profile_accessible_name });
-  fireEvent.click(profileButton);
-  
+  userEvent.click(profileButton);
+
   // expect to have redirected to profile page using link
   // expect(screen.getByText('profile-page')).toBeInTheDocument();
 });

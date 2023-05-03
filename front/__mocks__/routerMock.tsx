@@ -1,5 +1,6 @@
 import { NextRouter } from 'next/router';
 
+// referenced from https://github.com/bmvantunes/youtube-react-testing-video9-nextjs-router/blob/main/src/test-utils/createMockRouter.ts
 export function createMockRouter(router: Partial<NextRouter>): NextRouter {
   return {
     basePath: '',

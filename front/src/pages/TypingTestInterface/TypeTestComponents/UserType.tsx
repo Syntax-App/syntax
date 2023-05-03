@@ -28,7 +28,7 @@ const UserType = (props: UserTypeProps) => {
   if (!props.typeMode) return null;
 
   return (
-    <div>
+    <div data-testid="usertype">
       {typedChars.map((char, i) => {
          
         return (
