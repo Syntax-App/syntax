@@ -67,6 +67,8 @@ public class StartHandler implements Route {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        return 0;
     }
 
 

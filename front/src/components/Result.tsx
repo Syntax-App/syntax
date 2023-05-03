@@ -27,6 +27,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { useRouter } from "next/router";
 
+
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
 const code = `class Main { 
@@ -63,6 +64,8 @@ const ChatGPTIcon = createIcon({
   ),
 })
 
+
+
 interface ResultProps {
   stats: {acc: number, lpm: number};
   currLang: string,
@@ -74,6 +77,10 @@ export default function Result(props: ResultProps) {
   const { currentUser, methods } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const router = useRouter();
+
+  async function updateStats() {
+    await methods?.updateUserStats();
+  }
 
   return (
     <Flex justifyContent="center" maxH="100vh - 64" data-testid="result">
@@ -159,7 +166,7 @@ export default function Result(props: ResultProps) {
                     })}
                 </MenuList>
               </Menu>
-              <Button borderRadius={30} height={10} width={40} variant="solid" bgColor="green.200">CONTINUE</Button>
+              <Button borderRadius={30} height={10} width={40} variant="solid" bgColor="green.200" onClick={()=>updateStats()}>CONTINUE</Button>
             </Stack>
             <Button borderRadius={30} height={8} width={28} variant="outline">SKIP</Button>
           </HStack>
