@@ -56,7 +56,7 @@ public class StartHandler implements Route {
             Graph graph = new Graph();
             graph.constructGraph(this.db, email);
 
-//            String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
+            String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
             return new StartSuccessResponse("success", snippet).serialize();
         } catch (FileNotFoundException e) {
             return new StartFailureResponse("error", "Snippet file not found!").serialize();
