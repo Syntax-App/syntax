@@ -10,15 +10,13 @@ import com.google.cloud.firestore.WriteResult;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler.GetUserFailureResponse;
-import edu.brown.cs.student.main.server.types.UserTypes.NewestStats;
-import edu.brown.cs.student.main.server.types.UserTypes.User;
-import edu.brown.cs.student.main.server.types.UserTypes.UserStats;
+import edu.brown.cs.student.main.server.types.NewStats;
+import edu.brown.cs.student.main.server.types.User;
+import edu.brown.cs.student.main.server.types.UserStats;
 import edu.brown.cs.student.main.server.utils.JSONUtils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import spark.Request;
 import spark.Response;
@@ -50,28 +48,22 @@ public class EndHandler implements Route {
         //String email = request.queryParams("email");
         CollectionReference users = this.db.collection("users");
         String reqBody = request.body();
-        System.out.println("reqBody:" + reqBody);
-        System.out.println("hello");
         JSONUtils jsonUtils = new JSONUtils();
 
-
-        NewestStats new_stats = jsonUtils.fromJson(NewestStats.class, reqBody);
+        NewStats new_stats = jsonUtils.fromJson(NewStats.class, reqBody);
 
         Query query = users.whereEqualTo("email", new_stats.email());
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
-        System.out.println("in end handle");
-        System.out.println("getdocuments:" + querySnapshot.get().getDocuments());
         if (querySnapshot.get().getDocuments().isEmpty()) {
             return new GetUserFailureResponse("error", "User with given email does not exist!").serialize();
         }
 
-
         User currUser = querySnapshot.get().getDocuments().get(0).toObject(User.class);
 
-        UserStats curr_stats = currUser.stats();
-        int curr_highlpm = curr_stats.highlpm();
-        double curr_highacc = curr_stats.highacc();
+        UserStats curr_stats = currUser.getStats();
+        int curr_highlpm = curr_stats.getHighlpm();
+        double curr_highacc = curr_stats.getHighacc();
 
         // update if a new stat is higher
         if (new_stats.recentlpm() > curr_highlpm) {
@@ -82,14 +74,14 @@ public class EndHandler implements Route {
         }
 
         // calculate new averages
-        int new_numraces = curr_stats.numraces() + 1;
-        double new_avglpm = (curr_stats.avglpm()*curr_stats.numraces() + new_stats.recentlpm())/new_numraces;
-        double new_avgacc = (curr_stats.avgacc()*curr_stats.numraces() + new_stats.recentacc())/new_numraces;
-        double new_exp = curr_stats.exp() + .1;
-        if (curr_stats.exp() >= 10) new_exp = 10;
+        int new_numraces = curr_stats.getNumraces() + 1;
+        double new_avglpm = (curr_stats.getAvglpm()*curr_stats.getNumraces() + new_stats.recentlpm())/new_numraces;
+        double new_avgacc = (curr_stats.getAvgacc()*curr_stats.getNumraces() + new_stats.recentacc())/new_numraces;
+        double new_exp = curr_stats.getExp() + .1;
+        if (curr_stats.getExp() >= 10) new_exp = 10;
 
         UserStats updatedStats = new UserStats(curr_highlpm, curr_highacc, new_numraces, new_avglpm, new_avgacc, new_exp);
-        User updatedUser = updateUserStats(currUser, updatedStats);
+//        currUser.setStats(updatedStats);
 
         // get document id
         DocumentReference docRef = users.document(querySnapshot.get().getDocuments().get(0).getId());
@@ -98,11 +90,6 @@ public class EndHandler implements Route {
         docRef.update("stats", updatedStats);
 
         return new GetUserFailureResponse("error", "Not yet implemented!");
-    }
-
-    public User updateUserStats(User currUser, UserStats updatedStats) {
-        User user = new User(currUser.uuid(), currUser.name(), currUser.email(), currUser.pic(), updatedStats);
-        return user;
     }
 
     /**
@@ -116,7 +103,7 @@ public class EndHandler implements Route {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "success");
             HashMap<String, String> dataMap = new HashMap<>();
-            dataMap.put("snippet", snippet);
+            dataMap.put("snippet", this.snippet);
             responseMap.put("data", dataMap);
             return SerializeHelper.helpSerialize(responseMap);
         }
@@ -134,7 +121,7 @@ public class EndHandler implements Route {
         public String serialize() {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "error");
-            responseMap.put("error_message", error_message());
+            responseMap.put("error_message", this.error_message());
             return SerializeHelper.helpSerialize(responseMap);
         }
     }
