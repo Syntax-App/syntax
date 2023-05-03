@@ -6,7 +6,7 @@ public class Edge {
     private Node destination;
     private double weight;
 
-    public Edge(Node source, Node destination, double weight) {
+    public Edge(Node destination, double weight) {
         this.source = source;
         this.destination = destination;
         this.weight = weight;

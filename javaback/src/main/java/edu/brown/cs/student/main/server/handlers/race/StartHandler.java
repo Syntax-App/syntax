@@ -64,12 +64,25 @@ public class StartHandler implements Route {
 
             double userExperience = 2.0;
             String email = "daniel_liu2@brown.edu";
-
-            System.out.println("whit");
             int snippetId;
 
             if (this.snippetStack.containsKey(email)) {
-                snippetId = this.snippetStack.get(email).pop();
+                if (!snippetStack.isEmpty()) {
+                    snippetId = this.snippetStack.get(email).pop();
+                } else {
+                    Graph graph = new Graph();
+                    System.out.println("hello");
+                    graph.constructGraph(userExperience);
+                    System.out.println("hellllloooo");
+                    List<Integer> snippetIDs = graph.findPath(graph.getHead());
+
+                    System.out.println("hello!");
+
+                    LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
+                    snippetId = linkedSnippetIDs.pop();
+                    this.snippetStack.put(email, linkedSnippetIDs);
+                }
+
             } else {
                 Graph graph = new Graph();
                 System.out.println("hello");

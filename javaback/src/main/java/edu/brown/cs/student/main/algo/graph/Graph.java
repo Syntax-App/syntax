@@ -25,18 +25,27 @@ import java.util.concurrent.ExecutionException;
 
 public class Graph {
 
-    private List<Node> availableNodes;
+    private List<Integer> availableIDs;
     private Node head;
     private double standardWeight;
     private List<Integer> snippetIDs;
+    private SnippetsJSON json;
 
     public Graph() {
         this.head = null;
-        this.availableNodes = new ArrayList<>();
+        this.availableIDs = new ArrayList<>();
         this.standardWeight = 0.5f;
         this.snippetIDs = new ArrayList<>();
+
         try {
-            this.populateNodeList();
+            JSONUtils jsonUtils = new JSONUtils();
+            File snippetsFile = new File(
+                "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
+            Reader reader = new FileReader(snippetsFile);
+            String snippetsString = jsonUtils.readerToString(reader);
+
+            this.json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
+            this.populateIDList();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -67,42 +76,39 @@ public class Graph {
         }
         return new ArrayList<>();
         // base case: end of graph
-
-
     }
 
     public void constructGraph(double userExperience) {
         this.standardWeight = this.standardWeight - (0.05 * userExperience);
         // TODO: check if user is max experience level (10)?
 
-        this.head = this.determineHead(userExperience);
-        this.availableNodes.remove(this.head);
-        this.head.setChoices(this.availableNodes);
+        int minIndex = this.determineHead(userExperience);
+        this.availableIDs.remove(minIndex);
 
-        this.addEdges(this.availableNodes.size(), this.head, userExperience,
-            this.head.getChoices());
+        this.head = this.addEdges(this.availableIDs.size(), userExperience,
+            this.availableIDs, minIndex);
     }
 
-    private void addEdges(int nodesLeft, Node node, double exp, List<Node> nodes) {
-        if (nodes.size() != 0) {
+    private Node addEdges(int nodesLeft, double exp, List<Integer> availableIDs, int snippetID) {
+        if (nodesLeft != 0) {
             // edge destinations
-            List<Node> choices = new ArrayList<>();
+            List<Integer> destinationIDs = new ArrayList<>();
             // differences between difficulty and experience
-            double[] diffs = new double[3];
+            double[] diffs = new double[Math.min(3, nodesLeft)];
             // number of easier snippets
             double numEasy = 0;
             // sum of difficulty bumps
             double sum = 0;
 
-            List<Integer> randList = new ArrayList<>();
-            for (int i = 0; i < nodesLeft; i++) {
-                randList.add(i);
-            }
+            List<Integer> randList = new ArrayList<>(availableIDs);
+//            for (int i = 0; i < nodesLeft; i++) {
+//                randList.add(i);
+//            }
             Collections.shuffle(randList);
             for (int i = 0; i < Math.min(3, nodesLeft); i++) {
                 // add random node to choices
-                choices.add(nodes.get(randList.get(i)));
-                double diff = nodes.get(randList.get(i)).getDifficultyScore() - exp;
+                destinationIDs.add(randList.get(i));
+                double diff = this.json.array()[i].difficulty() - exp;
                 if (diff <= 0) {
                     numEasy++;
                 }
@@ -164,45 +170,51 @@ public class Graph {
                 }
             }
 
+            Set<Edge> edges = new HashSet<>();
             for (int i = 0; i < weights.length; i++) {
-                node.getOutgoingEdges().add(new Edge(node, choices.get(i), weights[i]));
-                List<Node> nodesCopy = new ArrayList<>(nodes);
-                nodesCopy.remove(choices.get(i));
-                choices.get(i).setChoices(nodesCopy);
-                // recursively build graph
-                this.addEdges(choices.get(i).getChoices().size(), choices.get(i), exp,
-                    choices.get(i).getChoices());
+//                for (Dataset subset: trainingDataSubset.partition(splitOnAttribute)) {
+//                    ITreeNode subtree = this.generateTreeHelper(subset);
+//                    edges.add(new ValueEdge(subset.getSharedValue(splitOnAttribute), subtree));
+//                }
+//
+//                return new AttributeNode(splitOnAttribute, mostCommonClassification, edges);
+                // make copy of available IDs
+                List<Integer> copyOfIDs = new ArrayList<>(availableIDs);
+                // remove destination's ID from available IDs
+                copyOfIDs.remove(destinationIDs.get(i));
+                // recursively build child node
+                Node subNode = this.addEdges(copyOfIDs.size(), exp,
+                    copyOfIDs, destinationIDs.get(i));
+                // add new edge for parent node pointing towards child node
+                edges.add(new Edge(subNode, weights[i]));
             }
+            // return parent node
+            return new Node(snippetID, this.json.array()[snippetID].difficulty(), edges);
+        } else {
+            return new Node(snippetID, this.json.array()[snippetID].difficulty(), new HashSet<>());
         }
     }
 
-    private Node determineHead(double userExperience) {
+    private int determineHead(double userExperience) {
         double min = 0;
         int minIndex = 0;
-        for (int i = 0; i < this.availableNodes.size(); i++) {
+        for (int i = 0; i < this.availableIDs.size(); i++) {
             double diff = Math.abs(
-                userExperience - this.availableNodes.get(i).getDifficultyScore());
+                userExperience - this.json.array()[i].difficulty());
             if (diff < min) {
                 min = diff;
                 minIndex = i;
             }
         }
-        return this.availableNodes.get(minIndex);
+        return minIndex;
     }
 
 
-    private void populateNodeList() throws IOException {
+    private void populateIDList() throws IOException {
         // TODO: insert strategy pattern here - different ways of loading in snippets
         // TODO: code below is one strategy pattern
-        JSONUtils jsonUtils = new JSONUtils();
-        File snippetsFile = new File(
-            "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
-        Reader reader = new FileReader(snippetsFile);
-        String snippetsString = jsonUtils.readerToString(reader);
-
-        SnippetsJSON json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
-        for (int i = 0; i < json.array().length; i++) {
-            this.availableNodes.add(new Node(i, json.array()[i].difficulty(), new HashSet<>()));
+        for (int i = 0; i < this.json.array().length; i++) {
+            this.availableIDs.add(i);
         }
     }
 
@@ -214,7 +226,7 @@ public class Graph {
         return this.head;
     }
 
-    public List<Node> getAvailableNodes() {
-        return this.availableNodes;
+    public List<Integer> getAvailableIDs() {
+        return this.availableIDs;
     }
 }
