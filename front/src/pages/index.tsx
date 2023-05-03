@@ -43,6 +43,12 @@ export default function Home() {
     setState("start");
   };
 
+  const newTest = () => {
+    setMode(false);
+    restart();
+    // TODO: get new code snippets
+  };
+
   // TODO: change this later
   // update words w hardcoded code
   useEffect(() => {
@@ -51,7 +57,7 @@ export default function Home() {
 
   if (state == "finish") {
     return (
-      <Result stats={stats} currLang={currLang} setCurrLang={setCurrLang} />
+      <Result stats={stats} currLang={currLang} setCurrLang={setCurrLang} newTest={newTest} />
     );
   } else {
     return (

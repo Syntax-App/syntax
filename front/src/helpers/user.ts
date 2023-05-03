@@ -10,22 +10,7 @@ export async function requestCreateUser(
       ? pic
       : "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
   });
-
   return response.json();
-
-  // const test = await response.json();
-  // console.log(test);
-
-  // return response.json();
-  // const response = await postData("http://localhost:4000/user/create", {
-  //   name: name,
-  //   email: email,
-  //   pic: pic
-  //     ? pic
-  //     : "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-  // });
-  // return response.json();
-  //console.log("hello")
 }
 
 export async function requestUpdateUserStats(

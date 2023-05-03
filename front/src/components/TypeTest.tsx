@@ -35,7 +35,7 @@ export default function TypeTest(props: TypeTestProps) {
 
     useEffect(() => {
         if (props.state == "start"){
-            setlpm(0);
+          setlpm(0);
         }
     }, [props.state]);
       

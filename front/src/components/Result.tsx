@@ -26,6 +26,8 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { State } from "@/pages/TypingTestInterface/hooks/useEngine";
 
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
@@ -64,23 +66,22 @@ const ChatGPTIcon = createIcon({
   ),
 })
 
-
-
 interface ResultProps {
   stats: {acc: number, lpm: number};
   currLang: string,
   setCurrLang: React.Dispatch<React.SetStateAction<string>>;
+  newTest: () => void;
 }
 
-// TODO: remove props!
 export default function Result(props: ResultProps) {
   const { currentUser, methods } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const router = useRouter();
 
-  async function updateStats() {
-    await methods?.updateUserStats();
-  }
+  // on mount, update stats
+  useEffect(() => {
+    methods?.updateUserStats(props.stats.lpm, props.stats.acc);
+  }, []);
 
   return (
     <Flex justifyContent="center" maxH="100vh - 64" data-testid="result">
@@ -155,7 +156,6 @@ export default function Result(props: ResultProps) {
                 <MenuList>
                   {languages.map((lang, i) => {
                       return (
-                        // TODO: setCurrLang(lang) HOW TO GET ACCESS TO THIS??
                         <MenuItem
                           key={i}
                           onClick={() => props.setCurrLang(lang)}
@@ -166,7 +166,7 @@ export default function Result(props: ResultProps) {
                     })}
                 </MenuList>
               </Menu>
-              <Button borderRadius={30} height={10} width={40} variant="solid" bgColor="green.200" onClick={()=>updateStats()}>CONTINUE</Button>
+              <Button borderRadius={30} height={10} width={40} variant="solid" bgColor="green.200" onClick={()=>props.newTest()}>CONTINUE</Button>
             </Stack>
             <Button borderRadius={30} height={8} width={28} variant="outline">SKIP</Button>
           </HStack>
