@@ -1,11 +1,9 @@
 package edu.brown.cs.student.main.server;
 
-import edu.brown.cs.student.main.server.csvHandlers.*;
 import edu.brown.cs.student.main.server.handlers.race.EndHandler;
 import edu.brown.cs.student.main.server.handlers.race.StartHandler;
 import edu.brown.cs.student.main.server.handlers.user.UserCreateHandler;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler;
-import edu.brown.cs.student.main.server.weather.WeatherHandler;
 import spark.Spark;
 
 import static spark.Spark.*;
@@ -53,12 +51,6 @@ public class Server {
 
         // initializing an instance which will hold shared states.
         States states = new States();
-
-        // Setting up the handlers for each endpoint.
-        Spark.get("loadcsv", new LoadHandler(states));
-        Spark.get("viewcsv", new ViewHandler(states));
-        Spark.get("searchcsv", new SearchHandler(states));
-        Spark.get("weather", new WeatherHandler());
 
         // User routes!
         Spark.get("user/get", new UserGetHandler(states));
