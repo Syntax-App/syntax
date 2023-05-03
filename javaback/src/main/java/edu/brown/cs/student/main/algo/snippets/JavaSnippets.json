@@ -1,0 +1,44 @@
+{
+  "array": [
+    {
+      "text": "import java.util.Arrays;\n\npublic class BubbleSort {\n\n    static void sort(int [] arrA){\n        if(arrA==null || arrA.length==0)\n            return;\n\n        System.out.println(\"Original Array: \" + Arrays.toString(arrA));\n        int size = arrA.length;\n        for (int i = 0; i <size-1 ; i++) {\n            for (int j = 0; j <size-i-1 ; j++) {\n                //check the adjacent elements\n                if(arrA[j]>arrA[j+1]){\n                    //swap the elements\n                    int temp = arrA[j];\n                    arrA[j] = arrA[j+1];\n                    arrA[j+1] = temp;\n                }\n            }\n        }\n        System.out.println(\"Sorted Array: \" +  Arrays.toString(arrA));\n    }\n\n    public static void main(String[] args) {\n        int [] arrA = {5, 1, 9, 3, 2, 10};\n        sort(arrA);\n    }\n}",
+      "difficulty": 5.0
+    },
+    {
+      "text": "import com.lowagie.text.Document;\nimport com.lowagie.text.Paragraph;\nimport com.lowagie.text.pdf.PdfWriter;\n\npublic class GeneratePDF {\n\n    public static void main(String[] args) {\n        try {\n            OutputStream file = new FileOutputStream(new File(\"C:\\\\Test.pdf\"));\n\n            Document document = new Document();\n            PdfWriter.getInstance(document, file);\n            document.open();\n            document.add(new Paragraph(\"Hello Kiran\"));\n            document.add(new Paragraph(new Date().toString()));\n\n            document.close();\n            file.close();\n\n        } catch (Exception e) {\n\n            e.printStackTrace();\n        }\n    }\n}",
+      "difficulty": 2.0
+    },
+    {
+      "text": "public void postMail( String recipients[ ], String subject, String message , String from) throws MessagingException\n{\n    boolean debug = false;\n\n     //Set the host smtp address\n     Properties props = new Properties();\n     props.put(\"mail.smtp.host\", \"smtp.example.com\");\n\n    // create some properties and get the default Session\n    Session session = Session.getDefaultInstance(props, null);\n    session.setDebug(debug);\n\n    // create a message\n    Message msg = new MimeMessage(session);\n\n    // set the from and to address\n    InternetAddress addressFrom = new InternetAddress(from);\n    msg.setFrom(addressFrom);\n\n    InternetAddress[] addressTo = new InternetAddress[recipients.length]; \n    for (int i = 0; i < recipients.length; i++)\n    {\n        addressTo[i] = new InternetAddress(recipients[i]);\n    }\n    msg.setRecipients(Message.RecipientType.TO, addressTo);\n   \n\n    // Optional : You can also set your custom headers in the Email if you Want\n    msg.addHeader(\"MyHeaderName\", \"myHeaderValue\");\n\n    // Setting the Subject and Content Type\n    msg.setSubject(subject);\n    msg.setContent(message, \"text/plain\");\n    Transport.send(msg);\n}",
+      "difficulty": 4.0
+    },
+    {
+      "text": "public static <T> T[] shuffle(T[] input) {\n        T[] arr = Arrays.copyOf(input, input.length);\n        int length = arr.length;\n        int m = length;\n        while (m > 0) {\n            int i = (int) Math.floor(Math.random() * m--);\n            T tmp = arr[i];\n            arr[i] = arr[m];\n            arr[m] = tmp;\n        }\n        return arr;\n    }",
+      "difficulty": 2.0
+    },
+    {
+      "text": "/**\n   * Factorial. Example of what the recursive implementation looks like.\n   *\n   * @param number for which factorial is to be calculated for\n   * @return factorial\n   */\n  public static int recursiveFactorial(int number) {\n    var initial = 0;\n    if (number == initial) {\n      return initial + 1;\n    }\n    return number * recursiveFactorial(number - 1);\n  }",
+      "difficulty": 1.0
+    },
+    {
+      "text": "public List<Node> breadthFirstSearch(String rootName) {\n    List<Node> result = new ArrayList<Node>();\n    List<Node> temp = new ArrayList<Node>();\n    Set<String> visited = new HashSet<String>();\n\n    Node root = nodes.get(rootName);\n    temp.add(root);\n    visited.add(rootName);\n\n    while (temp.size() > 0) {\n      Node currentNode = temp.get(0);\n      List<Node> neighbors = currentNode.getNeighbors();\n\n      for (int i = 0; i < neighbors.size(); i++) {\n        Node neighbor = neighbors.get(i);\n\n\t// a node can only be visited once if it has more than one parents \n        if (visited.contains(neighbor.getName())) {\n          continue;\n        } else {\n          temp.add(neighbor);\n          visited.add(neighbor.getName());\n        }\n      }\n\n      temp.remove(0);\n      result.add(currentNode);\n    }\n\n    return result;\n  }",
+      "difficulty": 6.0
+    },
+    {
+      "text": "public class Add{\n\n    public static void main(String[] args) {\n        \n        int first = 10;\n        int second = 20;\n\n        int sum = first + second;\n\n        System.out.println(\"The sum is: \" + sum);\n    }\n}",
+      "difficulty": 1.0
+    },
+    {
+      "text": "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode(int x) {\n *         val = x;\n *         next = null;\n *     }\n * }\n */\npublic class Solution {\n    public ListNode removeNthFromEnd(ListNode head, int n) {\n        ListNode cur = head, prev = head;\n        while(n-- > 0) {\n            cur = cur.next;\n        }\n        if (cur == null) \n            return head.next;\n        while (cur.next != null) {\n            cur = cur.next;\n            prev = prev.next;\n        }\n        prev.next = prev.next.next;\n        return head;\n    }\n}",
+      "difficulty": 3.0
+    },
+    {
+      "text": "package complexconditionals;\n\nimport java.util.*;\n\npublic class ComplexConditionals {\n    public static void main(String[] args) {\n        Scanner reader = new Scanner(System.in);\n        String input = reader.next();\n        String sOne = \"abc\";\n        String sTwo = \"z\";\n        \n        boolean bool1 = input.contains(sOne);\n        boolean bool2 = input.contains(sTwo);\n        \n        if((bool1 || bool2) && false)\n        {\n            System.out.println(\"TRUE\");\n        }\n        else\n        {\n            System.out.println(\"FALSE\");\n        }\n    }\n}",
+      "difficulty": 2.0
+    },
+    {
+      "text": "public class WritingXML {\n    public static void main(String[] args) {\n        File xmlFile = new File(\"cars.xml\");\n        Document dom = LoadXMLDocument(xmlFile);\n        \n        NodeList owners = dom.getElementsByTagName(\"owner\");\n        for(int i = 0; i < owners.getLength(); i++)\n        {\n            Element owner = (Element)owners.item(i);\n            owner.setAttribute(\"name\", \"Mike\");\n        }\n        \n        WriteXMLDocument(dom, xmlFile);\n    }\n    \n    private static void WriteXMLDocument(Document doc, File destination)\n    {\n        try{\n            // Write doc to destination file here...\n            TransformerFactory tf = TransformerFactory.newInstance();\n            Transformer transformer = tf.newTransformer();\n            StreamResult result = new StreamResult(destination);\n            DOMSource source = new DOMSource(doc);\n            \n            transformer.transform(source, result);\n        }\n        catch(TransformerConfigurationException e)\n        {\n            System.err.println(\"XML writing failed.\");\n        }\n        catch(TransformerException e)\n        {\n            System.err.println(\"XML writing failed.\");\n        }\n    }\n    \n    private static Document LoadXMLDocument(File source)\n    {\n        Document dom = null;\n        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();\n        \n        try {\n            DocumentBuilder builder = factory.newDocumentBuilder();\n            dom = builder.parse(source);\n        }\n        catch (ParserConfigurationException e) {\n             System.err.println(\"XML loading failed.\");\n        } \n        catch (SAXException e) {\n             System.err.println(\"XML loading failed.\");\n        } \n        catch (IOException e) {\n            System.err.println(\"XML loading failed.\");\n        }\n        \n        return dom;\n    }\n}",
+      "difficulty": 7.0
+    }
+  ]
+}

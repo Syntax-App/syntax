@@ -4,9 +4,9 @@ public class Edge {
 
     private Node source;
     private Node destination;
-    private float weight;
+    private double weight;
 
-    public Edge(Node source, Node destination, float weight) {
+    public Edge(Node source, Node destination, double weight) {
         this.source = source;
         this.destination = destination;
         this.weight = weight;
@@ -20,7 +20,7 @@ public class Edge {
         return this.destination;
     }
 
-    public float getWeight() {
+    public double getWeight() {
         return this.weight;
     }
 }

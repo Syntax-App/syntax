@@ -6,11 +6,11 @@ import java.util.Set;
 public class Node {
 
     private int snippetID;
-    private float difficultyScore;
+    private double difficultyScore;
     private Set<Edge> outgoingEdges;
     private List<Node> choices;
 
-    public Node(int snippetID, float difficultyScore, Set<Edge> outgoingEdges) {
+    public Node(int snippetID, double difficultyScore, Set<Edge> outgoingEdges) {
         this.snippetID = snippetID;
         this.difficultyScore = difficultyScore;
         this.outgoingEdges = outgoingEdges;
@@ -20,7 +20,7 @@ public class Node {
         return this.snippetID;
     }
 
-    public float getDifficultyScore() {
+    public double getDifficultyScore() {
         return this.difficultyScore;
     }
 

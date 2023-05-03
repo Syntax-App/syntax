@@ -4,10 +4,15 @@ import com.google.cloud.firestore.Firestore;
 import edu.brown.cs.student.main.server.config.FirebaseConfig;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class States {
     private Firestore db;
+    private Map<String, LinkedList<Integer>> snippetStacks;
     private List<String> activeFileHeader;
     private List<List<String>> activeFileContent;
 
@@ -18,6 +23,7 @@ public class States {
         this.activeFileHeader = new ArrayList<>();
         this.activeFileContent = new ArrayList<>();
         this.setupFirebase();
+        this.snippetStacks = new HashMap<>();
     }
 
     /**
@@ -63,6 +69,10 @@ public class States {
     }
 
     public Firestore getDb() {
-        return db;
+        return this.db;
+    }
+
+    public Map<String, LinkedList<Integer>> getSnippetStacks() {
+        return this.snippetStacks;
     }
 }
