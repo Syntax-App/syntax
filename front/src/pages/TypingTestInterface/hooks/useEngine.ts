@@ -10,8 +10,8 @@ import { type } from "os";
 // states to keep track of the game status
 export type State = "init" | "start" | "run" | "finish";
 
-const NUMBER_WORDS = 20;
-const COUNTDOWN_SECONDS = 30;
+export const NUMBER_WORDS = 20;
+export const COUNTDOWN_SECONDS = 30;
 
 const useEngine = () => {
   const [state, setState] = useState<State>("init");

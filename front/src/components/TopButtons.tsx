@@ -16,6 +16,8 @@ import { calculateAccuracy } from "../pages/TypingTestInterface/utils/typetesthe
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
+export const TEXT_timer_accessible_name = "time-left";
+
 interface TopButtonsProps {
     typeMode: boolean;
     currLang: string;
@@ -34,6 +36,7 @@ export default function TopButtons(props: TopButtonsProps) {
         <Text
             variant={"bigNumber"}
             color={"useColorModeValue(colors.light.blue, colors.dark.lightblue)"}
+            aria-label={TEXT_timer_accessible_name}
         >
             {timeLeft}
         </Text>
