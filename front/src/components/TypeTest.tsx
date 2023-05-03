@@ -9,8 +9,9 @@ import {
 import TopButtons from "@/components/TopButtons";
 import ControlButtons from "@/components/ControlButtons";
 import WordsContainer from "@/components/WordsContainer";
+import { TypeAnimation } from 'react-type-animation';
 
-const gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
+let gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
 
 interface TypeTestProps {
  state: string;
@@ -104,7 +105,7 @@ export default function TypeTest(props: TypeTestProps) {
                   ChatGPT Says...
                 </Text>
                 <br />
-                <Text
+                {/* <Text
                   fontSize="md"
                   fontWeight="medium"
                   textAlign="justify"
@@ -112,6 +113,20 @@ export default function TypeTest(props: TypeTestProps) {
                   px={4}
                 >
                   {gptSays}
+                </Text> */}
+                <Text
+                  fontSize="md"
+                  fontWeight="medium"
+                  textAlign="justify"
+                  color="blue.200"
+                  px={4}
+                >
+                  <TypeAnimation
+                    sequence={[gptSays]}
+                    wrapper="span"
+                    cursor={false}
+                    speed={70}
+                  />
                 </Text>
               </Box>
             </Flex>

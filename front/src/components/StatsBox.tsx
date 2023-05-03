@@ -22,13 +22,13 @@ export default function StatsBox(props: StatsBoxProps) {
             <SimpleGrid columns={3} spacing={10}>
                 <Flex direction="column" alignItems="center">
                     <Text fontFamily="code" fontSize="xs" fontWeight="regular">HIGHEST LINES/MIN</Text>
-                    <Text fontSize="5xl" fontWeight="medium">{props.stats.highlpm}</Text>
+                    <Text fontSize="5xl" fontWeight="medium">{Math.round(props.stats.highlpm)}</Text>
                 </Flex>
                 <Flex direction="row" justifyContent="center">
                     <Stack>
                         <Text fontFamily="code" fontSize="xs" fontWeight="regular">HIGHEST ACCURACY</Text>
                         <HStack>
-                            <Text fontSize="5xl" fontWeight="medium">{props.stats.highacc}%</Text>
+                            <Text fontSize="5xl" fontWeight="medium">{Math.round(props.stats.highacc)}%</Text>
                             <CircularProgress value={props.stats.highacc} size="60px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
                         </HStack>
                     </Stack>
@@ -39,14 +39,14 @@ export default function StatsBox(props: StatsBoxProps) {
                 </Flex>
                 <Flex direction="column" alignItems="center">
                     <Text fontFamily="code" fontSize="xs" fontWeight="regular">AVG. LINES/MIN</Text>
-                    <Text fontSize="5xl" fontWeight="medium">{props.stats.avglpm}</Text>
+                    <Text fontSize="5xl" fontWeight="medium">{Math.round(props.stats.avglpm)}</Text>
                 </Flex>
                 <Flex direction="row" justifyContent="center">
                     <Stack>
                         <Text fontFamily="code" fontSize="xs" fontWeight="regular">AVG. ACCURACY</Text>
                         <HStack>
-                            <Text fontSize="5xl" fontWeight="medium">{props.stats.avgacc}%</Text>
-                            <CircularProgress value={props.stats.highacc} size="60px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
+                            <Text fontSize="5xl" fontWeight="medium">{Math.round(props.stats.avgacc)}%</Text>
+                            <CircularProgress value={props.stats.avgacc} size="60px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
                         </HStack>
                     </Stack>
                 </Flex>
