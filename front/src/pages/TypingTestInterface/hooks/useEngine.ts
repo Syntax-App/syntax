@@ -11,7 +11,7 @@ import { type } from "os";
 export type State = "init" | "start" | "run" | "finish";
 
 export const NUMBER_WORDS = 20;
-export const COUNTDOWN_SECONDS = 30;
+export const COUNTDOWN_SECONDS = 10;
 
 const useEngine = () => {
   const [state, setState] = useState<State>("init");

@@ -66,6 +66,9 @@ public class Graph {
             return this.snippetIDs;
         }
         return new ArrayList<>();
+        // base case: end of graph
+
+
     }
 
     public void constructGraph(double userExperience) {

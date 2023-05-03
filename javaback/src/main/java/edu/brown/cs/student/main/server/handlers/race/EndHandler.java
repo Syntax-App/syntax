@@ -2,28 +2,23 @@ package edu.brown.cs.student.main.server.handlers.race;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.google.firebase.remoteconfig.Parameter;
-import com.squareup.moshi.Types;
+import com.google.cloud.firestore.WriteResult;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
-import edu.brown.cs.student.main.server.handlers.race.StartHandler.StartFailureResponse;
-import edu.brown.cs.student.main.server.handlers.race.StartHandler.StartSuccessResponse;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler.GetUserFailureResponse;
+import edu.brown.cs.student.main.server.types.UserTypes.NewestStats;
+import edu.brown.cs.student.main.server.types.UserTypes.User;
+import edu.brown.cs.student.main.server.types.UserTypes.UserStats;
 import edu.brown.cs.student.main.server.utils.JSONUtils;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import spark.Request;
 import spark.Response;
@@ -53,36 +48,62 @@ public class EndHandler implements Route {
     public Object handle(Request request, Response response)
         throws ExecutionException, InterruptedException, IOException {
         //String email = request.queryParams("email");
-        CollectionReference users = db.collection("users");
+        CollectionReference users = this.db.collection("users");
         String reqBody = request.body();
+        System.out.println("reqBody:" + reqBody);
+        System.out.println("hello");
         JSONUtils jsonUtils = new JSONUtils();
 
-//        Type statsType = Types.newParameterizedType(Map.class, String.class, Integer.class);
-//        Type bodyType = Types.newParameterizedType(Map.class, String.class, Object.class);
-        Map<String, Object> bodyParams = jsonUtils.fromJson(reqBody);
-        String email = (String) bodyParams.get("email"); // TODO - change this with actual Moshi stuff
-        Map<String, Integer> runStats = (Map<String, Integer>) bodyParams.get("run_stats");
 
-        Query query = users.whereEqualTo("email", email);
+        NewestStats new_stats = jsonUtils.fromJson(NewestStats.class, reqBody);
+
+        Query query = users.whereEqualTo("email", new_stats.email());
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
+        System.out.println("in end handle");
+        System.out.println("getdocuments:" + querySnapshot.get().getDocuments());
         if (querySnapshot.get().getDocuments().isEmpty()) {
             return new GetUserFailureResponse("error", "User with given email does not exist!").serialize();
         }
 
-        Map<String, Object> userObject = querySnapshot.get().getDocuments().get(0).getData();
-        Map<String, Integer> userStats = (Map<String, Integer>) userObject.get("stats");
 
-        if (runStats.get("lpm") > userStats.get("highlpm")) {
-            userStats.put("highlpm", runStats.get("lpm"));
+        User currUser = querySnapshot.get().getDocuments().get(0).toObject(User.class);
+
+        UserStats curr_stats = currUser.stats();
+        int curr_highlpm = curr_stats.highlpm();
+        double curr_highacc = curr_stats.highacc();
+
+        // update if a new stat is higher
+        if (new_stats.recentlpm() > curr_highlpm) {
+            curr_highlpm = new_stats.recentlpm();
         }
-        if (runStats.get("acc") > userStats.get("highacc")) {
-            userStats.put("highacc", runStats.get("acc"));
+        if (new_stats.recentacc() > curr_highacc) {
+            curr_highacc = new_stats.recentacc();
         }
+
+        // calculate new averages
+        int new_numraces = curr_stats.numraces() + 1;
+        double new_avglpm = (curr_stats.avglpm()*curr_stats.numraces() + new_stats.recentlpm())/new_numraces;
+        double new_avgacc = (curr_stats.avgacc()*curr_stats.numraces() + new_stats.recentacc())/new_numraces;
+        double new_exp = curr_stats.exp() + .1;
+        if (curr_stats.exp() >= 10) new_exp = 10;
+
+        UserStats updatedStats = new UserStats(curr_highlpm, curr_highacc, new_numraces, new_avglpm, new_avgacc, new_exp);
+        User updatedUser = updateUserStats(currUser, updatedStats);
+
+        // get document id
+        DocumentReference docRef = users.document(querySnapshot.get().getDocuments().get(0).getId());
+
+        // update user at id
+        docRef.update("stats", updatedStats);
 
         return new GetUserFailureResponse("error", "Not yet implemented!");
     }
 
+    public User updateUserStats(User currUser, UserStats updatedStats) {
+        User user = new User(currUser.uuid(), currUser.name(), currUser.email(), currUser.pic(), updatedStats);
+        return user;
+    }
 
     /**
      * Success response for loading. Serializes the result ("success") and the filepath of file loaded.
