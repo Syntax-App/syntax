@@ -17,14 +17,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useColorModeValue } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import StatsBox from "@/components/StatsBox";
-
-let defaultStats = {
-  highlpm: 21,
-  highacc: 98,
-  numraces: 24,
-  avglpm: 16,
-  avgacc: 85,
-};
+import { useRouter } from "next/router";
 
 export type UserStats = {
   highlpm: number;
@@ -34,19 +27,38 @@ export type UserStats = {
   avgacc: number;
 };
 
+const defaultStats = {
+  highlpm: 0,
+  highacc: 0,
+  numraces: 0,
+  avglpm: 0,
+  avgacc: 0
+};
+
+
 export default function Profile() {
-  const { currentUser, userInfo, methods } = useAuth();
+  const { currentUser, userInfo, methods, loading } = useAuth();
   const [stats, setStats] = useState<UserStats>(defaultStats);
   const icon_color = useColorModeValue("light.indigo", "dark.lightblue");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
 
   useEffect(() => {
-    if (userInfo && userInfo.stats) {
-      setStats(userInfo.stats);
-    } else {
-      setStats(defaultStats);
+    if (!loading) {
+      console.log(userInfo);
+      if (userInfo && userInfo.stats) {
+        setStats(userInfo.stats);
+      } else {
+        router.push("/login");
+      }
     }
-  }, [userInfo])
+  }, [loading])
+
+  async function logoutOnClick() {
+    await methods?.signout();
+    await onClose();
+    await router.push("/login");
+  }
     
   return (
     <Flex justifyContent="center" data-testid="profile-page">
@@ -77,7 +89,7 @@ export default function Profile() {
                 Are you sure your want to logout?
               </ModalBody>
               <ModalFooter>
-                <Button variant={"solid"} onClick={methods?.signout} mr={3}>Logout</Button>
+                <Button variant={"solid"} onClick={logoutOnClick} mr={3}>Logout</Button>
                 <Button variant='ghost' onClick={onClose}>Cancel</Button>
               </ModalFooter>
             </ModalContent>
