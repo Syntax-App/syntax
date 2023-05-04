@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main.server.types;
 
+import com.google.cloud.firestore.annotation.PropertyName;
+
 public class User {
     String uuid;
     String name;
@@ -34,10 +36,12 @@ public class User {
         return this.pic;
     }
 
+    @PropertyName("stats")
     public UserStats getStats() {
         return this.stats;
     }
 
+    @PropertyName("stats")
     public void setStats(UserStats stats) {
         this.stats = stats;
     }
