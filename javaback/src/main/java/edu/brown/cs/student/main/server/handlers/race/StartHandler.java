@@ -113,12 +113,11 @@ public class StartHandler implements Route {
 
             String snippetContent = json.array()[snippetId].text();
 
-            // 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
             String url = "https://api.openai.com/v1/chat/completions";
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Authorization", "Bearer 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");
+            connection.setRequestProperty("Authorization", "Bearer INSERT KEY HERE");
             Map<String, Object> data = jsonUtils.getParsedJSON(reader);
             data.put("model", "gpt-3.5-turbo");
             data.put("prompt", "Explain this code snippet: \n" + snippetContent);
