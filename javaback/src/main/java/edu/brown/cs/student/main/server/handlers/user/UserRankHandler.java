@@ -52,7 +52,9 @@ public class UserRankHandler implements Route {
             }
 
             // sort users based on their highlpm
-            userList.sort((u1, u2) -> Double.compare(u2.getStats().getHighlpm(), u1.getStats().getHighlpm()));
+            userList.sort((u1, u2) -> Double.compare(
+                    u2.getStats().getHighlpm()*u2.getStats().getAvgacc(),
+                    u1.getStats().getHighlpm()*u1.getStats().getAvgacc()));
 
             return new RankSuccessResponse("success", userList).serialize();
         } catch (Exception e) {
