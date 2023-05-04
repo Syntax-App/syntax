@@ -88,7 +88,7 @@ public class EndHandler implements Route {
         // update user at id
         docRef.update("stats", updatedStats);
 
-        return new EndSuccessResponse("success", updatedStats);
+        return new EndSuccessResponse("success", updatedStats).serialize();
     }
 
     /**

@@ -37,7 +37,14 @@ export async function requestRankings() {
   const json = await response.json();
   return (
     json.data.ranking
-    
+  );
+}
+
+export async function requestCode(lang: string, email?: string) {
+  const response = await fetch("http://localhost:4000/race/start?email=" + email + "&lang=" + lang);
+  const json = await response.json();
+  return (
+    json.data.snippet
   );
 }
 

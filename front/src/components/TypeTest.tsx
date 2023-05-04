@@ -14,7 +14,7 @@ import { TypeAnimation } from 'react-type-animation';
 let gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
 
 interface TypeTestProps {
- state: string;
+  state: string;
   typeMode: boolean;
   currLang: string;
   setCurrLang: React.Dispatch<React.SetStateAction<string>>;
@@ -29,6 +29,7 @@ interface TypeTestProps {
   setStats: React.Dispatch<React.SetStateAction<{ acc: number; lpm: number }>>;
   COUNTDOWN_SECONDS: number;
   timeElapsed: number;
+  getNewSnippet: () => void;
 }
 
 export default function TypeTest(props: TypeTestProps) {
@@ -62,6 +63,7 @@ export default function TypeTest(props: TypeTestProps) {
               stats={props.stats}
               setStats={props.setStats}
               lpm={lpm}
+              getNewSnippet={props.getNewSnippet}
             />
 
             {/* code box and chatgpt explanations */}

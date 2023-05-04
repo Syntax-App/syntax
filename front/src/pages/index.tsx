@@ -3,6 +3,8 @@ import { useState } from "react";
 import useEngine from "./TypingTestInterface/hooks/useEngine";
 import Result from "@/components/Result";
 import TypeTest from "@/components/TypeTest";
+import { requestCode } from "@/helpers/user";
+import { useAuth } from "@/contexts/AuthContext";
 
 const code: string = `class Main {\npublic static void main(String[] args) {\n\tMap<String, String> languages = new HashMap<>();\nlanguages.put("pos3", "JS");
     languages.put("pos1", "Java");
@@ -23,6 +25,8 @@ const code: string = `class Main {\npublic static void main(String[] args) {\n\t
 export default function Home() {
   const [currLang, setCurrLang] = useState("PYTHON");
   const [typeMode, setMode] = useState(false);
+  const [stats, setStats] = useState({ acc: 0, lpm: 0 });
+  const { userInfo, methods, loading } = useAuth();
   const {
     state,
     setState,
@@ -36,7 +40,30 @@ export default function Home() {
     COUNTDOWN_SECONDS,
     timeElapsed
   } = useEngine();
-  const [stats, setStats] = useState({ acc: 0, lpm: 0 });
+
+  async function getNewSnippet() {
+    if (userInfo && userInfo.email) {
+      requestCode(currLang, userInfo.email)
+      .then((snippet) => {
+        updateWords(snippet);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+    //TODO: handle case where user is not logged in
+  }
+
+  // update words when home mounts
+  useEffect(() => {
+    if (!loading) {
+      getNewSnippet();
+    }
+  }, [loading]);
+
+  // useEffect(() => {
+  //   updateWords(code);
+  // }, []);
 
   const startTest = () => {
     setMode(true);
@@ -46,22 +73,23 @@ export default function Home() {
   const newTest = () => {
     setMode(false);
     restart();
-    // TODO: get new code snippets
+    getNewSnippet();
   };
-
-  // TODO: change this later
-  // update words w hardcoded code
-  useEffect(() => {
-    updateWords(code);
-  }, [words]);
 
   if (state == "finish") {
     return (
-      <Result stats={stats} currLang={currLang} setCurrLang={setCurrLang} newTest={newTest} />
+      <Result 
+        stats={stats} 
+        currLang={currLang} 
+        setCurrLang={setCurrLang} 
+        newTest={newTest} 
+        words={words}
+        />
     );
   } else {
     return (
       <TypeTest
+        getNewSnippet={getNewSnippet}
         state={state}
         typeMode={typeMode}
         currLang={currLang}
