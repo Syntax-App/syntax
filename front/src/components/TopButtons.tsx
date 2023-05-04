@@ -19,15 +19,16 @@ const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 export const TEXT_timer_accessible_name = "time-left";
 
 interface TopButtonsProps {
-    typeMode: boolean;
-    currLang: string;
-    setCurrLang: React.Dispatch<React.SetStateAction<string>>;
-    timeLeft: number;
-    errors: number;
-    totalTyped: number;
-    stats: {acc: number, lpm: number};
-    setStats: React.Dispatch<React.SetStateAction<{acc: number, lpm: number}>>;
-    lpm: number;
+  typeMode: boolean;
+  currLang: string;
+  setCurrLang: React.Dispatch<React.SetStateAction<string>>;
+  timeLeft: number;
+  errors: number;
+  totalTyped: number;
+  stats: {acc: number, lpm: number};
+  setStats: React.Dispatch<React.SetStateAction<{acc: number, lpm: number}>>;
+  lpm: number;
+  getNewSnippet: () => void;
 }
   
 export default function TopButtons(props: TopButtonsProps) {
@@ -119,6 +120,7 @@ export default function TopButtons(props: TopButtonsProps) {
             width={40}
             variant="outline"
             leftIcon={<RepeatIcon />}
+            onClick={() => props.getNewSnippet()}
           >
             REGENERATE
           </Button>

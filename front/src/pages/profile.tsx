@@ -45,7 +45,6 @@ export default function Profile() {
 
   useEffect(() => {
     if (!loading) {
-      console.log(userInfo);
       if (userInfo && userInfo.stats) {
         setStats(userInfo.stats);
       } else {

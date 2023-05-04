@@ -29,7 +29,6 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { State } from "@/pages/TypingTestInterface/hooks/useEngine";
 
-
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
 const code = `class Main { 
@@ -71,6 +70,7 @@ interface ResultProps {
   currLang: string,
   setCurrLang: React.Dispatch<React.SetStateAction<string>>;
   newTest: () => void;
+  words: string;
 }
 
 export default function Result(props: ResultProps) {
@@ -113,7 +113,7 @@ export default function Result(props: ResultProps) {
                 >
                 <pre>
                   <code>
-                    {code}
+                    {props.words}
                   </code>
                 </pre>
               </Box>

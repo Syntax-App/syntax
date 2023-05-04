@@ -10,6 +10,7 @@ import edu.brown.cs.student.main.algo.snippets.Snippets.SnippetsJSON;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler;
+import edu.brown.cs.student.main.server.types.User;
 import edu.brown.cs.student.main.server.utils.JSONUtils;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -55,18 +56,26 @@ public class StartHandler implements Route {
     public Object handle(Request request, Response response) {
         // this is where we will call our algorithm!
         try {
-            //String email = request.queryParams("email");
-//            CollectionReference users = db.collection("users");
-//            Query query = users.whereEqualTo("email", email);
-//            ApiFuture<QuerySnapshot> querySnapshot = query.get();
-            //double userExperience =  querySnapshot.get().getDocuments().get(0).getData().get("exp");
+            // get email param
+            String email = request.queryParams("email");
+            String lang = request.queryParams("lang");
 
-            double userExperience = 2.0;
-            String email = "daniel_liu2@brown.edu";
+            // get user with the email
+            CollectionReference users = this.db.collection("users");
+            Query query = users.whereEqualTo("email", email);
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            User currUser =  querySnapshot.get().getDocuments().get(0).toObject(User.class);
+
+            // get exp stat
+            double userExperience = currUser.getStats().getExp();
+
+//            double userExperience = 2.0;
+//            String email = "daniel_liu2@brown.edu";
+
             int snippetId;
 
             if (this.snippetStack.containsKey(email)) {
-                if (snippetStack.get(email).size() > 1) {
+                if (this.snippetStack.get(email).size() > 1) {
                     snippetId = this.snippetStack.get(email).pop();
                 } else {
                     snippetId = this.snippetStack.get(email).pop();
@@ -160,8 +169,8 @@ public class StartHandler implements Route {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "success");
             HashMap<String, String> dataMap = new HashMap<>();
-            dataMap.put("snippet", snippet);
-            dataMap.put("explanation", explanation);
+            dataMap.put("snippet", this.snippet);
+            dataMap.put("explanation", this.explanation);
             responseMap.put("data", dataMap);
             return SerializeHelper.helpSerialize(responseMap);
         }
@@ -179,7 +188,7 @@ public class StartHandler implements Route {
         public String serialize() {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "error");
-            responseMap.put("error_message", error_message());
+            responseMap.put("error_message", this.error_message());
             return SerializeHelper.helpSerialize(responseMap);
         }
     }
