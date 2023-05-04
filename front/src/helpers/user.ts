@@ -10,22 +10,7 @@ export async function requestCreateUser(
       ? pic
       : "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
   });
-
   return response.json();
-
-  // const test = await response.json();
-  // console.log(test);
-
-  // return response.json();
-  // const response = await postData("http://localhost:4000/user/create", {
-  //   name: name,
-  //   email: email,
-  //   pic: pic
-  //     ? pic
-  //     : "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-  // });
-  // return response.json();
-  //console.log("hello")
 }
 
 export async function requestUpdateUserStats(
@@ -45,6 +30,15 @@ export async function requestUpdateUserStats(
 export async function requestGetUser(email: string) {
   const response = await fetch("http://localhost:4000/user/get?email=" + email);
   return await response.json();
+}
+
+export async function requestRankings() {
+  const response = await fetch("http://localhost:4000/user/ranking");
+  const json = await response.json();
+  return (
+    json.data.ranking
+    
+  );
 }
 
 // copied from https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
