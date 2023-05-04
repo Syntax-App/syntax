@@ -6,7 +6,6 @@ import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.types.User;
 import edu.brown.cs.student.main.server.types.UserStats;
-import edu.brown.cs.student.main.server.utils.JSONUtils;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -43,7 +42,7 @@ public class UserRankHandler implements Route {
 
             // case where there are no users returned
             if (users.isEmpty()) {
-                return new RankFailureResponse("error", "there are no users in the database");
+                return new RankFailureResponse("error", "there are no users in the database").serialize();
             }
 
             // convert all users to User class
@@ -51,9 +50,6 @@ public class UserRankHandler implements Route {
                 User user = userDoc.toObject(User.class);
                 userList.add(user);
             }
-
-            System.out.println(userList.get(0).getStats());
-            System.out.println(userList.get(0).getName());
 
             // sort users based on their highlpm
             userList.sort((u1, u2) -> Double.compare(u2.getStats().getHighlpm(), u1.getStats().getHighlpm()));
@@ -63,7 +59,7 @@ public class UserRankHandler implements Route {
             System.out.println(e.getMessage());
         }
 
-        return new RankFailureResponse("error", "YUH");
+        return new RankFailureResponse("error", "YUH").serialize();
     }
 
     public record RankSuccessResponse(String status, List<User> users) {
