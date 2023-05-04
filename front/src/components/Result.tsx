@@ -76,7 +76,6 @@ interface ResultProps {
 export default function Result(props: ResultProps) {
   const { currentUser, methods } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const router = useRouter();
 
   // on mount, update stats
   useEffect(() => {

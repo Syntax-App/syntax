@@ -1,4 +1,3 @@
-import { parse } from "path";
 import UserType from "../pages/TypingTestInterface/TypeTestComponents/UserType";
 import { useEffect, useRef, useState } from "react";
 
