@@ -32,6 +32,15 @@ export async function requestGetUser(email: string) {
   return await response.json();
 }
 
+export async function requestRankings() {
+  const response = await fetch("http://localhost:4000/user/ranking");
+  const json = await response.json();
+  return (
+    json.data.ranking
+    
+  );
+}
+
 // copied from https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 async function postData(url = "", data = {}) {
   // Default options are marked with *
