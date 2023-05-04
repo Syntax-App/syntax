@@ -19,6 +19,7 @@ export interface IAuthContext {
   currentUser: User | undefined;
   userInfo: IUserInfo | undefined;
   methods: IAuthMethods | undefined;
+  loading: boolean;
 }
 
 export interface IAuthMethods {
@@ -44,6 +45,7 @@ const emptyFunc = async () => {
 const defaultState: IAuthContext = {
   currentUser: undefined,
   userInfo: undefined,
+  loading: false,
   methods: {
     emailLogin: emptyFunc,
     emailSignup: emptyFunc,
@@ -64,9 +66,11 @@ export function AuthProvider({ children }: any) {
   const [currentUser, setCurrentUser] = useState<User>();
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const googleProvider = new GoogleAuthProvider();
+  const [loading, setloading] = useState<boolean>(true)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setloading(true);
       if (user) {
         setCurrentUser(user);
         if (user.email) {
@@ -84,11 +88,13 @@ export function AuthProvider({ children }: any) {
           requestGetUser(user.email).then((r) => {
             if (r.status === "success") {
               setUserInfo(r.data.user);
+              setloading(false);
             }
           });
         }
       } else {
         setCurrentUser(undefined);
+        setloading(false);
       }
     });
     return unsubscribe;
@@ -139,11 +145,9 @@ export function AuthProvider({ children }: any) {
             result.user.email,
             result.user.photoURL
           ).then((userInf) => {
-            console.log(userInf);
             setUserInfo(userInf.data.user);
           });
         }
-        //setCurrentUser(result.user);
       })
       .catch((error: FirebaseError) => {
         console.log(error.code);
@@ -168,6 +172,7 @@ export function AuthProvider({ children }: any) {
   const value: IAuthContext = {
     currentUser: currentUser,
     userInfo: userInfo,
+    loading: loading,
     methods: { emailLogin, emailSignup, googleLogin, signout, updateUserStats },
   };
 

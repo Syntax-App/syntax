@@ -24,14 +24,6 @@ interface UserStats {
   highlpm: number;
 }
 
-let ranking = [
-  { username: "hmasamur", lpm: 87 },
-  { username: "aymann", lpm: 85 },
-  { username: "dantheman", lpm: 78 },
-  { username: "itsjess", lpm: 75 },
-  { username: "nimtelson", lpm: 70 },
-];
-
 export default function Leaderboard() {
   const [rankingList, setRankingList] = useState<Array<User>>([]);
 
