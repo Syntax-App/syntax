@@ -113,21 +113,22 @@ public class StartHandler implements Route {
 
             String snippetContent = json.array()[snippetId].text();
 
-            String url = "https://api.openai.com/v1/chat/completions";
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Authorization", "Bearer INSERT KEY HERE");
-            Map<String, Object> data = jsonUtils.getParsedJSON(reader);
-            data.put("model", "gpt-3.5-turbo");
-            data.put("prompt", "Explain this code snippet: \n" + snippetContent);
-            data.put("max_tokens", 100);
-            data.put("temperature", 1.0);
-
-            connection.setDoOutput(true);
-            connection.getOutputStream().write(data.toString().getBytes());
-            String explanation = new BufferedReader(new InputStreamReader(connection.getInputStream())).lines()
-                .reduce((a, b) -> a + b).get();
+//            String url = "https://api.openai.com/v1/chat/completions";
+//            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+//            connection.setRequestMethod("POST");
+//            connection.setRequestProperty("Content-Type", "application/json");
+//            connection.setRequestProperty("Authorization", "Bearer INSERT KEY HERE");
+//            Map<String, Object> data = jsonUtils.getParsedJSON(reader);
+//            data.put("model", "gpt-3.5-turbo");
+//            data.put("prompt", "Explain this code snippet: \n" + snippetContent);
+//            data.put("max_tokens", 100);
+//            data.put("temperature", 1.0);
+//
+//            connection.setDoOutput(true);
+//            connection.getOutputStream().write(data.toString().getBytes());
+//            String explanation = new BufferedReader(new InputStreamReader(connection.getInputStream())).lines()
+//                .reduce((a, b) -> a + b).get();
+            String explanation = "code explanation goes here";
 
             //String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
             return new StartSuccessResponse("success", snippetContent, explanation).serialize();
