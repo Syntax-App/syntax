@@ -23,7 +23,7 @@ import spark.Response;
 import spark.Route;
 
 public class EndHandler implements Route {
-    private Firestore db;
+    private final Firestore db;
 
     /**
      * LoadHandler constructor.
@@ -56,7 +56,7 @@ public class EndHandler implements Route {
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
         if (querySnapshot.get().getDocuments().isEmpty()) {
-            return new GetUserFailureResponse("error", "User with given email does not exist!").serialize();
+            return new EndFailureResponse("error", "User with given email does not exist!").serialize();
         }
 
         User currUser = querySnapshot.get().getDocuments().get(0).toObject(User.class);
@@ -75,13 +75,12 @@ public class EndHandler implements Route {
 
         // calculate new averages
         int new_numraces = curr_stats.getNumraces() + 1;
-        double new_avglpm = (curr_stats.getAvglpm()*curr_stats.getNumraces() + new_stats.recentlpm())/new_numraces;
-        double new_avgacc = (curr_stats.getAvgacc()*curr_stats.getNumraces() + new_stats.recentacc())/new_numraces;
+        double new_avglpm = (curr_stats.getAvglpm() * curr_stats.getNumraces() + new_stats.recentlpm()) / new_numraces;
+        double new_avgacc = (curr_stats.getAvgacc() * curr_stats.getNumraces() + new_stats.recentacc()) / new_numraces;
         double new_exp = curr_stats.getExp() + .1;
         if (curr_stats.getExp() >= 10) new_exp = 10;
 
         UserStats updatedStats = new UserStats(curr_highlpm, curr_highacc, new_numraces, new_avglpm, new_avgacc, new_exp);
-//        currUser.setStats(updatedStats);
 
         // get document id
         DocumentReference docRef = users.document(querySnapshot.get().getDocuments().get(0).getId());
@@ -89,21 +88,21 @@ public class EndHandler implements Route {
         // update user at id
         docRef.update("stats", updatedStats);
 
-        return new GetUserFailureResponse("error", "Not yet implemented!");
+        return new EndSuccessResponse("success", updatedStats);
     }
 
     /**
      * Success response for loading. Serializes the result ("success") and the filepath of file loaded.
      */
-    public record StartSuccessResponse(String status, String snippet) {
+    public record EndSuccessResponse(String status, UserStats stats) {
         /**
          * @return this response, serialized as Json
          */
         public String serialize() {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "success");
-            HashMap<String, String> dataMap = new HashMap<>();
-            dataMap.put("snippet", this.snippet);
+            HashMap<String, UserStats> dataMap = new HashMap<>();
+            dataMap.put("updated_stats", this.stats);
             responseMap.put("data", dataMap);
             return SerializeHelper.helpSerialize(responseMap);
         }
@@ -113,7 +112,7 @@ public class EndHandler implements Route {
     /**
      * Failure response for loading. Serializes the error type and the error message.
      */
-    public record StartFailureResponse(String status, String error_message) {
+    public record EndFailureResponse(String status, String error_message) {
 
         /**
          * @return this response, serialized as Json

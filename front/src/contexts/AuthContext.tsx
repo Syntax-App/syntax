@@ -26,7 +26,7 @@ export interface IAuthMethods {
   emailSignup: () => Promise<void>;
   googleLogin: () => Promise<void>;
   signout: () => Promise<void>;
-  updateUserStats: () => Promise<void>;
+  updateUserStats: (recentlpm: number, recentacc: number) => Promise<void>;
 }
 
 export interface IUserInfo {
@@ -62,7 +62,7 @@ export function useAuth() {
 export function AuthProvider({ children }: any) {
   const auth = getAuth(app);
   const [currentUser, setCurrentUser] = useState<User>();
-  const [userInfo, setUserInfo] = useState<any>();
+  const [userInfo, setUserInfo] = useState<IUserInfo>();
   const googleProvider = new GoogleAuthProvider();
 
   useEffect(() => {
@@ -151,9 +151,12 @@ export function AuthProvider({ children }: any) {
       });
   }
 
-  async function updateUserStats() {
-    return requestUpdateUserStats("my@email.com", 40, 20).then((userInf) => {
-      console.log(userInf);
+  async function updateUserStats(recentlpm: number, recentacc: number) {
+    //TODO: decide what to do if user is a guest
+    if (userInfo === undefined) return;
+    // update stats if logged in
+    return requestUpdateUserStats(userInfo.email, recentlpm, recentacc).then((res) => {
+      console.log(res);
     });
   }
 

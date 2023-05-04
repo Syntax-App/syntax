@@ -4,6 +4,7 @@ import edu.brown.cs.student.main.server.handlers.race.EndHandler;
 import edu.brown.cs.student.main.server.handlers.race.StartHandler;
 import edu.brown.cs.student.main.server.handlers.user.UserCreateHandler;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler;
+import edu.brown.cs.student.main.server.handlers.user.UserRankHandler;
 import spark.Spark;
 
 import static spark.Spark.*;
@@ -55,6 +56,7 @@ public class Server {
         // User routes!
         Spark.get("user/get", new UserGetHandler(states));
         Spark.post("user/create", new UserCreateHandler(states));
+        Spark.get("user/ranking", new UserRankHandler(states));
 
         // Race routes!
         Spark.get("race/start", new StartHandler(states));

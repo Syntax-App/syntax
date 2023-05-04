@@ -8,7 +8,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { FaUser } from "react-icons/fa";
 import { IoIosStats } from "react-icons/io";
 import { Icon } from "@chakra-ui/react";
 import Link from "next/link";

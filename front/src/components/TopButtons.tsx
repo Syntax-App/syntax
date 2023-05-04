@@ -91,14 +91,6 @@ export default function TopButtons(props: TopButtonsProps) {
             <Text variant={"label"}>LPM</Text>
             <Text variant={"bigNumber"}>{props.stats.lpm}</Text>
           </Flex>
-          {/* <Flex
-            flexDir={"column"}
-            alignItems={"center"}
-            justifyContent={"space-between"}
-          >
-            <Text variant={"label"}> ERRORS</Text>
-            <Text variant={"bigNumber"}> {props.errors}</Text>
-          </Flex> */}
         </Flex>
         <HStack gap={4}>
           <Menu>
