@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import spark.Request;
 import spark.Response;
@@ -60,11 +61,28 @@ public class StartHandler implements Route {
             String email = request.queryParams("email");
             String lang = request.queryParams("lang");
 
+            JSONUtils jsonUtils = new JSONUtils();
+            File snippetsFile = new File(
+                "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
+            Reader reader = new FileReader(snippetsFile);
+            String snippetsString = jsonUtils.readerToString(reader);
+
+            SnippetsJSON json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
+
+            // if user is not logged in
+            if (email == null) {
+                Graph graph = new Graph();
+                int randID = graph.getAvailableIDs()
+                    .get(new Random().nextInt(graph.getAvailableIDs().size()));
+                return new StartSuccessResponse("success", json.array()[randID].text(),
+                    "code explanation here").serialize();
+            }
+
             // get user with the email
             CollectionReference users = this.db.collection("users");
             Query query = users.whereEqualTo("email", email);
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
-            User currUser =  querySnapshot.get().getDocuments().get(0).toObject(User.class);
+            User currUser = querySnapshot.get().getDocuments().get(0).toObject(User.class);
 
             // get exp stat
             double userExperience = currUser.getStats().getExp();
@@ -113,13 +131,6 @@ public class StartHandler implements Route {
                 this.snippetStack.put(email, linkedSnippetIDs);
             }
 
-            JSONUtils jsonUtils = new JSONUtils();
-            File snippetsFile = new File("src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
-            Reader reader = new FileReader(snippetsFile);
-            String snippetsString = jsonUtils.readerToString(reader);
-
-            SnippetsJSON json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
-
             String snippetContent = json.array()[snippetId].text();
 
 //            String url = "https://api.openai.com/v1/chat/completions";
@@ -141,19 +152,16 @@ public class StartHandler implements Route {
 
             //String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
             return new StartSuccessResponse("success", snippetContent, explanation).serialize();
-        } catch (Exception e) {
-            return new StartFailureResponse("error", e.getMessage()).serialize();
+//        } catch (Exception e) {
+//            return new StartFailureResponse("error", e.getMessage()).serialize();
+//        }
+        } catch (FileNotFoundException | ExecutionException | InterruptedException e) {
+            return new StartFailureResponse("error", "Snippet file not found!").serialize();
+        } catch (IOException e) {
+            return new StartFailureResponse("error", "Could not open snippet file").serialize();
+        } catch (IndexOutOfBoundsException e) {
+            return new StartFailureResponse("error", "User not found").serialize();
         }
-//        } catch (FileNotFoundException e) {
-//            return new StartFailureResponse("error", "Snippet file not found!").serialize();
-//        } catch (IOException e) {
-//            return new StartFailureResponse("error", "Could not open snippet file").serialize();
-//        }
-//        } catch (ExecutionException e) {
-//            return new StartFailureResponse("error", "Snippet file not found!").serialize();
-//        } catch (InterruptedException e) {
-//            return new StartFailureResponse("error", "Snippet file not found!").serialize();
-//        }
 
     }
 
