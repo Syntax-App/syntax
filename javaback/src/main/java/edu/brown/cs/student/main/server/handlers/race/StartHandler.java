@@ -11,6 +11,8 @@ import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler;
 import edu.brown.cs.student.main.server.utils.JSONUtils;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,31 +69,39 @@ public class StartHandler implements Route {
             int snippetId;
 
             if (this.snippetStack.containsKey(email)) {
-                if (!snippetStack.isEmpty()) {
+                if (snippetStack.get(email).size() > 1) {
                     snippetId = this.snippetStack.get(email).pop();
                 } else {
+                    snippetId = this.snippetStack.get(email).pop();
                     Graph graph = new Graph();
-                    System.out.println("hello");
                     graph.constructGraph(userExperience);
-                    System.out.println("hellllloooo");
                     List<Integer> snippetIDs = graph.findPath(graph.getHead());
-
-                    System.out.println("hello!");
-
                     LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
-                    snippetId = linkedSnippetIDs.pop();
                     this.snippetStack.put(email, linkedSnippetIDs);
+
+//                    if (!this.snippetStack.isEmpty()) {
+//
+//                    } else {
+//                        LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
+//                        this.snippetStack.put(email, linkedSnippetIDs);
+//                    }
+//                    Graph graph = new Graph();
+//                    System.out.println("hello");
+//                    graph.constructGraph(userExperience);
+//                    System.out.println("hellllloooo");
+//                    List<Integer> snippetIDs = graph.findPath(graph.getHead());
+//
+//                    System.out.println("hello!");
+//
+//                    LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
+//                    snippetId = linkedSnippetIDs.pop();
+//                    this.snippetStack.put(email, linkedSnippetIDs);
                 }
 
             } else {
                 Graph graph = new Graph();
-                System.out.println("hello");
                 graph.constructGraph(userExperience);
-                System.out.println("hellllloooo");
                 List<Integer> snippetIDs = graph.findPath(graph.getHead());
-
-                System.out.println("hello!");
-
                 LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
                 snippetId = linkedSnippetIDs.pop();
                 this.snippetStack.put(email, linkedSnippetIDs);
@@ -101,14 +111,30 @@ public class StartHandler implements Route {
             File snippetsFile = new File("src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
             Reader reader = new FileReader(snippetsFile);
             String snippetsString = jsonUtils.readerToString(reader);
-            System.out.println(snippetsString);
 
             SnippetsJSON json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
 
             String snippetContent = json.array()[snippetId].text();
 
+            // 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
+            String url = "https://api.openai.com/v1/chat/completions";
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Authorization", "Bearer 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");
+            Map<String, Object> data = jsonUtils.getParsedJSON(reader);
+            data.put("model", "gpt-3.5-turbo");
+            data.put("prompt", "Explain this code snippet: \n" + snippetContent);
+            data.put("max_tokens", 100);
+            data.put("temperature", 1.0);
+
+            connection.setDoOutput(true);
+            connection.getOutputStream().write(data.toString().getBytes());
+            String explanation = new BufferedReader(new InputStreamReader(connection.getInputStream())).lines()
+                .reduce((a, b) -> a + b).get();
+
             //String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
-            return new StartSuccessResponse("success", snippetContent).serialize();
+            return new StartSuccessResponse("success", snippetContent, explanation).serialize();
         } catch (Exception e) {
             return new StartFailureResponse("error", e.getMessage()).serialize();
         }
@@ -129,7 +155,7 @@ public class StartHandler implements Route {
     /**
      * Success response for loading. Serializes the result ("success") and the filepath of file loaded.
      */
-    public record StartSuccessResponse(String status, String snippet) {
+    public record StartSuccessResponse(String status, String snippet, String explanation) {
         /**
          * @return this response, serialized as Json
          */
@@ -138,6 +164,7 @@ public class StartHandler implements Route {
             responseMap.put("status", "success");
             HashMap<String, String> dataMap = new HashMap<>();
             dataMap.put("snippet", snippet);
+            dataMap.put("explanation", explanation);
             responseMap.put("data", dataMap);
             return SerializeHelper.helpSerialize(responseMap);
         }

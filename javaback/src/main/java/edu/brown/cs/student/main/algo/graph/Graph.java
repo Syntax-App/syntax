@@ -53,12 +53,13 @@ public class Graph {
 
     public List<Integer> findPath(Node node) {
         // if we aren't at end of graph
-        if (node.getOutgoingEdges().size() > 0) {
+        // node.getOutgoingEdges().size() > 0
+        if (node != null) {
             // "randomly" choose edge to take based on weights
             // Credit: https://stackoverflow.com/questions/9330394/how-to-pick-an-item-by-its-probability
             double p = Math.random();
             double cumulativeProbability = 0;
-            Node nextNode;
+            Node nextNode = null;
             for (Edge edge : node.getOutgoingEdges()) {
                 cumulativeProbability += edge.getWeight();
                 // chose an edge
@@ -66,16 +67,16 @@ public class Graph {
                     nextNode = edge.getDestination();
                     // add snippet to list
                     this.snippetIDs.add(edge.getDestination().getSnippetID());
-                    // recursively go down the chosen edge
-                    return this.findPath(nextNode);
+                    break;
+                    // return this.findPath(nextNode);
                 }
             }
+            // recursively go down the chosen edge
+            return this.findPath(nextNode);
             // base case: end of graph
         } else {
             return this.snippetIDs;
         }
-        return new ArrayList<>();
-        // base case: end of graph
     }
 
     public void constructGraph(double userExperience) {
