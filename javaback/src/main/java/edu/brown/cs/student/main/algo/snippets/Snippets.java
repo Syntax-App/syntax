@@ -12,6 +12,7 @@ public class Snippets {
     // represents a Feature
     public record Snippet(
         @Json(name = "text") String text,
-        @Json(name = "difficulty") double difficulty
+        @Json(name = "difficulty") double difficulty,
+        @Json(name = "explanation") String explanation
     ){}
 }
