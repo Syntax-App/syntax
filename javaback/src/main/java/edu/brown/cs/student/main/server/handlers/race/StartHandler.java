@@ -43,6 +43,7 @@ import java.util.Map;
 public class StartHandler implements Route {
     private Firestore db;
     private Map<String, LinkedList<Integer>> snippetStack;
+    private StringBuilder completionString;
 
     /**
      * LoadHandler constructor.
@@ -52,7 +53,9 @@ public class StartHandler implements Route {
     public StartHandler(States states) {
         this.db = states.getDb();
         this.snippetStack = states.getSnippetStacks();
+        this.completionString = new StringBuilder();
     }
+
 
     /**
      * Uses filepath and hasHeader params to parse a CSV and set the active file variables.
@@ -102,9 +105,10 @@ public class StartHandler implements Route {
 
                 service.streamChatCompletion(chatCompletionRequest)
                     .doOnError(Throwable::printStackTrace)
-                    .blockingForEach(System.out::println);
+                    .blockingForEach(this::testLambda);
                 // List<ChatMessage> responseMessages = chatCompletionRequest.getMessages();
-                String explanation = "";
+                String explanation = this.completionString.toString();
+                this.completionString = new StringBuilder();
 //                Flowable<ChatCompletionChunk> responseMessages = service.streamChatCompletion(chatCompletionRequest);
 //                for (ChatCompletionChunk m : responseMessages.toList().blockingGet()) {
 //                    explanation = explanation + " " + m.getChoices().get(0).getMessage().getContent();
@@ -183,6 +187,10 @@ public class StartHandler implements Route {
             return new StartFailureResponse("error", "User not found").serialize();
         }
 
+    }
+
+    private void testLambda(ChatCompletionChunk chatCompletionChunk) {
+        this.completionString.append(chatCompletionChunk.getChoices().get(0).getMessage().getContent());
     }
 
 
