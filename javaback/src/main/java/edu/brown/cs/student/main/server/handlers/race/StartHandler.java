@@ -190,7 +190,7 @@ public class StartHandler implements Route {
             OpenAiService service = new OpenAiService(token);
 
             final List<ChatMessage> messages = new ArrayList<>();
-            final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippet);
+            final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippetContent);
             messages.add(systemMessage);
             ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
                 .builder()
