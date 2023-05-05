@@ -31,27 +31,6 @@ import { State } from "@/pages/TypingTestInterface/hooks/useEngine";
 
 const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
 
-const code = `class Main { 
-  public static void main(String[] args) {
-    Map<String, String> languages = new HashMap<>(); 
-    languages.put("pos3", "JS");
-    languages.put("pos1", "Java");
-    languages.put("pos2", "Python");
-    System.out.println("Map: " + languages);
-    TreeMap<String, String> sortedNumbers = new TreeMap<>(languages);
-    System.out.println("Map with sorted Key" + sortedNumbers); 
-    Map<String, String> languages = new HashMap<>(); 
-    languages.put("pos3", "JS");
-    languages.put("pos1", "Java");
-    languages.put("pos2", "Python");
-    System.out.println("Map: " + languages);
-    TreeMap<String, String> sortedNumbers = new TreeMap<>(languages);
-    System.out.println("Map with sorted Key" + sortedNumbers); 
-  } 
-}`;
-
-const gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
-
 const ChatGPTIcon = createIcon({
   displayName: 'ChatGPTIcon',
   viewBox: '0 0 340 342',
@@ -71,6 +50,7 @@ interface ResultProps {
   setCurrLang: React.Dispatch<React.SetStateAction<string>>;
   newTest: () => void;
   words: string;
+  gptSays: string;
 }
 
 export default function Result(props: ResultProps) {
@@ -136,7 +116,7 @@ export default function Result(props: ResultProps) {
                   <ModalHeader>ChatGPT Says...</ModalHeader>
                   <ModalCloseButton />
                   <ModalBody>
-                    {gptSays}
+                    {props.gptSays}
                   </ModalBody>
                   <ModalFooter>
                     <Button onClick={onClose}>Close</Button>

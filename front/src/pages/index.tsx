@@ -27,6 +27,7 @@ export default function Home() {
   const [typeMode, setMode] = useState(false);
   const [stats, setStats] = useState({ acc: 0, lpm: 0 });
   const { userInfo, methods, loading } = useAuth();
+  const [gptSays, setGptSays] = useState("");
   const {
     state,
     setState,
@@ -42,16 +43,14 @@ export default function Home() {
   } = useEngine();
 
   async function getNewSnippet() {
-    if (userInfo && userInfo.email) {
-      requestCode(currLang, userInfo.email)
-      .then((snippet) => {
-        updateWords(snippet);
+    requestCode(currLang, userInfo?.email)
+      .then((data) => {
+        updateWords(data.snippet);
+        setGptSays(data.explanation);
       })
       .catch((err) => {
         console.log(err);
       });
-    }
-    //TODO: handle case where user is not logged in
   }
 
   // update words when home mounts
@@ -60,10 +59,6 @@ export default function Home() {
       getNewSnippet();
     }
   }, [loading]);
-
-  // useEffect(() => {
-  //   updateWords(code);
-  // }, []);
 
   const startTest = () => {
     setMode(true);
@@ -84,6 +79,7 @@ export default function Home() {
         setCurrLang={setCurrLang} 
         newTest={newTest} 
         words={words}
+        gptSays={gptSays}
         />
     );
   } else {
@@ -99,6 +95,7 @@ export default function Home() {
         typed={typed}
         totalTyped={totalTyped}
         words={words}
+        gptSays={gptSays}
         startTest={startTest}
         restart={restart}
         stats={stats}
