@@ -5,6 +5,9 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.algo.graph.Graph;
 import edu.brown.cs.student.main.algo.snippets.Snippets.SnippetsJSON;
 import edu.brown.cs.student.main.server.SerializeHelper;
@@ -74,8 +77,36 @@ public class StartHandler implements Route {
                 Graph graph = new Graph();
                 int randID = graph.getAvailableIDs()
                     .get(new Random().nextInt(graph.getAvailableIDs().size()));
-                return new StartSuccessResponse("success", json.array()[randID].text(),
-                    "code explanation here").serialize();
+                String snippet = json.array()[randID].text();
+
+                String url = "https://api.openai.com/v1/chat/completions";
+                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Authorization", "Bearer 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");
+
+                Moshi moshi = new Moshi.Builder().build();
+                JsonAdapter<Map<String, Object>> adapter = moshi.adapter(
+                    Types.newParameterizedType(Map.class, String.class, Object.class));
+                Map<String, Object> data = new HashMap<>();
+                data.put("model", "gpt-3.5-turbo");
+                // data.put("model", "text-davinci-003");
+                data.put("prompt", "Explain this code snippet: \n" + snippet);
+                data.put("max_tokens", 4000);
+                data.put("temperature", 1.0);
+
+                connection.getOutputStream().write(adapter.toJson(data).getBytes());
+                BufferedReader in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuffer explanation = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    explanation.append(inputLine);
+                }
+                in.close();
+                return new StartSuccessResponse("success", snippet,
+                    explanation.toString()).serialize();
             }
 
             // get user with the email
@@ -86,10 +117,6 @@ public class StartHandler implements Route {
 
             // get exp stat
             double userExperience = currUser.getStats().getExp();
-
-//            double userExperience = 2.0;
-//            String email = "daniel_liu2@brown.edu";
-
             int snippetId;
 
             if (this.snippetStack.containsKey(email)) {
@@ -102,24 +129,6 @@ public class StartHandler implements Route {
                     List<Integer> snippetIDs = graph.findPath(graph.getHead());
                     LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
                     this.snippetStack.put(email, linkedSnippetIDs);
-
-//                    if (!this.snippetStack.isEmpty()) {
-//
-//                    } else {
-//                        LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
-//                        this.snippetStack.put(email, linkedSnippetIDs);
-//                    }
-//                    Graph graph = new Graph();
-//                    System.out.println("hello");
-//                    graph.constructGraph(userExperience);
-//                    System.out.println("hellllloooo");
-//                    List<Integer> snippetIDs = graph.findPath(graph.getHead());
-//
-//                    System.out.println("hello!");
-//
-//                    LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
-//                    snippetId = linkedSnippetIDs.pop();
-//                    this.snippetStack.put(email, linkedSnippetIDs);
                 }
 
             } else {
@@ -133,22 +142,26 @@ public class StartHandler implements Route {
 
             String snippetContent = json.array()[snippetId].text();
 
-//            String url = "https://api.openai.com/v1/chat/completions";
-//            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-//            connection.setRequestMethod("POST");
-//            connection.setRequestProperty("Content-Type", "application/json");
-//            connection.setRequestProperty("Authorization", "Bearer INSERT KEY HERE");
-//            Map<String, Object> data = jsonUtils.getParsedJSON(reader);
-//            data.put("model", "gpt-3.5-turbo");
-//            data.put("prompt", "Explain this code snippet: \n" + snippetContent);
-//            data.put("max_tokens", 100);
-//            data.put("temperature", 1.0);
-//
-//            connection.setDoOutput(true);
-//            connection.getOutputStream().write(data.toString().getBytes());
-//            String explanation = new BufferedReader(new InputStreamReader(connection.getInputStream())).lines()
-//                .reduce((a, b) -> a + b).get();
-            String explanation = "code explanation goes here";
+            String url = "https://api.openai.com/v1/chat/completions";
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Authorization", "Bearer INSERT KEY HERE");
+
+            Moshi moshi = new Moshi.Builder().build();
+            JsonAdapter<Map<String, Object>> adapter = moshi.adapter(
+                Types.newParameterizedType(Map.class, String.class, Object.class));
+            Map<String, Object> data = new HashMap<>();
+            data.put("model", "gpt-3.5-turbo");
+            data.put("prompt", "Explain this code snippet: \n" + snippetContent);
+            data.put("max_tokens", 10);
+            data.put("temperature", 1.0);
+
+            connection.getOutputStream().write(adapter.toJson(data).getBytes());
+            String explanation = new BufferedReader(new InputStreamReader(connection.getInputStream())).lines()
+                .reduce((a, b) -> a + b).get();
+            // String explanation = "code explanation goes here";
 
             //String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
             return new StartSuccessResponse("success", snippetContent, explanation).serialize();
@@ -158,7 +171,7 @@ public class StartHandler implements Route {
         } catch (FileNotFoundException | ExecutionException | InterruptedException e) {
             return new StartFailureResponse("error", "Snippet file not found!").serialize();
         } catch (IOException e) {
-            return new StartFailureResponse("error", "Could not open snippet file").serialize();
+            return new StartFailureResponse("error", "Could not open snippet file " + e.getMessage()).serialize();
         } catch (IndexOutOfBoundsException e) {
             return new StartFailureResponse("error", "User not found").serialize();
         }
