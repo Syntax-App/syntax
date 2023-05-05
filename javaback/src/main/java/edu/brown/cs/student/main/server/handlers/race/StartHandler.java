@@ -14,6 +14,8 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
 import com.theokanning.openai.service.OpenAiService;
 import edu.brown.cs.student.main.algo.graph.Graph;
+import edu.brown.cs.student.main.algo.snippets.GPTProxyCache;
+import edu.brown.cs.student.main.algo.snippets.Snippets.Snippet;
 import edu.brown.cs.student.main.algo.snippets.Snippets.SnippetsJSON;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
@@ -28,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -43,7 +46,9 @@ import java.util.Map;
 public class StartHandler implements Route {
     private Firestore db;
     private Map<String, LinkedList<Integer>> snippetStack;
-    private StringBuilder completionString;
+    private final StringBuilder completionString;
+    private GPTProxyCache cache;
+    private SnippetsJSON json;
 
     /**
      * LoadHandler constructor.
@@ -53,7 +58,20 @@ public class StartHandler implements Route {
     public StartHandler(States states) {
         this.db = states.getDb();
         this.snippetStack = states.getSnippetStacks();
+        try {
+            JSONUtils jsonUtils = new JSONUtils();
+            File snippetsFile = new File(
+                "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
+            Reader reader = new FileReader(snippetsFile);
+            String snippetsString = jsonUtils.readerToString(reader);
+
+            this.json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         this.completionString = new StringBuilder();
+        this.cache = new GPTProxyCache(100, 60, TimeUnit.MINUTES, this.json, this.completionString);
     }
 
 
@@ -73,49 +91,35 @@ public class StartHandler implements Route {
             String email = request.queryParams("email");
             String lang = request.queryParams("lang");
 
-            JSONUtils jsonUtils = new JSONUtils();
-            File snippetsFile = new File(
-                "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
-            Reader reader = new FileReader(snippetsFile);
-            String snippetsString = jsonUtils.readerToString(reader);
-
-            SnippetsJSON json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
-
             // if user is not logged in
             if (email == null) {
                 Graph graph = new Graph();
                 int randID = graph.getAvailableIDs()
                     .get(new Random().nextInt(graph.getAvailableIDs().size()));
-                String snippet = json.array()[randID].text();
+                String snippet = this.json.array()[randID].text();
 
-                String token = APIKeys.API_KEY;
-                OpenAiService service = new OpenAiService(token);
+//                String token = APIKeys.API_KEY;
+//                OpenAiService service = new OpenAiService(token);
+//
+//                final List<ChatMessage> messages = new ArrayList<>();
+//                final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippet);
+//                messages.add(systemMessage);
+//                ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
+//                    .builder()
+//                    .model("gpt-3.5-turbo")
+//                    .messages(messages)
+//                    .n(1)
+//                    .maxTokens(500)
+//                    .logitBias(new HashMap<>())
+//                    .build();
+//
+//                service.streamChatCompletion(chatCompletionRequest)
+//                    .doOnError(Throwable::printStackTrace)
+//                    .blockingForEach(this::testLambda);
 
-                final List<ChatMessage> messages = new ArrayList<>();
-                final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippet);
-                messages.add(systemMessage);
-                ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-                    .builder()
-                    .model("gpt-3.5-turbo")
-                    .messages(messages)
-                    .n(1)
-                    .maxTokens(500)
-                    .logitBias(new HashMap<>())
-                    .build();
-
-                service.streamChatCompletion(chatCompletionRequest)
-                    .doOnError(Throwable::printStackTrace)
-                    .blockingForEach(this::testLambda);
-                // List<ChatMessage> responseMessages = chatCompletionRequest.getMessages();
-                String explanation = this.completionString.toString();
-                this.completionString = new StringBuilder();
-//                Flowable<ChatCompletionChunk> responseMessages = service.streamChatCompletion(chatCompletionRequest);
-//                for (ChatCompletionChunk m : responseMessages.toList().blockingGet()) {
-//                    explanation = explanation + " " + m.getChoices().get(0).getMessage().getContent();
-//                }
-
-                // String explanation = json.array()[randID].explanation();
-                service.shutdownExecutor();
+                String explanation = this.cache.getExplanation(randID);
+//                this.completionString.setLength(0);
+//                service.shutdownExecutor();
                 return new StartSuccessResponse("success", snippet,
                     explanation).serialize();
             }
@@ -179,20 +183,13 @@ public class StartHandler implements Route {
 //        } catch (Exception e) {
 //            return new StartFailureResponse("error", e.getMessage()).serialize();
 //        }
-        } catch (FileNotFoundException | ExecutionException | InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             return new StartFailureResponse("error", "Snippet file not found!").serialize();
-        } catch (IOException e) {
-            return new StartFailureResponse("error", "Could not open snippet file " + e.getMessage()).serialize();
         } catch (IndexOutOfBoundsException e) {
             return new StartFailureResponse("error", "User not found").serialize();
         }
 
     }
-
-    private void testLambda(ChatCompletionChunk chatCompletionChunk) {
-        this.completionString.append(chatCompletionChunk.getChoices().get(0).getMessage().getContent());
-    }
-
 
     /**
      * Success response for loading. Serializes the result ("success") and the filepath of file loaded.
