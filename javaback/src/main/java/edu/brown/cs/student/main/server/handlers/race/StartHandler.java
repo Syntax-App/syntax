@@ -5,6 +5,10 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
+import com.theokanning.openai.completion.chat.ChatCompletionChunk;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
@@ -16,7 +20,9 @@ import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.config.APIKeys;
 import edu.brown.cs.student.main.server.types.User;
 import edu.brown.cs.student.main.server.utils.JSONUtils;
-
+import io.reactivex.Flowable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,22 +85,6 @@ public class StartHandler implements Route {
                     .get(new Random().nextInt(graph.getAvailableIDs().size()));
                 String snippet = json.array()[randID].text();
 
-//                String url = "https://api.openai.com/v1/chat/completions";
-//                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-//                connection.setRequestMethod("POST");
-//                connection.setRequestProperty("Content-Type", "application/json");
-//                connection.setDoOutput(true);
-//                connection.setRequestProperty("Authorization", "Bearer " + Constants.API_KEY);
-//
-//                Moshi moshi = new Moshi.Builder().build();
-//                JsonAdapter<Map<String, Object>> adapter = moshi.adapter(
-//                    Types.newParameterizedType(Map.class, String.class, Object.class));
-//                Map<String, Object> data = new HashMap<>();
-//                data.put("model", "gpt-3.5-turbo");
-//                // data.put("model", "text-davinci-003");
-//                data.put("prompt", "Explain this code snippet: \n" + snippet);
-//                data.put("max_tokens", 4000);
-//                data.put("temperature", 1.0);
                 String token = APIKeys.API_KEY;
                 OpenAiService service = new OpenAiService(token);
 
@@ -103,7 +93,7 @@ public class StartHandler implements Route {
                 messages.add(systemMessage);
                 ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
                     .builder()
-                    .model("gpt-3.5")
+                    .model("gpt-3.5-turbo")
                     .messages(messages)
                     .n(1)
                     .maxTokens(500)
@@ -113,20 +103,17 @@ public class StartHandler implements Route {
                 service.streamChatCompletion(chatCompletionRequest)
                     .doOnError(Throwable::printStackTrace)
                     .blockingForEach(System.out::println);
-
-                service.shutdownExecutor();
-
-//                connection.getOutputStream().write(adapter.toJson(data).getBytes());
-//                BufferedReader in = new BufferedReader(
-//                    new InputStreamReader(connection.getInputStream()));
-//                String inputLine;
-//                StringBuilder explanation = new StringBuilder();
-//                while ((inputLine = in.readLine()) != null) {
-//                    explanation.append(inputLine);
+                // List<ChatMessage> responseMessages = chatCompletionRequest.getMessages();
+                String explanation = "";
+//                Flowable<ChatCompletionChunk> responseMessages = service.streamChatCompletion(chatCompletionRequest);
+//                for (ChatCompletionChunk m : responseMessages.toList().blockingGet()) {
+//                    explanation = explanation + " " + m.getChoices().get(0).getMessage().getContent();
 //                }
-//                in.close();
+
+                // String explanation = json.array()[randID].explanation();
+                service.shutdownExecutor();
                 return new StartSuccessResponse("success", snippet,
-                    chatCompletionRequest.toString()).serialize();
+                    explanation).serialize();
             }
 
             // get user with the email
@@ -161,50 +148,30 @@ public class StartHandler implements Route {
             }
 
             String snippetContent = json.array()[snippetId].text();
-//
-//            String url = "https://api.openai.com/v1/chat/completions";
-//            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-//            connection.setRequestMethod("POST");
-//            connection.setRequestProperty("Content-Type", "application/json");
-//            connection.setDoOutput(true);
-//            connection.setRequestProperty("Authorization", "Bearer INSERT KEY HERE");
-//
-//            Moshi moshi = new Moshi.Builder().build();
-//            JsonAdapter<Map<String, Object>> adapter = moshi.adapter(
-//                Types.newParameterizedType(Map.class, String.class, Object.class));
-//            Map<String, Object> data = new HashMap<>();
-//            data.put("model", "gpt-3.5-turbo");
-//            data.put("prompt", "Explain this code snippet: \n" + snippetContent);
-//            data.put("max_tokens", 10);
-//            data.put("temperature", 1.0);
-//
-//            connection.getOutputStream().write(adapter.toJson(data).getBytes());
-//            String explanation = new BufferedReader(new InputStreamReader(connection.getInputStream())).lines()
-//                .reduce((a, b) -> a + b).get();
             // String explanation = "code explanation goes here";
-            String token = APIKeys.API_KEY;
-            OpenAiService service = new OpenAiService(token);
-
-            final List<ChatMessage> messages = new ArrayList<>();
-            final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippetContent);
-            messages.add(systemMessage);
-            ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-                .builder()
-                .model("gpt-3.5")
-                .messages(messages)
-                .n(1)
-                .maxTokens(500)
-                .logitBias(new HashMap<>())
-                .build();
-
-            service.streamChatCompletion(chatCompletionRequest)
-                .doOnError(Throwable::printStackTrace)
-                .blockingForEach(System.out::println);
-
-            service.shutdownExecutor();
+//            String token = APIKeys.API_KEY;
+//            OpenAiService service = new OpenAiService(token);
+//
+//            final List<ChatMessage> messages = new ArrayList<>();
+//            final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippetContent);
+//            messages.add(systemMessage);
+//            ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
+//                .builder()
+//                .model("gpt-3.5")
+//                .messages(messages)
+//                .n(1)
+//                .maxTokens(500)
+//                .logitBias(new HashMap<>())
+//                .build();
+//
+//            service.streamChatCompletion(chatCompletionRequest)
+//                .doOnError(Throwable::printStackTrace)
+//                .blockingForEach(System.out::println);
+//
+//            service.shutdownExecutor();
 
             //String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
-            return new StartSuccessResponse("success", snippetContent, chatCompletionRequest.toString()).serialize();
+            return new StartSuccessResponse("success", snippetContent, json.array()[snippetId].explanation()).serialize();
 //        } catch (Exception e) {
 //            return new StartFailureResponse("error", e.getMessage()).serialize();
 //        }
