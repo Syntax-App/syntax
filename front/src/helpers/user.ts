@@ -41,10 +41,17 @@ export async function requestRankings() {
 }
 
 export async function requestCode(lang: string, email?: string) {
-  const response = await fetch("http://localhost:4000/race/start?email=" + email + "&lang=" + lang);
+  let response;
+
+  if (email) {
+    response = await fetch("http://localhost:4000/race/start?email=" + email + "&lang=" + lang);
+  } else {
+    response = await fetch("http://localhost:4000/race/start?lang=" + lang);
+  }
+
   const json = await response.json();
   return (
-    json.data.snippet
+    json.data
   );
 }
 
