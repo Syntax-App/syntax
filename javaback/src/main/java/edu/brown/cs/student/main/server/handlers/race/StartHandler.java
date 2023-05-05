@@ -74,7 +74,6 @@ public class StartHandler implements Route {
         this.cache = new GPTProxyCache(100, 60, TimeUnit.MINUTES, this.json, this.completionString);
     }
 
-
     /**
      * Uses filepath and hasHeader params to parse a CSV and set the active file variables.
      *
@@ -93,33 +92,12 @@ public class StartHandler implements Route {
 
             // if user is not logged in
             if (email == null) {
-                Graph graph = new Graph();
+                Graph graph = new Graph(lang);
                 int randID = graph.getAvailableIDs()
                     .get(new Random().nextInt(graph.getAvailableIDs().size()));
                 String snippet = this.json.array()[randID].text();
 
-//                String token = APIKeys.API_KEY;
-//                OpenAiService service = new OpenAiService(token);
-//
-//                final List<ChatMessage> messages = new ArrayList<>();
-//                final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippet);
-//                messages.add(systemMessage);
-//                ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-//                    .builder()
-//                    .model("gpt-3.5-turbo")
-//                    .messages(messages)
-//                    .n(1)
-//                    .maxTokens(500)
-//                    .logitBias(new HashMap<>())
-//                    .build();
-//
-//                service.streamChatCompletion(chatCompletionRequest)
-//                    .doOnError(Throwable::printStackTrace)
-//                    .blockingForEach(this::testLambda);
-
                 String explanation = this.cache.getExplanation(randID);
-//                this.completionString.setLength(0);
-//                service.shutdownExecutor();
                 return new StartSuccessResponse("success", snippet,
                     explanation).serialize();
             }
@@ -139,7 +117,7 @@ public class StartHandler implements Route {
                     snippetId = this.snippetStack.get(email).pop();
                 } else {
                     snippetId = this.snippetStack.get(email).pop();
-                    Graph graph = new Graph();
+                    Graph graph = new Graph(lang);
                     graph.constructGraph(userExperience);
                     List<Integer> snippetIDs = graph.findPath(graph.getHead());
                     LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
@@ -147,7 +125,7 @@ public class StartHandler implements Route {
                 }
 
             } else {
-                Graph graph = new Graph();
+                Graph graph = new Graph(lang);
                 graph.constructGraph(userExperience);
                 List<Integer> snippetIDs = graph.findPath(graph.getHead());
                 LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
@@ -155,34 +133,10 @@ public class StartHandler implements Route {
                 this.snippetStack.put(email, linkedSnippetIDs);
             }
 
-            String snippetContent = json.array()[snippetId].text();
-            // String explanation = "code explanation goes here";
-//            String token = APIKeys.API_KEY;
-//            OpenAiService service = new OpenAiService(token);
-//
-//            final List<ChatMessage> messages = new ArrayList<>();
-//            final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippetContent);
-//            messages.add(systemMessage);
-//            ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-//                .builder()
-//                .model("gpt-3.5")
-//                .messages(messages)
-//                .n(1)
-//                .maxTokens(500)
-//                .logitBias(new HashMap<>())
-//                .build();
-//
-//            service.streamChatCompletion(chatCompletionRequest)
-//                .doOnError(Throwable::printStackTrace)
-//                .blockingForEach(System.out::println);
-//
-//            service.shutdownExecutor();
+            String snippetContent = this.json.array()[snippetId].text();
+            String explanation = this.cache.getExplanation(snippetId);
 
-            //String snippet = Files.readString(Path.of("src/main/java/edu/brown/cs/student/main/syntax-algo/ReactFlightClient.txt"));
-            return new StartSuccessResponse("success", snippetContent, json.array()[snippetId].explanation()).serialize();
-//        } catch (Exception e) {
-//            return new StartFailureResponse("error", e.getMessage()).serialize();
-//        }
+            return new StartSuccessResponse("success", snippetContent, explanation).serialize();
         } catch (ExecutionException | InterruptedException e) {
             return new StartFailureResponse("error", "Snippet file not found!").serialize();
         } catch (IndexOutOfBoundsException e) {

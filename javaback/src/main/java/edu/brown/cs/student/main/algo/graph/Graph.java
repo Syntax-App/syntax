@@ -30,17 +30,30 @@ public class Graph {
     private double standardWeight;
     private List<Integer> snippetIDs;
     private SnippetsJSON json;
+    private String lang;
 
-    public Graph() {
+    public Graph(String lang) {
         this.head = null;
         this.availableIDs = new ArrayList<>();
         this.standardWeight = 0.5f;
         this.snippetIDs = new ArrayList<>();
+        this.lang = lang;
 
         try {
             JSONUtils jsonUtils = new JSONUtils();
-            File snippetsFile = new File(
-                "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
+            File snippetsFile;
+            // extensible for multiple different languages
+            switch(lang) {
+                // typescript if specified
+                case "typescript":
+                    snippetsFile = new File();
+                    break;
+                // java by default
+                default:
+                    snippetsFile = new File(
+                        "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
+                    break;
+            }
             Reader reader = new FileReader(snippetsFile);
             String snippetsString = jsonUtils.readerToString(reader);
 

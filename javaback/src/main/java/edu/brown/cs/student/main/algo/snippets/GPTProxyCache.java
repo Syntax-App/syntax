@@ -35,6 +35,7 @@ public class GPTProxyCache {
                     @NotNull
                     @Override
                     public String load(@NotNull Integer snippetID) {
+                        // credit: https://github.com/TheoKanning/openai-java/blob/main/example/src/main/java/example/OpenAiApiExample.java
                         String token = APIKeys.API_KEY;
                         OpenAiService service = new OpenAiService(token);
 
@@ -45,6 +46,7 @@ public class GPTProxyCache {
                             .builder()
                             .model("gpt-3.5-turbo")
                             .messages(messages)
+                            .temperature(0.5)
                             .n(1)
                             .maxTokens(500)
                             .logitBias(new HashMap<>())
