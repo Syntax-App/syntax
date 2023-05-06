@@ -7,8 +7,7 @@ import WordsContainer from "@/components/WordsContainer";
 import { SkeletonText } from "@chakra-ui/react";
 import { State } from "@/pages/TypingTestInterface/hooks/useEngine";
 import Hotkeys from "react-hot-keys";
-
-// let gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
+import { BsFillChatRightDotsFill } from "react-icons/bs";
 
 interface TypeTestProps {
   state: string;
@@ -53,23 +52,12 @@ export default function TypeTest(props: TypeTestProps) {
   }, [props.loadGpt]);
 
   // RESTART SHORTCUT
-
   useEffect(() => {
     if (restartShortcut) {
       setRestartShortcut(false);
       props.restart();
     }
   }, [restartShortcut, setRestartShortcut]);
-
-  // useEffect(() => {
-  //   const handleKeyPress = (e: KeyboardEvent) => {
-  //     if (e.shiftKey && e.key === "r" && props.state == "running") {
-  //       console.log("RESTART SHORTCUT");
-  //       props.restart;
-  //     }
-  //   };
-  //   window.addEventListener("keydown", handleKeyPress);
-  // }, [])
 
   return (
     <>
@@ -116,7 +104,7 @@ export default function TypeTest(props: TypeTestProps) {
                 h="md"
                 transition={"ease 1s"}
                 padding={5}
-                bg={useColorModeValue("light.lightblue", "dark.darkblue")}
+                bg={useColorModeValue("light.lightGrey", "dark.darkblue")}
                 overflowY="scroll"
               >
                 <WordsContainer
@@ -138,16 +126,19 @@ export default function TypeTest(props: TypeTestProps) {
                 w="30vw"
                 h="md"
                 padding={5}
-                bg={useColorModeValue("light.indigo", "dark.indigo")}
+                pt={10}
+                bg={useColorModeValue("light.mediumGrey", "dark.indigo")}
                 overflowY="scroll"
               >
                 <Text
                   fontSize="xl"
-                  fontWeight={600}
+                  fontWeight={800}
                   textAlign="center"
-                  color="blue.100"
+                  color={useColorModeValue("light.extraLight", "blue.100")}
                 >
-                  ChatGPT Says...
+                  {/* <BsFillChatRightDotsFill></BsFillChatRightDotsFill> */}
+                  ChatGPT
+                  Says...
                 </Text>
                 <br />
                 {props.loadGpt ? (
@@ -158,8 +149,14 @@ export default function TypeTest(props: TypeTestProps) {
                       spacing={4}
                       skeletonHeight={4}
                       fadeDuration={30}
-                      startColor="dark.indigo"
-                      endColor="dark.blue"
+                      startColor={useColorModeValue(
+                        "light.backgroundGrey",
+                        "dark.indigo"
+                      )}
+                      endColor={useColorModeValue(
+                        "light.mediumGrey",
+                        "dark.blue"
+                      )}
                     />
                   </Box>
                 ) : (
@@ -167,7 +164,7 @@ export default function TypeTest(props: TypeTestProps) {
                     fontSize="md"
                     fontWeight="medium"
                     textAlign="justify"
-                    color="blue.200"
+                    color={useColorModeValue("light.extraLight", "blue.200")}
                     px={4}
                   >
                     {props.gptSays}

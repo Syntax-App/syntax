@@ -19,7 +19,7 @@ export const TEXT_ranking_accessible_name = "Leaderboard Button";
 // NavBar component
 export default function NavBar() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const icon_color = useColorModeValue("light.indigo", "dark.lightblue");
+  const icon_color = useColorModeValue("light.darkGrey", "dark.lightblue");
   const {currentUser, userInfo, methods} = useAuth();
 
   return (

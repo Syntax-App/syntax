@@ -95,6 +95,7 @@ export default function TopButtons(props: TopButtonsProps) {
         <HStack gap={4}>
           <Menu>
             <MenuButton
+              display={props.typeMode ? "none" : "show"}
               as={Button}
               borderRadius={30}
               height={8}
@@ -114,6 +115,7 @@ export default function TopButtons(props: TopButtonsProps) {
             </MenuList>
           </Menu>
           <Button
+            display={props.typeMode ? "none" : "show"}
             borderRadius={30}
             height={8}
             width={40}

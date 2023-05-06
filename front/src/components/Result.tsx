@@ -63,91 +63,142 @@ export default function Result(props: ResultProps) {
 
   return (
     <Flex justifyContent="center" maxH="100vh - 64" data-testid="result">
-      <Flex direction='column' alignContent='center' alignItems='center' w="80%" gap={20} paddingY="14" >
-          <Flex direction="row" w="100%">
-            <Flex direction="column" alignItems="start" justifyContent="space-around">
-                <Stack alignItems="flex-start">
-                  <Text fontFamily="code" fontSize="s" fontWeight="regular">LINES/MIN</Text>
-                  <Text fontSize="8xl" fontWeight="bold">{props.stats.lpm}</Text>
-                </Stack>
-                <Stack alignItems="flex-start">
-                  <Text fontFamily="code" fontSize="s" fontWeight="regular">ACCURACY</Text>
-                  <HStack>
-                      <Text fontSize="8xl" fontWeight="bold">{props.stats.acc}%</Text>
-                      <CircularProgress value={props.stats.acc} size="75px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
-                  </HStack>
-                </Stack>
-            </Flex>
-            <Spacer/>
-            <Stack alignItems="center" gap={8}>
-              {/* code display */}
-              <Box 
-                className="code-box" 
-                borderRadius={30} 
-                w="50vw" 
-                h="sm"
-                padding={5} 
-                bg={useColorModeValue("light.lightblue", "dark.darkblue")}
-                overflowY="scroll"
-                >
-                <pre>
-                  <code>
-                    {props.words}
-                  </code>
-                </pre>
-              </Box>
-              {/* button/modal for ChatGPT explanation */}
-              <Button 
-                onClick={onOpen}
-                bg={useColorModeValue("light.lightblue", "dark.indigo")} 
-                color={useColorModeValue("light.blue", "dark.extralight")} 
-                w="70%" 
-                borderRadius={15}
-                leftIcon={<ChatGPTIcon/>}
-                _hover={{
-                  bg: useColorModeValue("blue.400", "blue.600") 
-                }}
-                >ChatGPT Says...</Button>
-
-              <Modal onClose={onClose} isOpen={isOpen} isCentered scrollBehavior="inside">
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalHeader>ChatGPT Says...</ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    {props.gptSays}
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button onClick={onClose}>Close</Button>
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
+      <Flex
+        direction="column"
+        alignContent="center"
+        alignItems="center"
+        w="80%"
+        gap={20}
+        paddingY="14"
+      >
+        <Flex direction="row" w="100%">
+          <Flex
+            direction="column"
+            alignItems="start"
+            justifyContent="space-around"
+          >
+            <Stack alignItems="flex-start">
+              <Text fontFamily="code" fontSize="s" fontWeight="regular">
+                LINES/MIN
+              </Text>
+              <Text fontSize="8xl" fontWeight="bold">
+                {props.stats.lpm}
+              </Text>
+            </Stack>
+            <Stack alignItems="flex-start">
+              <Text fontFamily="code" fontSize="s" fontWeight="regular">
+                ACCURACY
+              </Text>
+              <HStack>
+                <Text fontSize="8xl" fontWeight="bold">
+                  {props.stats.acc}%
+                </Text>
+                <CircularProgress
+                  value={props.stats.acc}
+                  size="75px"
+                  thickness={15}
+                  color={useColorModeValue("light.lightGrey", "dark.lightblue")}
+                />
+              </HStack>
             </Stack>
           </Flex>
-          {/* continue and skip buttons */}
-          <HStack gap={4} alignItems="flex-end">
-            <Stack alignItems="center" gap={4}>
+          <Spacer />
+          <Stack alignItems="center" gap={8}>
+            {/* code display */}
+            <Box
+              className="code-box"
+              borderRadius={30}
+              w="50vw"
+              h="sm"
+              padding={5}
+              bg={useColorModeValue("light.lightGrey", "dark.darkblue")}
+              overflowY="scroll"
+            >
+              <pre>
+                <code>{props.words}</code>
+              </pre>
+            </Box>
+            {/* button/modal for ChatGPT explanation */}
+            <Button
+              onClick={onOpen}
+              bg={useColorModeValue("light.mediumGrey", "dark.indigo")}
+              color={useColorModeValue("light.extraLight", "dark.extralight")}
+              w="70%"
+              borderRadius={15}
+              leftIcon={<ChatGPTIcon />}
+              _hover={{
+                bg: useColorModeValue("light.lightGrey", "blue.600"),
+              }}
+            >
+              ChatGPT Says...
+            </Button>
+
+            <Modal
+              onClose={onClose}
+              isOpen={isOpen}
+              isCentered
+              scrollBehavior="inside"
+            >
+              <ModalOverlay />
+              <ModalContent
+                background={useColorModeValue(
+                  "light.backgroundGrey",
+                  "dark.blue"
+                )}
+              >
+                <ModalHeader>ChatGPT Says...</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>{props.gptSays}</ModalBody>
+                <ModalFooter>
+                  <Button onClick={onClose}>Close</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </Stack>
+        </Flex>
+        {/* continue and skip buttons */}
+        <HStack gap={4} alignItems="flex-end">
+          <Stack alignItems="center" gap={4}>
+            <Stack alignItems="center" gap={-1}>
+              <Text variant={"label"}>CODING LANGUAGE</Text>
               <Menu>
-                <MenuButton as={Button} fontSize="sm" borderRadius={30} height={6} width={36} leftIcon={<Icon as={IoIosArrowDropdownCircle}/>}>
+                <MenuButton
+                  bg={useColorModeValue("light.darkGrey", "#77A3CD")}
+                  as={Button}
+                  fontSize="sm"
+                  borderRadius={30}
+                  height={6}
+                  width={36}
+                  leftIcon={<Icon as={IoIosArrowDropdownCircle} />}
+                >
                   {props.currLang}
                 </MenuButton>
                 <MenuList>
                   {props.languages.map((lang, i) => {
-                      return (
-                        <MenuItem
-                          key={i}
-                          onClick={() => props.setCurrLang(lang)}
-                        >
-                          {lang}
-                        </MenuItem>
-                      );
-                    })}
+                    return (
+                      <MenuItem key={i} onClick={() => props.setCurrLang(lang)}>
+                        {lang}
+                      </MenuItem>
+                    );
+                  })}
                 </MenuList>
               </Menu>
-              <Button borderRadius={30} height={10} width={40} variant="solid" bgColor="green.200" onClick={()=>props.newTest()}>CONTINUE</Button>
             </Stack>
-            <Button borderRadius={30} height={8} width={28} variant="outline">SKIP</Button>
-          </HStack>
+            <Button
+              borderRadius={30}
+              height={10}
+              width={40}
+              variant="solid"
+              bgColor={useColorModeValue("light.forestGreen", "green.200")}
+              onClick={() => props.newTest()}
+            >
+              CONTINUE
+            </Button>
+          </Stack>
+          <Button borderRadius={30} height={8} width={28} variant="outline">
+            SKIP
+          </Button>
+        </HStack>
       </Flex>
     </Flex>
   );
