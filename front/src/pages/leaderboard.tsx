@@ -56,9 +56,9 @@ export default function Leaderboard() {
         <TableContainer
           borderRadius={30}
           w="100%"
-          bg={useColorModeValue("light.lightblue", "dark.darkblue")}
+          bg={useColorModeValue("light.mediumGrey", "dark.darkblue")}
         >
-          <Table variant="striped" colorScheme="blue">
+          <Table variant="striped" colorScheme={useColorModeValue("gray", "blue")}>
             <Thead>
               <Tr>
                 <Th>#</Th>

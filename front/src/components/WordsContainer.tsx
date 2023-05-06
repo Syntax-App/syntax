@@ -1,6 +1,6 @@
 import UserType from "../pages/TypingTestInterface/TypeTestComponents/UserType";
 import { useEffect, useRef, useState } from "react";
-import { SkeletonText, Flex, Box } from "@chakra-ui/react";
+import { SkeletonText, Flex, Box, useColorModeValue } from "@chakra-ui/react";
 
 interface WordsProps {
   userInput: string;
@@ -62,7 +62,11 @@ export default function WordsContainer(props: WordsProps) {
 
   // calculates LPM
   useEffect(() => {
-    const perSecond = linesCompleted / props.timeElapsed;
+    var perSecond = 0;
+    // prevents LPM from going to infinity
+    if (props.timeElapsed > 0){
+      perSecond = linesCompleted / props.timeElapsed;
+    };
     const linesPerMin = Math.round(perSecond * 60);
     props.setlpm(linesPerMin);
   }, [linesCompleted])
@@ -82,21 +86,31 @@ export default function WordsContainer(props: WordsProps) {
           </code>
         </pre>
       </Box>
-      <Flex className="codesnippet" justifyContent="center">
-        { props.loadGpt ?
-          <Box w='55vw'>
-            <SkeletonText 
-              height='20px'
+      <Flex
+        className="codesnippet"
+        color={
+          props.typeMode
+            ? useColorModeValue("light.mediumGrey", "#4C597B")
+            : useColorModeValue("light.darkGrey", "#4C597B")        }
+        justifyContent="center"
+      >
+        {props.loadGpt ? (
+          <Box w="55vw">
+            <SkeletonText
+              height="20px"
               noOfLines={10}
               spacing={4}
               skeletonHeight={4}
               fadeDuration={30}
               startColor="dark.blue"
-              endColor="dark.darkblue"/>
-          </Box> :
+              endColor="dark.darkblue"
+            />
+          </Box>
+        ) : (
           <pre>
             <code>{props.words}</code>
-          </pre> }
+          </pre>
+        )}
       </Flex>
     </Box>
   );

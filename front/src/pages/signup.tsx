@@ -96,7 +96,7 @@ export default function Signup() {
         >
           <Text>{currentUser?.email}</Text>
           <Box
-            bg={useColorModeValue("light.lightblue", "dark.darkblue")}
+            bg={useColorModeValue("light.extraLight", "dark.darkblue")}
             height="80%"
             maxH="80%"
             width="100%"
@@ -116,7 +116,7 @@ export default function Signup() {
             >
               <Text
                 variant="header"
-                color={useColorModeValue("light.lightblue", "dark.vibrantblue")}
+                color={useColorModeValue("light.darkGrey", "dark.vibrantblue")}
               >
                 Join Syntax
               </Text>
@@ -128,10 +128,10 @@ export default function Signup() {
               placeholder="USERNAME"
               _placeholder={{
                 fontFamily: "source code pro",
-                color: useColorModeValue("light.lightblue", "dark.darkblue"),
+                color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
               }}
-              color={useColorModeValue("light.lightblue", "dark.darkblue")}
-              bg={useColorModeValue("light.lightblue", "light.extralight")}
+              color={useColorModeValue("light.darkGrey", "dark.darkblue")}
+              bg={useColorModeValue("light.backgroundGrey", "light.extralight")}
               isRequired={true}
             />
             <Input
@@ -142,9 +142,12 @@ export default function Signup() {
               placeholder="EMAIL"
               _placeholder={{
                 fontFamily: "source code pro",
-                color: useColorModeValue("light.lightblue", "dark.darkblue"),
+                color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
               }}
-              bg={useColorModeValue("light.lightblue", "dark.mediumlightblue")}
+              bg={useColorModeValue(
+                "light.backgroundGrey",
+                "dark.mediumlightblue"
+              )}
               isRequired={true}
             />
             <InputGroup size="md" mt="1rem">
@@ -156,10 +159,10 @@ export default function Signup() {
                 variant={"solid"}
                 _placeholder={{
                   fontFamily: "source code pro",
-                  color: useColorModeValue("light.lightblue", "dark.darkblue"),
+                  color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
                 }}
                 bg={useColorModeValue(
-                  "light.lightblue",
+                  "light.backgroundGrey",
                   "dark.mediumlightblue"
                 )}
                 isRequired={true}
@@ -197,10 +200,10 @@ export default function Signup() {
                 variant={"solid"}
                 _placeholder={{
                   fontFamily: "source code pro",
-                  color: useColorModeValue("light.lightblue", "dark.darkblue"),
+                  color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
                 }}
                 bg={useColorModeValue(
-                  "light.lightblue",
+                  "light.backgroundGrey",
                   "dark.mediumlightblue"
                 )}
                 isRequired={true}
@@ -247,7 +250,8 @@ export default function Signup() {
             <Button
               width="100%"
               borderRadius="3rem"
-              bg="#83BFF6"
+              bg={useColorModeValue("light.darkGrey", "#83BFF6")}
+              color={useColorModeValue("light.extraLight", "dark.blue")}
               my="1.8rem"
               onClick={() => handleSignUp()}
             >
@@ -260,12 +264,16 @@ export default function Signup() {
             width="80%"
             borderRadius="3rem"
             leftIcon={<FcGoogle size="1.2rem" />}
-            bg="#DBE7FF"
+            bg={useColorModeValue("light.extraLight", "#DBE7FF")}
+            color={"#7786AE"}
             onClick={() => login(true)}
           >
             Sign in with Google
           </Button>
-          <Text color="#7786AE" mt="3rem">
+          <Text
+            color={useColorModeValue("light.mediumGrey", "#7786AE")}
+            mt="3rem"
+          >
             Already a Syntax user? &nbsp; &nbsp;<a>Sign In</a>
           </Text>
         </Flex>
@@ -278,7 +286,7 @@ export default function Signup() {
         width={"40%"}
       >
         <Box
-          bg={useColorModeValue("light.lightblue", "dark.darkblue")}
+          bg={useColorModeValue("light.lightGrey", "dark.darkblue")}
           height={"100vh"}
           borderLeftRadius={"2rem"}
           width="100%"
@@ -290,7 +298,7 @@ export default function Signup() {
         >
           <Text
             variant="header"
-            color={useColorModeValue("light.lightblue", "dark.vibrantblue")}
+            color={useColorModeValue("light.darkGrey", "dark.vibrantblue")}
           >
             SYNTAX
           </Text>
@@ -298,7 +306,7 @@ export default function Signup() {
           <br></br>
           <Text
             variant="signupDescription"
-            color={useColorModeValue("light.lightblue", "dark.mediumlightblue")}
+            color={useColorModeValue("light.darkGrey", "dark.mediumlightblue")}
           >
             Higher productivity, fluency with syntax, and building of muscle
             memory are all improvements to be gained from practicing typing out

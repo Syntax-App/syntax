@@ -2,6 +2,7 @@ import React from "react";
 import {
   Button,
   HStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import RestartButton from "../pages/TypingTestInterface/TypeTestComponents/RestartButton";
 
@@ -23,7 +24,7 @@ export default function ControlButtons(props: ButtonsInterface) {
             height={10}
             width={32}
             variant="solid"
-            bgColor="green.200"
+            bgColor={useColorModeValue("light.forestGreen","green.200")}
             onClick={props.startTest}
             display={props.typeMode ? "none" : "show"}
             aria-label={TEXT_start_accessible_name}

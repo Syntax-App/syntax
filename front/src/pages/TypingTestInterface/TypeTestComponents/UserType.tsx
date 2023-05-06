@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react";
+import { Text, useColorModeValue } from "@chakra-ui/react";
 import Caret from "./Caret";
 import { useEffect, useMemo } from "react";
 
@@ -51,8 +51,16 @@ const Character = (props: CharacterProps) => {
   return (
     <Text
       as="span"
-      bg={isWhiteSpace && !isCorrect ? "#ee6f2a" : "none"}
-      color={isCorrect ? "#eac747" : "#ee6f2a"}
+      bg={
+        isWhiteSpace && !isCorrect
+          ? useColorModeValue("#953911", "#ee6f2a")
+          : "none"
+      }
+      color={
+        isCorrect
+          ? useColorModeValue("light.darkGrey", "#eac747")
+          : useColorModeValue("#953911", "#ee6f2a")
+      }
     >
       {props.expected}
     </Text>
