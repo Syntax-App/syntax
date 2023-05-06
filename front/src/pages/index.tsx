@@ -6,21 +6,7 @@ import TypeTest from "@/components/TypeTest";
 import { requestCode } from "@/helpers/user";
 import { useAuth } from "@/contexts/AuthContext";
 
-const code: string = `class Main {\npublic static void main(String[] args) {\n\tMap<String, String> languages = new HashMap<>();\nlanguages.put("pos3", "JS");
-    languages.put("pos1", "Java");
-    languages.put("pos2", "Python");
-    System.out.println("Map: " + languages);
-    TreeMap<String, String> sortedNumbers = new TreeMap<>(languages);
-    System.out.println("Map with sorted Key" + sortedNumbers); 
-    Map<String, String> languages = new HashMap<>(); 
-    languages.put("pos3", "JS");
-    languages.put("pos1", "Java");
-    languages.put("pos2", "Python");
-    System.out.println("Map: " + languages);
-    TreeMap<String, String> sortedNumbers = new TreeMap<>(languages);
-    System.out.println("Map with sorted Key" + sortedNumbers); 
-  } 
-}`;
+const languages = ["JAVA", "JAVASCRIPT"];
 
 export default function Home() {
   const [currLang, setCurrLang] = useState("PYTHON");
@@ -28,6 +14,7 @@ export default function Home() {
   const [stats, setStats] = useState({ acc: 0, lpm: 0 });
   const { userInfo, methods, loading } = useAuth();
   const [gptSays, setGptSays] = useState("");
+  const [loadGpt, setLoadGpt] = useState(false);
   const {
     state,
     setState,
@@ -43,10 +30,12 @@ export default function Home() {
   } = useEngine();
 
   async function getNewSnippet() {
+    setLoadGpt(true);
     requestCode(currLang, userInfo?.email)
       .then((data) => {
         updateWords(data.snippet);
         setGptSays(data.explanation);
+        setLoadGpt(false);
       })
       .catch((err) => {
         console.log(err);
@@ -80,6 +69,7 @@ export default function Home() {
         newTest={newTest} 
         words={words}
         gptSays={gptSays}
+        languages={languages}
         />
     );
   } else {
@@ -102,6 +92,8 @@ export default function Home() {
         setStats={setStats}
         COUNTDOWN_SECONDS={COUNTDOWN_SECONDS}
         timeElapsed={timeElapsed}
+        loadGpt={loadGpt}
+        languages={languages}
       />
     );
   }

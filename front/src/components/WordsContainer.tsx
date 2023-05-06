@@ -1,5 +1,6 @@
 import UserType from "../pages/TypingTestInterface/TypeTestComponents/UserType";
 import { useEffect, useRef, useState } from "react";
+import { SkeletonText, Flex, Box } from "@chakra-ui/react";
 
 interface WordsProps {
   userInput: string;
@@ -9,6 +10,7 @@ interface WordsProps {
   //lpm: number;
   setlpm: React.Dispatch<React.SetStateAction<number>>;
   timeElapsed: number;
+  loadGpt: boolean;
 }
 
 export default function WordsContainer(props: WordsProps) {
@@ -66,8 +68,8 @@ export default function WordsContainer(props: WordsProps) {
   }, [linesCompleted])
 
   return (
-    <div ref={typingBoxRef} className="typetest">
-      <div className="usertyped">
+    <Box ref={typingBoxRef} className="typetest">
+      <Box className="usertyped">
         <pre>
           <code>
             <UserType
@@ -79,12 +81,23 @@ export default function WordsContainer(props: WordsProps) {
             />
           </code>
         </pre>
-      </div>
-      <div className="codesnippet">
-        <pre>
-          <code>{props.words}</code>
-        </pre>
-      </div>
-    </div>
+      </Box>
+      <Flex className="codesnippet" justifyContent="center">
+        { props.loadGpt ?
+          <Box w='55vw'>
+            <SkeletonText 
+              height='20px'
+              noOfLines={10}
+              spacing={4}
+              skeletonHeight={4}
+              fadeDuration={30}
+              startColor="dark.blue"
+              endColor="dark.darkblue"/>
+          </Box> :
+          <pre>
+            <code>{props.words}</code>
+          </pre> }
+      </Flex>
+    </Box>
   );
 }

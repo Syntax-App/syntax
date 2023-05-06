@@ -4,7 +4,6 @@ import {
   Text,
   Flex,
   useColorModeValue,
-  Box,
   TableContainer,
   Table,
   Thead,
