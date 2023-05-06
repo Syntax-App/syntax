@@ -9,6 +9,7 @@ import {
 import TopButtons from "@/components/TopButtons";
 import ControlButtons from "@/components/ControlButtons";
 import WordsContainer from "@/components/WordsContainer";
+import { SkeletonText } from "@chakra-ui/react";
 
 // let gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
 
@@ -30,6 +31,8 @@ interface TypeTestProps {
   COUNTDOWN_SECONDS: number;
   timeElapsed: number;
   getNewSnippet: () => void;
+  loadGpt: boolean;
+  languages: string[];
 }
 
 export default function TypeTest(props: TypeTestProps) {
@@ -55,6 +58,7 @@ export default function TypeTest(props: TypeTestProps) {
             {/* language dropdown and regenerate button // accuracy and lpm in type mode */}
             <TopButtons
               typeMode={props.typeMode}
+              languages={props.languages}
               currLang={props.currLang}
               setCurrLang={props.setCurrLang}
               timeLeft={props.timeLeft}
@@ -68,7 +72,7 @@ export default function TypeTest(props: TypeTestProps) {
 
             {/* code box and chatgpt explanations */}
             <Flex direction="row" gap={6}>
-              <Box
+              <Flex
                 className="stats-box"
                 borderRadius={30}
                 w={props.typeMode ? "80vw" : "60vw"}
@@ -85,8 +89,9 @@ export default function TypeTest(props: TypeTestProps) {
                   setlpm={setlpm}
                   COUNTDOWN_SECONDS={props.COUNTDOWN_SECONDS}
                   timeElapsed={props.timeElapsed}
+                  loadGpt={props.loadGpt}
                 />
-              </Box>
+              </Flex>
               <Box
                 display={props.typeMode ? "none" : "show"}
                 transition={"ease 1s"}
@@ -107,15 +112,26 @@ export default function TypeTest(props: TypeTestProps) {
                   ChatGPT Says...
                 </Text>
                 <br />
-                <Text
-                  fontSize="md"
-                  fontWeight="medium"
-                  textAlign="justify"
-                  color="blue.200"
-                  px={4}
-                >
-                  {props.gptSays}
-                </Text>
+                { props.loadGpt ?
+                  <Box w='27vw'>
+                    <SkeletonText 
+                      height='20px'
+                      noOfLines={10}
+                      spacing={4}
+                      skeletonHeight={4}
+                      fadeDuration={30}
+                      startColor="dark.indigo"
+                      endColor="dark.blue"/>
+                  </Box> :
+                  <Text
+                    fontSize="md"
+                    fontWeight="medium"
+                    textAlign="justify"
+                    color="blue.200"
+                    px={4}
+                  >
+                    {props.gptSays}
+                  </Text> }
               </Box>
             </Flex>
             {/* start, skip, restart buttons */}

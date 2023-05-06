@@ -14,12 +14,11 @@ import { RepeatIcon } from "@chakra-ui/icons";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { calculateAccuracy } from "../pages/TypingTestInterface/utils/typetesthelper";
 
-const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
-
 export const TEXT_timer_accessible_name = "time-left";
 
 interface TopButtonsProps {
   typeMode: boolean;
+  languages: string[];
   currLang: string;
   setCurrLang: React.Dispatch<React.SetStateAction<string>>;
   timeLeft: number;
@@ -105,7 +104,7 @@ export default function TopButtons(props: TopButtonsProps) {
               {props.currLang}
             </MenuButton>
             <MenuList>
-              {languages.map((lang, key) => {
+              {props.languages.map((lang, key) => {
                 return (
                   <MenuItem key={key} onClick={() => props.setCurrLang(lang)}>
                     {lang}
