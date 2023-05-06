@@ -15,6 +15,8 @@ export default function Home() {
   const { userInfo, methods, loading } = useAuth();
   const [gptSays, setGptSays] = useState("");
   const [loadGpt, setLoadGpt] = useState(false);
+  const [regenerated, setRegenerated] = useState(false);
+
   const {
     state,
     setState,
@@ -30,17 +32,20 @@ export default function Home() {
   } = useEngine();
 
   async function getNewSnippet() {
+    
     setLoadGpt(true);
-    //setState("idle");
     requestCode(currLang, userInfo?.email)
       .then((data) => {
         updateWords(data.snippet);
         setGptSays(data.explanation);
         setLoadGpt(false);
+        setRegenerated(true);
       })
       .catch((err) => {
         console.log(err);
       });
+
+    //restart();
   }
 
   // update words when home mounts

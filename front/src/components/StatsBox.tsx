@@ -16,7 +16,7 @@ interface StatsBoxProps {
 export default function StatsBox(props: StatsBoxProps) {
 
     return (
-        <Box className="stats-box" borderRadius={30} w="100%" padding={5} bg={useColorModeValue("light.lightblue", "dark.darkblue")}>
+        <Box className="stats-box" borderRadius={30} w="100%" padding={5} bg={useColorModeValue("light.lightGrey", "dark.darkblue")}>
             <Text fontSize="2xl" fontWeight="medium">{props.header}</Text>
             <br/>
             <SimpleGrid columns={3} spacing={10}>
@@ -29,7 +29,7 @@ export default function StatsBox(props: StatsBoxProps) {
                         <Text fontFamily="code" fontSize="xs" fontWeight="regular">HIGHEST ACCURACY</Text>
                         <HStack>
                             <Text fontSize="5xl" fontWeight="medium">{Math.round(props.stats.highacc)}%</Text>
-                            <CircularProgress value={props.stats.highacc} size="60px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
+                            <CircularProgress value={props.stats.highacc} size="60px" thickness={15} color={useColorModeValue("light.extraLight", "dark.lightblue")} />
                         </HStack>
                     </Stack>
                 </Flex>
@@ -46,7 +46,7 @@ export default function StatsBox(props: StatsBoxProps) {
                         <Text fontFamily="code" fontSize="xs" fontWeight="regular">AVG. ACCURACY</Text>
                         <HStack>
                             <Text fontSize="5xl" fontWeight="medium">{Math.round(props.stats.avgacc)}%</Text>
-                            <CircularProgress value={props.stats.avgacc} size="60px" thickness={15} color={useColorModeValue("light.blue", "dark.lightblue")} />
+                            <CircularProgress value={props.stats.avgacc} size="60px" thickness={15} color={useColorModeValue("light.extraLight", "dark.lightblue")} />
                         </HStack>
                     </Stack>
                 </Flex>

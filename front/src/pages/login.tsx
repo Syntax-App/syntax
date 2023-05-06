@@ -53,7 +53,7 @@ export default function Login() {
     >
       <Text>{currentUser?.email}</Text>
       <Box
-        bg={"#7786AE"}
+        bg={useColorModeValue("light.mediumGrey", "#7786AE")}
         width="25%"
         height="80%"
         maxH="80%"
@@ -74,7 +74,7 @@ export default function Login() {
         >
           <Text
             variant="header"
-            color={useColorModeValue("light.lightblue", "dark.darkblue")}
+            color={useColorModeValue("light.backgroundGrey", "dark.darkblue")}
           >
             Welcome
           </Text>
@@ -86,10 +86,10 @@ export default function Login() {
           placeholder="USERNAME"
           _placeholder={{
             fontFamily: "source code pro",
-            color: useColorModeValue("light.lightblue", "dark.dullblue"),
+            color: useColorModeValue("light.darkGrey", "dark.dullblue"),
           }}
-          color={useColorModeValue("light.lightblue", "dark.dullblue")}
-          bg={useColorModeValue("light.lightblue", "dark.blue")}
+          color={useColorModeValue("light.darkGrey", "dark.dullblue")}
+          bg={useColorModeValue("light.extraLight", "dark.blue")}
           isRequired={true}
         />
         <InputGroup size="md" mt="1rem" mb=".3rem">
@@ -101,10 +101,10 @@ export default function Login() {
             placeholder="PASSWORD"
             _placeholder={{
               fontFamily: "source code pro",
-              color: useColorModeValue("light.lightblue", "dark.dullblue"),
+              color: useColorModeValue("light.darkGrey", "dark.dullblue"),
             }}
-            color={useColorModeValue("light.lightblue", "dark.dullblue")}
-            bg={useColorModeValue("light.lightblue", "dark.blue")}
+            color={useColorModeValue("light.darkGrey", "dark.dullblue")}
+            bg={useColorModeValue("light.extraLight", "dark.blue")}
             isRequired={true}
           />
           <InputRightElement width="2.8rem">
@@ -133,7 +133,7 @@ export default function Login() {
         </InputGroup>
         <Flex justifyContent={"flex-start"} alignItems={"flex-start"}>
           <Text
-            color="#4C597B"
+            color={useColorModeValue("light.darkGrey", "#4C597B")}
             fontWeight={"bold"}
             cursor={"pointer"}
             fontSize={".8rem"}
@@ -151,7 +151,8 @@ export default function Login() {
         <Button
           width="100%"
           borderRadius="3rem"
-          bg="#83BFF6"
+          bg={useColorModeValue("light.darkGrey", "#83BFF6")}
+          color={useColorModeValue("light.backgroundGrey", "dark.blue")}
           my="1.8rem"
           onClick={() => handleLogin()}
         >
@@ -163,14 +164,15 @@ export default function Login() {
           width="100%"
           borderRadius="3rem"
           leftIcon={<FcGoogle size="1.2rem" />}
-          bg="#DBE7FF"
+          bg={useColorModeValue("light.extraLight", "#DBE7FF")}
+          color={"#7786AE"}
           my="1.8rem"
           onClick={() => login(true)}
         >
           Sign in with Google
         </Button>
       </Box>
-      <Text color="#7786AE" mt=".3rem">
+      <Text color={useColorModeValue("light.mediumGrey", "#7786AE")} mt=".3rem">
         New to syntax? &nbsp; &nbsp;<a>Join Now</a>
       </Text>
     </Flex>
