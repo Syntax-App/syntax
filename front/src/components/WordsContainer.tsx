@@ -91,8 +91,8 @@ export default function WordsContainer(props: WordsProps) {
               spacing={4}
               skeletonHeight={4}
               fadeDuration={30}
-              startColor="dark.blue"
-              endColor="dark.darkblue"/>
+              startColor="dark.darkblue"
+              endColor="dark.blue"/>
           </Box> :
           <pre>
             <code>{props.words}</code>
