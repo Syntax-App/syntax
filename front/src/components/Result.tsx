@@ -29,8 +29,6 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { State } from "@/pages/TypingTestInterface/hooks/useEngine";
 
-const languages = ["PYTHON", "JAVA", "JAVASCRIPT", "C++", "C"];
-
 const ChatGPTIcon = createIcon({
   displayName: 'ChatGPTIcon',
   viewBox: '0 0 340 342',
@@ -51,6 +49,7 @@ interface ResultProps {
   newTest: () => void;
   words: string;
   gptSays: string;
+  languages: string[];
 }
 
 export default function Result(props: ResultProps) {
@@ -133,7 +132,7 @@ export default function Result(props: ResultProps) {
                   {props.currLang}
                 </MenuButton>
                 <MenuList>
-                  {languages.map((lang, i) => {
+                  {props.languages.map((lang, i) => {
                       return (
                         <MenuItem
                           key={i}

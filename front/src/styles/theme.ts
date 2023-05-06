@@ -137,7 +137,7 @@ const components = {
       }),
       header: () => ({
         fontFamily: fonts.heading,
-        fontWeight: "900",
+        fontWeight: "bold",
         fontSize: "2.3rem",
       }),
     },
