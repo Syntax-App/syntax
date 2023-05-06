@@ -65,7 +65,10 @@ public class GPTProxyCache {
                     }
 
                     private void buildExplanation(ChatCompletionChunk chatCompletionChunk) {
-                        completionString.append(chatCompletionChunk.getChoices().get(0).getMessage().getContent());
+                        String token = chatCompletionChunk.getChoices().get(0).getMessage().getContent();
+                        if (token != null) {
+                            completionString.append(chatCompletionChunk.getChoices().get(0).getMessage().getContent());
+                        }
                     }
                 });
     }

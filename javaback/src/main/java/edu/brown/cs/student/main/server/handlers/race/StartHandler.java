@@ -138,6 +138,7 @@ public class StartHandler implements Route {
             String snippetContent = this.json.array()[snippetId].text();
             String explanation = this.cache.getExplanation(snippetContent);
 
+
             return new StartSuccessResponse("success", snippetContent, explanation).serialize();
         } catch (ExecutionException | InterruptedException e) {
             return new StartFailureResponse("error", "Snippet file not found!").serialize();
