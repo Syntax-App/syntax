@@ -58,17 +58,17 @@ public class StartHandler implements Route {
     public StartHandler(States states) {
         this.db = states.getDb();
         this.snippetStack = states.getSnippetStacks();
-        try {
-            JSONUtils jsonUtils = new JSONUtils();
-            File snippetsFile = new File(
-                "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
-            Reader reader = new FileReader(snippetsFile);
-            String snippetsString = jsonUtils.readerToString(reader);
-
-            this.json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+//        try {
+//            JSONUtils jsonUtils = new JSONUtils();
+//            File snippetsFile = new File(
+//                "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
+//            Reader reader = new FileReader(snippetsFile);
+//            String snippetsString = jsonUtils.readerToString(reader);
+//
+//            this.json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
 
         this.completionString = new StringBuilder();
         this.cache = new GPTProxyCache(100, 60, TimeUnit.MINUTES, this.json, this.completionString);
@@ -92,12 +92,14 @@ public class StartHandler implements Route {
 
             // if user is not logged in
             if (email == null) {
+                if (lang == null) lang = "";
                 Graph graph = new Graph(lang);
+                this.json = graph.getJson();
                 int randID = graph.getAvailableIDs()
                     .get(new Random().nextInt(graph.getAvailableIDs().size()));
                 String snippet = this.json.array()[randID].text();
 
-                String explanation = this.cache.getExplanation(randID);
+                String explanation = this.cache.getExplanation(snippet);
                 return new StartSuccessResponse("success", snippet,
                     explanation).serialize();
             }
@@ -134,7 +136,7 @@ public class StartHandler implements Route {
             }
 
             String snippetContent = this.json.array()[snippetId].text();
-            String explanation = this.cache.getExplanation(snippetId);
+            String explanation = this.cache.getExplanation(snippetContent);
 
             return new StartSuccessResponse("success", snippetContent, explanation).serialize();
         } catch (ExecutionException | InterruptedException e) {

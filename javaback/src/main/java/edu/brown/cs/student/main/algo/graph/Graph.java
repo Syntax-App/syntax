@@ -241,4 +241,8 @@ public class Graph {
     public List<Integer> getAvailableIDs() {
         return this.availableIDs;
     }
+
+    public SnippetsJSON getJson() {
+        return this.json;
+    }
 }

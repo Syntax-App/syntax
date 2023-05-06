@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GPTProxyCache {
     /**Cache for storing WeatherResponse instances*/
-    private final LoadingCache<Integer, String> cache;
+    private final LoadingCache<String, String> cache;
 
     /**
      * Constructor that allows for the configuration of the cache based on developer's needs
@@ -34,13 +34,13 @@ public class GPTProxyCache {
                 new CacheLoader<>() {
                     @NotNull
                     @Override
-                    public String load(@NotNull Integer snippetID) {
+                    public String load(@NotNull String snippet) {
                         // credit: https://github.com/TheoKanning/openai-java/blob/main/example/src/main/java/example/OpenAiApiExample.java
                         String token = APIKeys.API_KEY;
                         OpenAiService service = new OpenAiService(token);
 
                         final List<ChatMessage> messages = new ArrayList<>();
-                        final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + json.array()[snippetID].text());
+                        final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "Explain this code snippet: \n" + snippet);
                         messages.add(systemMessage);
                         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
                             .builder()
@@ -70,7 +70,7 @@ public class GPTProxyCache {
                 });
     }
 
-    public String getExplanation(int snippetID) {
-        return this.cache.getUnchecked(snippetID);
+    public String getExplanation(String snippet) {
+        return this.cache.getUnchecked(snippet);
     }
 }
