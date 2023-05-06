@@ -8,35 +8,42 @@ const config: ThemeConfig = {
   }
 
 const colors = {
-    // blue color scheme based off of #3A496F
-    blue: {
-        50: "#EEF1F6",
-        100: "#D0D6E6",
-        200: "#B2BCD7",
-        300: "#94A2C7",
-        400: "#7688B7",
-        500: "#586EA7",
-        600: "#465886",
-        700: "#354264",
-        800: "#232C43",
-        900: "#121621"
-    },
-    dark: {
-        extralight: "#9FC1E1",
-        mediumlightblue: "#7786AE",
-        lightblue: "#77A3CD", // button/logo color
-        indigo: "#56699B", // chatGPT bg color
-        blue: "#3A496F", // bg color
-        darkblue: "#2A3656", // code bg color
-        dullblue: "#B1C5EC", // input box placeholder
-        vibrantblue: "#83BFF6",
-    },
-    light: {
-        extralight: "#DBE7FF",
-        lightblue: "#77A3CD",
-        indigo: "#56699B",
-        blue: "#3A496F",
-    },
+  // blue color scheme based off of #3A496F
+  blue: {
+    50: "#EEF1F6",
+    100: "#D0D6E6",
+    200: "#B2BCD7",
+    300: "#94A2C7",
+    400: "#7688B7",
+    500: "#586EA7",
+    600: "#465886",
+    700: "#354264",
+    800: "#232C43",
+    900: "#121621",
+  },
+  dark: {
+    extralight: "#9FC1E1",
+    mediumlightblue: "#7786AE",
+    lightblue: "#77A3CD", // button/logo color
+    indigo: "#56699B", // chatGPT bg color
+    blue: "#3A496F", // bg color
+    darkblue: "#2A3656", // code bg color
+    dullblue: "#B1C5EC", // input box placeholder
+    vibrantblue: "#83BFF6",
+  },
+  light: {
+    extralight: "#DBE7FF",
+    lightblue: "#77A3CD",
+    indigo: "#56699B",
+    blue: "#3A496F",
+
+    backgroundGrey: "#B6BABE",
+    lightGrey: "#B6BABE", // type box
+    mediumGrey: "#919AA3", // logo, gpt box
+    darkGrey: "#3E414A", // boldest
+    forestGreen: "#587A72", // start button
+    superLight: "#E6E6E6", // google signin and signup
+  },
 };
 
 const styles = {

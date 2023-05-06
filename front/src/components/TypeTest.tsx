@@ -1,20 +1,18 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-  Text,
-  Flex,
-  Box,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Text, Flex, Box, useColorModeValue } from "@chakra-ui/react";
 import TopButtons from "@/components/TopButtons";
 import ControlButtons from "@/components/ControlButtons";
 import WordsContainer from "@/components/WordsContainer";
 import { SkeletonText } from "@chakra-ui/react";
+import { State } from "@/pages/TypingTestInterface/hooks/useEngine";
+import Hotkeys from "react-hot-keys";
 
 // let gptSays = `This Java program starts by creating a HashMap named "languages" to store a mapping of programming languages and their positions. It adds three key-value pairs to the map using the put() method, with the keys being string values representing the positions (e.g. "pos1", "pos2", "pos3") and the values being string values representing the programming languages (e.g. "Java", "Python", "JS").`;
 
 interface TypeTestProps {
   state: string;
+  setState: React.Dispatch<React.SetStateAction<State>>;
   typeMode: boolean;
   currLang: string;
   setCurrLang: React.Dispatch<React.SetStateAction<string>>;
@@ -36,16 +34,55 @@ interface TypeTestProps {
 }
 
 export default function TypeTest(props: TypeTestProps) {
-    const [lpm, setlpm] = useState(0);
+  const [lpm, setlpm] = useState(0);
+  const [restartShortcut, setRestartShortcut] = useState(false);
 
-    useEffect(() => {
-        if (props.state == "start"){
-          setlpm(0);
-        }
-    }, [props.state]);
-      
-    return (
-      <>
+  useEffect(() => {
+    if (props.state === "start") {
+      setlpm(0);
+    }
+  }, [props.state]);
+
+  // prevents typing while code snippet is loading
+  useEffect(() => {
+    if (props.loadGpt) {
+      props.setState("idle");
+    } else {
+      props.setState("idle");
+    }
+  }, [props.loadGpt]);
+
+  // RESTART SHORTCUT
+
+  useEffect(() => {
+    if (restartShortcut) {
+      setRestartShortcut(false);
+      props.restart();
+    }
+  }, [restartShortcut, setRestartShortcut]);
+
+  // useEffect(() => {
+  //   const handleKeyPress = (e: KeyboardEvent) => {
+  //     if (e.shiftKey && e.key === "r" && props.state == "running") {
+  //       console.log("RESTART SHORTCUT");
+  //       props.restart;
+  //     }
+  //   };
+  //   window.addEventListener("keydown", handleKeyPress);
+  // }, [])
+
+  return (
+    <>
+      <Hotkeys
+        keyName="shift+r"
+        onKeyDown={() => {
+          console.log("pressed shortcut");
+          setRestartShortcut(true);
+        }}
+        onKeyUp={() => {
+          setRestartShortcut(true);
+        }}
+      >
         <Flex justifyContent="center" data-testid="typetest">
           <Flex
             direction="column"
@@ -90,6 +127,7 @@ export default function TypeTest(props: TypeTestProps) {
                   COUNTDOWN_SECONDS={props.COUNTDOWN_SECONDS}
                   timeElapsed={props.timeElapsed}
                   loadGpt={props.loadGpt}
+                  state={props.state}
                 />
               </Flex>
               <Box
@@ -112,17 +150,19 @@ export default function TypeTest(props: TypeTestProps) {
                   ChatGPT Says...
                 </Text>
                 <br />
-                { props.loadGpt ?
-                  <Box w='27vw'>
-                    <SkeletonText 
-                      height='20px'
+                {props.loadGpt ? (
+                  <Box w="27vw">
+                    <SkeletonText
+                      height="20px"
                       noOfLines={10}
                       spacing={4}
                       skeletonHeight={4}
                       fadeDuration={30}
                       startColor="dark.indigo"
-                      endColor="dark.blue"/>
-                  </Box> :
+                      endColor="dark.blue"
+                    />
+                  </Box>
+                ) : (
                   <Text
                     fontSize="md"
                     fontWeight="medium"
@@ -131,7 +171,8 @@ export default function TypeTest(props: TypeTestProps) {
                     px={4}
                   >
                     {props.gptSays}
-                  </Text> }
+                  </Text>
+                )}
               </Box>
             </Flex>
             {/* start, skip, restart buttons */}
@@ -142,6 +183,7 @@ export default function TypeTest(props: TypeTestProps) {
             />
           </Flex>
         </Flex>
-      </>
-    );
+      </Hotkeys>
+    </>
+  );
 }

@@ -14,16 +14,11 @@ const UserType = (props: UserTypeProps) => {
   const typedChars = props.userInput.split("");
   const words = props.words.trim();
 
-  
-  // if (words[i] === "\n") {
-  //   props.setLinesCompleted(props.linesCompleted + 1);
-  // }
-
-  useMemo(() => {
+  useEffect(() => {
     if (words[props.userInput.length] === "\n"){
       props.setLinesCompleted(props.linesCompleted + 1);
     }
-  }, [props.userInput])
+  }, [props.userInput.length])
 
   if (!props.typeMode) return null;
 
@@ -51,8 +46,6 @@ interface CharacterProps {
 const Character = (props: CharacterProps) => {
   // checks if typed char matches expected char
   const isCorrect = props.actual === props.expected;
-  
-  //console.log("expected:" + props.expected)
   const isWhiteSpace = props.expected === " ";
 
   return (

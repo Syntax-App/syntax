@@ -8,7 +8,7 @@ import { type } from "os";
 // SPEED-TYPING INTERFACE REFERENCED FROM: https://www.youtube.com/watch?v=oc7BMlIU3VY
 
 // states to keep track of the game status
-export type State = "start" | "run" | "finish";
+export type State = "start" | "run" | "finish" | "idle";
 
 export const NUMBER_WORDS = 20;
 export const COUNTDOWN_SECONDS = 10;
@@ -20,7 +20,7 @@ const useEngine = () => {
     useCountdownTimer(COUNTDOWN_SECONDS);
   // record keyboard strokes during start or run
   const { typed, cursor, clearTyped, resetTotalTyped, totalTyped } = useTypings(
-    (state !== "finish")
+    state !== "finish" && state !== "idle"
   );
 
   const [timeElapsed, setTimeElapsed] = useState(1);
@@ -47,7 +47,6 @@ const useEngine = () => {
   useEffect(() => {
     const wordsReached = words.substring(0, cursor);
     setErrors(countErrors(typed, wordsReached));
-    //setLinesCompleted(countCompletedLines(wordsReached));
   }, [errors, countErrors, typed]);
 
   useEffect(() => {
@@ -73,7 +72,7 @@ const useEngine = () => {
     totalTyped,
     restart,
     COUNTDOWN_SECONDS,
-    timeElapsed
+    timeElapsed,
   };
 };
 

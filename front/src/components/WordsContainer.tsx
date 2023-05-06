@@ -7,10 +7,10 @@ interface WordsProps {
   words: string; // this props.code is for random generated
   typeMode: boolean;
   COUNTDOWN_SECONDS: number;
-  //lpm: number;
   setlpm: React.Dispatch<React.SetStateAction<number>>;
   timeElapsed: number;
   loadGpt: boolean;
+  state: string;
 }
 
 export default function WordsContainer(props: WordsProps) {
@@ -21,7 +21,7 @@ export default function WordsContainer(props: WordsProps) {
     const typingBox = typingBoxRef.current;
 
     // prevents tabbing out of the typing box
-    if (typingBox) {
+    if (typingBox && props.state !== "finish") {
       // selects elements that are focusable
       const allFocusableElems = document.querySelectorAll(
         'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
