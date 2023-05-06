@@ -43,10 +43,10 @@ public class Graph {
             JSONUtils jsonUtils = new JSONUtils();
             File snippetsFile;
             // extensible for multiple different languages
-            switch(lang) {
+            switch(this.lang) {
                 // typescript if specified
-                case "typescript":
-                    snippetsFile = new File();
+                case "script":
+                    snippetsFile = new File("src/main/java/edu/brown/cs/student/main/algo/snippets/TSXSnippets.json");
                     break;
                 // java by default
                 default:
@@ -225,8 +225,6 @@ public class Graph {
 
 
     private void populateIDList() throws IOException {
-        // TODO: insert strategy pattern here - different ways of loading in snippets
-        // TODO: code below is one strategy pattern
         for (int i = 0; i < this.json.array().length; i++) {
             this.availableIDs.add(i);
         }

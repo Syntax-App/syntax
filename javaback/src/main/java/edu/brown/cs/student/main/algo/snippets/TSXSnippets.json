@@ -1,0 +1,44 @@
+{
+  "array": [
+    {
+      "text": "type Graph = { [key: string]: { [key: string]: number } };\n\nfunction dijkstra(graph: Graph, start: string, end: string): number {\n  const distances: { [key: string]: number } = {};\n  const queue = new PriorityQueue<string>();\n  const visited = new Set<string>();\n\n  distances[start] = 0;\n  queue.enqueue(start, 0);\n\n  while (!queue.isEmpty()) {\n    const current = queue.dequeue().element;\n\n    if (current === end) {\n      return distances[end];\n    }\n\n    if (visited.has(current)) {\n      continue;\n    }\n\n    visited.add(current);\n\n    for (const neighbor in graph[current]) {\n      const distance = graph[current][neighbor];\n      const totalDistance = distances[current] + distance;\n\n      if (!distances[neighbor] || totalDistance < distances[neighbor]) {\n        distances[neighbor] = totalDistance;\n        queue.enqueue(neighbor, totalDistance);\n      }\n    }\n  }\n\n  return -1;\n}",
+      "difficulty": 9
+    },
+    {
+      "text": "async function getUser(id: number): Promise<User> {\n  const response = await fetch(`/users/${id}`);\n  const user = await response.json();\n\n  return user;\n}\n\nasync function updateUser(user: User): Promise<void> {\n  const response = await fetch(`/users/${user.id}`, {\n    method: 'PUT',\n    body: JSON.stringify(user),\n    headers: {\n      'Content-Type': 'application/json'\n    }\n  });\n\n  if (!response.ok) {\n    throw new Error('Failed to update user.');\n  }\n}\n\nasync function deleteUser(id: number): Promise<void> {\n  const response = await fetch(`/users/${id}`, {\n    method: 'DELETE'\n  });\n\n  if (!response.ok) {\n    throw new Error('Failed to delete user.');\n  }\n}",
+      "difficulty": 7
+    },
+    {
+      "text": "import * as React from \"react\";\n\nimport styles from \"./button.module.scss\";\n\nexport function IconButton(props: {\n  onClick?: () => void;\n  icon?: JSX.Element;\n  type?: \"primary\" | \"danger\";\n  text?: string;\n  bordered?: boolean;\n  shadow?: boolean;\n  className?: string;\n  title?: string;\n  disabled?: boolean;\n}) {\n  return (\n    <button\n      className={\n        styles[\"icon-button\"] +\n        ` ${props.bordered && styles.border} ${props.shadow && styles.shadow} ${\n          props.className ?? \"\"\n        } clickable ${styles[props.type ?? \"\"]}`\n      }\n      onClick={props.onClick}\n      title={props.title}\n      disabled={props.disabled}\n      role=\"button\"\n    >\n      {props.icon && (\n        <div\n          className={\n            styles[\"icon-button-icon\"] +\n            ` ${props.type === \"primary\" && \"no-dark\"}`\n          }\n        >\n          {props.icon}\n        </div>\n      )}\n\n      {props.text && (\n        <div className={styles[\"icon-button-text\"]}>{props.text}</div>\n      )}\n    </button>\n  );\n}",
+      "difficulty": 5
+    },
+    {
+      "text": "export function AvatarPicker(props: {\n  onEmojiClick: (emojiId: string) => void;\n}) {\n  return (\n    <EmojiPicker\n      lazyLoadEmojis\n      theme={EmojiTheme.AUTO}\n      getEmojiUrl={getEmojiUrl}\n      onEmojiClick={(e) => {\n        props.onEmojiClick(e.unified);\n      }}\n    />\n  );\n}\n\nexport function Avatar(props: { model?: ModelType; avatar?: string }) {\n  if (props.model) {\n    return (\n      <div className=\"no-dark\">\n        {props.model?.startsWith(\"gpt-4\") ? (\n          <BlackBotIcon className=\"user-avatar\" />\n        ) : (\n          <BotIcon className=\"user-avatar\" />\n        )}\n      </div>\n    );\n  }\n\n  return (\n    <div className=\"user-avatar\">\n      {props.avatar && <EmojiAvatar avatar={props.avatar} />}\n    </div>\n  );\n}\n\nexport function EmojiAvatar(props: { avatar: string; size?: number }) {\n  return (\n    <Emoji\n      unified={props.avatar}\n      size={props.size ?? 18}\n      getEmojiUrl={getEmojiUrl}\n    />\n  );\n}",
+      "difficulty": 4
+    },
+    {
+      "text": "function App() {\n  return (\n    <Box textAlign=\"center\" fontSize=\"xl\">\n      <Grid minH=\"100vh\" p={3}>\n        <ColorModeSwitcher justifySelf=\"flex-end\" />\n        <VStack spacing={8}>\n          <Logo h=\"40vmin\" pointerEvents=\"none\" />\n          <Text>\n            Edit <Code fontSize=\"xl\">src/App.js</Code> and save to reload.\n          </Text>\n          <Link\n            color=\"teal.500\"\n            href=\"https://chakra-ui.com\"\n            fontSize=\"2xl\"\n            target=\"_blank\"\n            rel=\"noopener noreferrer\"\n          >\n            Learn Chakra\n          </Link>\n        </VStack>\n      </Grid>\n    </Box>\n  )\n}\n\nexport default App",
+      "difficulty": 3
+    },
+    {
+      "text": "const Mailto = ({ email, subject = '', body = '', children }) => {\n  let params = subject || body ? '?' : '';\n  if (subject) params += `subject=${encodeURIComponent(subject)}`;\n  if (body) params += `${subject ? '&' : ''}body=${encodeURIComponent(body)}`;\n\n  return <a href={`mailto:${email}${params}`}>{children}</a>;\n};",
+      "difficulty": 1
+    },
+    {
+      "text": "/* CSS */\n.carousel {\n  position: relative;\n}\n\n.carousel-item {\n  position: absolute;\n  visibility: hidden;\n}\n\n.carousel-item.visible {\n  visibility: visible;\n}\n\n// React Component\nconst Carousel = ({ carouselItems, ...rest }) => {\n  const [active, setActive] = React.useState(0);\n  let scrollInterval = null;\n\n  React.useEffect(() => {\n    scrollInterval = setTimeout(() => {\n      setActive((active + 1) % carouselItems.length);\n    }, 2000);\n    return () => clearTimeout(scrollInterval);\n  });\n\n  return (\n    <div className=\"carousel\">\n      {carouselItems.map((item, index) => {\n        const activeClass = active === index ? ' visible' : '';\n        return React.cloneElement(item, {\n          ...rest,\n          className: `carousel-item${activeClass}`\n        });\n      })}\n    </div>\n  );\n};",
+      "difficulty": 6
+    },
+    {
+      "text": "function copyToClipboard() {\n\n  const copyText = document.getElementById(\"myInput\");\n  copyText.select();\n  document.execCommand(\"copy\");\n  \n}\n//new API\nfunction copyToClipboard(){\n navigator.clipboard.writeText(document.querySelector('#myInput').value)\n}",
+      "difficulty": 1
+    },
+    {
+      "text": "export default function EditPost() {\n  function handleSubmit(e) {\n    // Prevent the browser from reloading the page\n    e.preventDefault();\n    // Read the form data\n    const form = e.target;\n    const formData = new FormData(form);\n    // You can pass formData as a fetch body directly:\n    fetch('/some-api', { method: form.method, body: formData });\n    // You can generate a URL out of it, as the browser does by default:\n    console.log(new URLSearchParams(formData).toString());\n    // You can work with it as a plain object.\n    const formJson = Object.fromEntries(formData.entries());\n    console.log(formJson); // (!) This doesn't include multiple select values\n    // Or you can get an array of name-value pairs.\n    console.log([...formData.entries()]);\n  }\n\n  return (\n    <form method=\"post\" onSubmit={handleSubmit}>\n      <label>\n        Pick your favorite fruit:\n        <select name=\"selectedFruit\" defaultValue=\"orange\">\n          <option value=\"apple\">Apple</option>\n          <option value=\"banana\">Banana</option>\n          <option value=\"orange\">Orange</option>\n        </select>\n      </label>\n      <label>\n        Pick all your favorite vegetables:\n        <select\n          name=\"selectedVegetables\"\n          multiple={true}\n          defaultValue={['corn', 'tomato']}\n        >\n          <option value=\"cucumber\">Cucumber</option>\n          <option value=\"corn\">Corn</option>\n          <option value=\"tomato\">Tomato</option>\n        </select>\n      </label>\n      <hr />\n      <button type=\"reset\">Reset</button>\n      <button type=\"submit\">Submit</button>\n    </form>\n  );\n}",
+      "difficulty": 8
+    },
+    {
+      "text": "const API_URL = \"http://localhost:8080/api/auth/\";\n\nclass AuthService {\n  login(username: string, password: string) {\n    return axios\n      .post(API_URL + \"signin\", {\n        username,\n        password\n      })\n      .then(response => {\n        if (response.data.accessToken) {\n          localStorage.setItem(\"user\", JSON.stringify(response.data));\n        }\n\n        return response.data;\n      });\n  }\n\n  logout() {\n    localStorage.removeItem(\"user\");\n  }\n\n  register(username: string, email: string, password: string) {\n    return axios.post(API_URL + \"signup\", {\n      username,\n      email,\n      password\n    });\n  }\n\n  getCurrentUser() {\n    const userStr = localStorage.getItem(\"user\");\n    if (userStr) return JSON.parse(userStr);\n\n    return null;\n  }\n}\n\nexport default new AuthService();",
+      "difficulty": 5
+    }
+  ]
+}
