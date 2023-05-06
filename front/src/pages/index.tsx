@@ -26,11 +26,12 @@ export default function Home() {
     restart,
     totalTyped,
     COUNTDOWN_SECONDS,
-    timeElapsed
+    timeElapsed,
   } = useEngine();
 
   async function getNewSnippet() {
     setLoadGpt(true);
+    //setState("idle");
     requestCode(currLang, userInfo?.email)
       .then((data) => {
         updateWords(data.snippet);
@@ -62,21 +63,22 @@ export default function Home() {
 
   if (state == "finish") {
     return (
-      <Result 
-        stats={stats} 
-        currLang={currLang} 
-        setCurrLang={setCurrLang} 
-        newTest={newTest} 
+      <Result
+        stats={stats}
+        currLang={currLang}
+        setCurrLang={setCurrLang}
+        newTest={newTest}
         words={words}
         gptSays={gptSays}
         languages={languages}
-        />
+      />
     );
   } else {
     return (
       <TypeTest
         getNewSnippet={getNewSnippet}
         state={state}
+        setState={setState}
         typeMode={typeMode}
         currLang={currLang}
         setCurrLang={setCurrLang}
