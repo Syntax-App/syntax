@@ -5,7 +5,6 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteResult;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.types.User;
@@ -19,13 +18,13 @@ import spark.Route;
 import java.util.*;
 
 /**
- * Handler class for loading a CSV file.
+ * Handler class for user/create endpoint
  */
 public class UserCreateHandler implements Route {
     private final Firestore db;
 
     /**
-     * LoadHandler constructor.
+     * UserCreateHandler constructor.
      *
      * @param states -  a class that keeps track of shared variables.
      */

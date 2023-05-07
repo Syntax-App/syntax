@@ -5,27 +5,12 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
-import com.theokanning.openai.completion.chat.ChatCompletionChunk;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.completion.chat.ChatMessageRole;
-import com.theokanning.openai.service.OpenAiService;
 import edu.brown.cs.student.main.algo.graph.Graph;
 import edu.brown.cs.student.main.algo.snippets.GPTProxyCache;
-import edu.brown.cs.student.main.algo.snippets.Snippets.Snippet;
 import edu.brown.cs.student.main.algo.snippets.Snippets.SnippetsJSON;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
-import edu.brown.cs.student.main.server.config.APIKeys;
 import edu.brown.cs.student.main.server.types.User;
-import edu.brown.cs.student.main.server.utils.JSONUtils;
-import io.reactivex.Flowable;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -35,13 +20,12 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Handler class for loading a CSV file.
+ * Handler class for race/start endpoint
  */
 public class StartHandler implements Route {
     private Firestore db;
@@ -51,54 +35,45 @@ public class StartHandler implements Route {
     private SnippetsJSON json;
 
     /**
-     * LoadHandler constructor.
-     *
+     * StartHandler constructor.
      * @param states -  a class that keeps track of shared variables.
      */
     public StartHandler(States states) {
         this.db = states.getDb();
         this.snippetStack = states.getSnippetStacks();
-//        try {
-//            JSONUtils jsonUtils = new JSONUtils();
-//            File snippetsFile = new File(
-//                "src/main/java/edu/brown/cs/student/main/algo/snippets/JavaSnippets.json");
-//            Reader reader = new FileReader(snippetsFile);
-//            String snippetsString = jsonUtils.readerToString(reader);
-//
-//            this.json = jsonUtils.fromJson(SnippetsJSON.class, snippetsString);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
 
         this.completionString = new StringBuilder();
-        this.cache = new GPTProxyCache(100, 60, TimeUnit.MINUTES, this.json, this.completionString);
+        // create cache to store a max of 100 GPT explanations with 24-hour expiration time
+        this.cache = new GPTProxyCache(100, 24, TimeUnit.HOURS, this.completionString);
     }
 
     /**
-     * Uses filepath and hasHeader params to parse a CSV and set the active file variables.
+     * Uses email and language params to respond with a snippet and its explanation
      *
      * @param request  the request to handle
      * @param response used to modify properties of the response
      * @return response content
-     * @throws Exception part of interface
      */
     @Override
     public Object handle(Request request, Response response) {
-        // this is where we will call our algorithm!
+        // this is where we call our algorithm!
         try {
-            // get email param
+            // get email and language params
             String email = request.queryParams("email");
             String lang = request.queryParams("lang");
 
             // if user is not logged in
             if (email == null) {
+                // if no language, use default graph
                 if (lang == null) lang = "";
+                // create new graph
                 Graph graph = new Graph(lang);
                 this.json = graph.getJson();
+                // choose random snippet since no personalization is possible without user data
                 int randID = graph.getAvailableIDs()
                     .get(new Random().nextInt(graph.getAvailableIDs().size()));
-                String snippet = this.json.array()[randID].text();
 
+                String snippet = this.json.array()[randID].text();
                 String explanation = this.cache.getExplanation(snippet);
                 return new StartSuccessResponse("success", snippet,
                     explanation).serialize();
@@ -114,30 +89,38 @@ public class StartHandler implements Route {
             double userExperience = currUser.getStats().getExp();
             int snippetId;
 
+            // if user has done races before
             if (this.snippetStack.containsKey(email)) {
+                // if there's more than one snippet left for the user,
+                // pop it off the stack and use it
                 if (this.snippetStack.get(email).size() > 1) {
                     snippetId = this.snippetStack.get(email).pop();
                 } else {
+                    // if there's one snippet left, pop the last snippet
                     snippetId = this.snippetStack.get(email).pop();
+                    // construct new graph and find new path
                     Graph graph = new Graph(lang);
                     graph.constructGraph(userExperience);
                     List<Integer> snippetIDs = graph.findPath(graph.getHead());
                     LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
+                    // refresh stack with new snippet order
                     this.snippetStack.put(email, linkedSnippetIDs);
                 }
-
             } else {
+                // if it's the user's first time ever racing
+                // construct a new graph and find a new path
                 Graph graph = new Graph(lang);
                 graph.constructGraph(userExperience);
                 List<Integer> snippetIDs = graph.findPath(graph.getHead());
                 LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
+                // pop a snippet off the path for use
                 snippetId = linkedSnippetIDs.pop();
+                // set stack with snippets
                 this.snippetStack.put(email, linkedSnippetIDs);
             }
-
+            // get snippet text and explanation
             String snippetContent = this.json.array()[snippetId].text();
             String explanation = this.cache.getExplanation(snippetContent);
-
 
             return new StartSuccessResponse("success", snippetContent, explanation).serialize();
         } catch (ExecutionException | InterruptedException e) {
@@ -149,7 +132,8 @@ public class StartHandler implements Route {
     }
 
     /**
-     * Success response for loading. Serializes the result ("success") and the filepath of file loaded.
+     * Success response for starting a race. Serializes the result ("success"), the snippet text,
+     * and the snippet explanation
      */
     public record StartSuccessResponse(String status, String snippet, String explanation) {
         /**
@@ -168,7 +152,7 @@ public class StartHandler implements Route {
 
 
     /**
-     * Failure response for loading. Serializes the error type and the error message.
+     * Failure response for starting a race. Serializes the error type and the error message.
      */
     public record StartFailureResponse(String status, String error_message) {
 

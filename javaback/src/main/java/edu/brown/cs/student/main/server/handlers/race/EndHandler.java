@@ -6,10 +6,8 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteResult;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
-import edu.brown.cs.student.main.server.handlers.user.UserGetHandler.GetUserFailureResponse;
 import edu.brown.cs.student.main.server.types.NewStats;
 import edu.brown.cs.student.main.server.types.User;
 import edu.brown.cs.student.main.server.types.UserStats;
@@ -22,11 +20,14 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/**
+ * This class represents the handler of the race/end endpoint
+ */
 public class EndHandler implements Route {
     private final Firestore db;
 
     /**
-     * LoadHandler constructor.
+     * EndHandler constructor.
      *
      * @param states -  a class that keeps track of shared variables.
      */
@@ -35,32 +36,34 @@ public class EndHandler implements Route {
     }
 
     /**
-     * Uses filepath and hasHeader params to parse a CSV and set the active file variables.
+     * Updates user stats based on completed race's performance
      *
      * @param request  the request to handle
      * @param response used to modify properties of the response
      * @return response content
-     * @throws Exception part of interface
      */
     @Override
     public Object handle(Request request, Response response)
         throws ExecutionException, InterruptedException, IOException {
-        //String email = request.queryParams("email");
+        // access collection of user data from Firestore
         CollectionReference users = this.db.collection("users");
+        // get request data
         String reqBody = request.body();
+
         JSONUtils jsonUtils = new JSONUtils();
 
         NewStats new_stats = jsonUtils.fromJson(NewStats.class, reqBody);
 
+        // get the user data corresponding to the email
         Query query = users.whereEqualTo("email", new_stats.email());
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
+        // check if user with email exists
         if (querySnapshot.get().getDocuments().isEmpty()) {
             return new EndFailureResponse("error", "User with given email does not exist!").serialize();
         }
 
         User currUser = querySnapshot.get().getDocuments().get(0).toObject(User.class);
-
         UserStats curr_stats = currUser.getStats();
         int curr_highlpm = curr_stats.getHighlpm();
         double curr_highacc = curr_stats.getHighacc();
@@ -78,6 +81,7 @@ public class EndHandler implements Route {
         double new_avglpm = (curr_stats.getAvglpm() * curr_stats.getNumraces() + new_stats.recentlpm()) / new_numraces;
         double new_avgacc = (curr_stats.getAvgacc() * curr_stats.getNumraces() + new_stats.recentacc()) / new_numraces;
         double new_exp = curr_stats.getExp() + .1;
+        // keep experience at 10 or lower
         if (curr_stats.getExp() >= 10) new_exp = 10;
 
         UserStats updatedStats = new UserStats(curr_highlpm, curr_highacc, new_numraces, new_avglpm, new_avgacc, new_exp);
@@ -92,7 +96,7 @@ public class EndHandler implements Route {
     }
 
     /**
-     * Success response for loading. Serializes the result ("success") and the filepath of file loaded.
+     * Success response for ending a race. Serializes the result ("success") and the updated stats
      */
     public record EndSuccessResponse(String status, UserStats stats) {
         /**
@@ -110,7 +114,7 @@ public class EndHandler implements Route {
 
 
     /**
-     * Failure response for loading. Serializes the error type and the error message.
+     * Failure response for ending a race. Serializes the error type and the error message.
      */
     public record EndFailureResponse(String status, String error_message) {
 
