@@ -161,7 +161,7 @@ export default function Login() {
         </Button>
       </Box>
       <Text color={useColorModeValue("light.mediumGrey", "#7786AE")} mt=".3rem">
-        New to syntax? &nbsp; &nbsp;<a>Join Now</a>
+        New to syntax? &nbsp; &nbsp;<a href="/signup">Join Now</a>
       </Text>
     </Flex>
   );

@@ -260,7 +260,7 @@ export default function Signup() {
             color={useColorModeValue("light.mediumGrey", "#7786AE")}
             mt="3rem"
           >
-            Already a Syntax user? &nbsp; &nbsp;<a>Sign In</a>
+            Already a Syntax user? &nbsp; &nbsp;<a href="/login">Sign In</a>
           </Text>
         </Flex>
       </Flex>
