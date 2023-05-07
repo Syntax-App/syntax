@@ -6,6 +6,8 @@ import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import edu.brown.cs.student.main.server.types.User;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -39,6 +41,11 @@ public class UserGetHandler implements Route {
         ApiFuture<QuerySnapshot> querySnapshot = null;
 
         String email = request.queryParams("email");
+
+        if (email == null) {
+            return this.getSerializedFailure("No email parameter was provided!");
+        }
+
         CollectionReference users = db.collection("users");
         Query query = users.whereEqualTo("email", email);
         querySnapshot = query.get();
@@ -51,28 +58,30 @@ public class UserGetHandler implements Route {
 
         // otherwise, return a success res w the user data
         response.status(200);
-        return this.getSerializedSuccess("success", querySnapshot.get().getDocuments().get(0).getData());
+        return this.getSerializedSuccess(querySnapshot.get().getDocuments().get(0).toObject(User.class));
     }
 
     public <T> String checkEmpty(List<T> docs) {
         if (docs.isEmpty()) {
-            return this.getSerializedFailure("error", "user with given email does not exist!");
+            return this.getSerializedFailure("User with given email does not exist!");
         }
         return null;
     }
 
-    public String getSerializedSuccess(String status, Map<String, Object> data) {
-        return new GetUserSuccessResponse(status, data).serialize();
+    public String getSerializedSuccess(User user) {
+        Map<String, User> dataMap = new HashMap<>();
+        dataMap.put("user", user);
+        return new GetUserSuccessResponse("success", dataMap).serialize();
     }
 
-    public String getSerializedFailure(String status, String errorMessage) {
-        return new GetUserFailureResponse(status, errorMessage).serialize();
+    public String getSerializedFailure(String errorMessage) {
+        return new GetUserFailureResponse("error", errorMessage).serialize();
     }
 
     /**
      * Success response for loading. Serializes the result ("success") and the filepath of file loaded.
      */
-    public record GetUserSuccessResponse(String status, Map<String, Object> userData) {
+    public record GetUserSuccessResponse(String status, Map<String, User> data) {
 
         /**
          * @return this response, serialized as Json
@@ -80,10 +89,7 @@ public class UserGetHandler implements Route {
         public String serialize() {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "success");
-
-            HashMap<String, Map<String, Object>> dataMap = new HashMap<>();
-            dataMap.put("user", this.userData);
-            responseMap.put("data", dataMap);
+            responseMap.put("data", data);
             return SerializeHelper.helpSerialize(responseMap);
         }
     }
