@@ -7,6 +7,7 @@ import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
 import edu.brown.cs.student.main.algo.graph.Graph;
 import edu.brown.cs.student.main.algo.snippets.GPTProxyCache;
+import edu.brown.cs.student.main.algo.snippets.GPTRequester;
 import edu.brown.cs.student.main.algo.snippets.Snippets.SnippetsJSON;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
@@ -30,7 +31,6 @@ import java.util.Map;
 public class StartHandler implements Route {
     private Firestore db;
     private Map<String, LinkedList<Integer>> snippetStack;
-    private final StringBuilder completionString;
     private GPTProxyCache cache;
     private SnippetsJSON json;
 
@@ -42,9 +42,9 @@ public class StartHandler implements Route {
         this.db = states.getDb();
         this.snippetStack = states.getSnippetStacks();
 
-        this.completionString = new StringBuilder();
+        GPTRequester gptRequester = new GPTRequester();
         // create cache to store a max of 100 GPT explanations with 24-hour expiration time
-        this.cache = new GPTProxyCache(100, 24, TimeUnit.HOURS, this.completionString);
+        this.cache = new GPTProxyCache(gptRequester, 100, 24, TimeUnit.HOURS);
     }
 
     /**
