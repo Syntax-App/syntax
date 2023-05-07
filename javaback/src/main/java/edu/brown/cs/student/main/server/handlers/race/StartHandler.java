@@ -87,6 +87,7 @@ public class StartHandler implements Route {
 
             // get exp stat
             double userExperience = currUser.getStats().getExp();
+            if (lang == null) lang = "";
             int snippetId;
 
             // if user has done races before

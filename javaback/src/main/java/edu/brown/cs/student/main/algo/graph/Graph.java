@@ -33,7 +33,7 @@ public class Graph {
     public Graph(String lang) {
         this.head = null;
         this.availableIDs = new ArrayList<>();
-        this.standardWeight = 0.5f;
+        this.standardWeight = 0.5;
         this.snippetIDs = new ArrayList<>();
         this.lang = lang;
 
@@ -152,62 +152,8 @@ public class Graph {
                 }
             }
 
-            double[] weights = new double[diffs.length];
-            double proportionForHard;
-            // if there are easier snippet choices, set the proportion accordingly
-            if (numEasy > 0) {
-                proportionForHard = 1 - this.standardWeight;
-            } else {
-                // if there are only harder snippet choices
-                proportionForHard = 1;
-            }
-            // if all snippet choices are easy, the weights are 1 divided by the number of choices
-            if (numEasy == diffs.length) {
-                for (int i = 0; i < diffs.length; i++) {
-                    weights[i] = 1 / numEasy;
-                }
-            } else {
-                // keep track of harder snippets
-                ArrayList<Integer> positiveDeltas = new ArrayList<>();
-                for (int i = 0; i < diffs.length; i++) {
-                    // if snippet is easy, divide standard weight by number of easy snippets
-                    if (diffs[i] <= 0) {
-                        weights[i] = (this.standardWeight / numEasy);
-                    } else {
-                        positiveDeltas.add(i);
-                        // case where there's only one hard snippet
-                        if (diffs[i] == sum) {
-                            weights[i] = 1 - this.standardWeight;
-                        } else {
-                            // case where there's either 2 or 3
-                            weights[i] = (diffs[i] / sum) * proportionForHard;
-                        }
-                    }
-                }
-
-                // swap the weights of the snippet with highest difficulty
-                // and lower difficulty
-                if (positiveDeltas.size() > 1) {
-                    double minVal = Double.POSITIVE_INFINITY;
-                    double maxVal = Double.NEGATIVE_INFINITY;
-                    int minIndex = 0;
-                    int maxIndex = 0;
-                    // find max and min weights
-                    for (int j = 0; j < positiveDeltas.size(); j++) {
-                        if (weights[positiveDeltas.get(j)] > maxVal) {
-                            maxVal = weights[positiveDeltas.get(j)];
-                            maxIndex = positiveDeltas.get(j);
-                        }
-                        if (weights[positiveDeltas.get(j)] < minVal) {
-                            minVal = weights[positiveDeltas.get(j)];
-                            minIndex = positiveDeltas.get(j);
-                        }
-                    }
-                    // swap max and min weights
-                    weights[maxIndex] = minVal;
-                    weights[minIndex] = maxVal;
-                }
-            }
+            // calculate weights
+            double[] weights = this.calculateWeights(numEasy, diffs, sum);
 
             Set<Edge> edges = new HashSet<>();
             for (int i = 0; i < weights.length; i++) {
@@ -227,6 +173,74 @@ public class Graph {
             // base case
             return new Node(snippetID, this.json.array()[snippetID].difficulty(), new HashSet<>());
         }
+    }
+
+    public double[] calculateWeights(double numEasy, double[] diffs, double sum) {
+        double[] weights = new double[diffs.length];
+        double proportionForHard;
+
+        // if there are easier snippet choices, set the proportion accordingly
+        if (numEasy > 0) {
+            proportionForHard = 1 - this.standardWeight;
+        } else {
+            // if there are only harder snippet choices
+            proportionForHard = 1;
+        }
+        // if all snippet choices are easy, the weights are 1 divided by the number of choices
+        if (numEasy == diffs.length) {
+            for (int i = 0; i < diffs.length; i++) {
+                weights[i] = 1 / numEasy;
+            }
+        } else {
+            // keep track of harder snippets
+            ArrayList<Integer> positiveDeltas = new ArrayList<>();
+            for (int i = 0; i < diffs.length; i++) {
+                // if snippet is easy, divide standard weight by number of easy snippets
+                if (diffs[i] <= 0) {
+                    weights[i] = (this.standardWeight / numEasy);
+                } else {
+                    positiveDeltas.add(i);
+                    // case where there's only one hard snippet
+                    if (diffs[i] == sum) {
+                        weights[i] = 1 - this.standardWeight;
+                    } else {
+                        // case where there's either 2 or 3
+                        weights[i] = (diffs[i] / sum) * proportionForHard;
+                    }
+                }
+            }
+
+            // swap the weights of the snippet with highest difficulty
+            // and lower difficulty
+            if (positiveDeltas.size() > 1) {
+                this.swapWeights(weights, positiveDeltas);
+            }
+        }
+        return weights;
+    }
+
+    /**
+     * Helper method to swap weights. Made public for testing
+     */
+    public void swapWeights(double[] weights, ArrayList<Integer> positiveDeltas) {
+        double minVal = Double.POSITIVE_INFINITY;
+        double maxVal = Double.NEGATIVE_INFINITY;
+        int minIndex = 0;
+        int maxIndex = 0;
+        // find max and min weights
+        for (int j = 0; j < positiveDeltas.size(); j++) {
+            if (weights[positiveDeltas.get(j)] > maxVal) {
+                maxVal = weights[positiveDeltas.get(j)];
+                maxIndex = positiveDeltas.get(j);
+            }
+            if (weights[positiveDeltas.get(j)] < minVal) {
+                minVal = weights[positiveDeltas.get(j)];
+                minIndex = positiveDeltas.get(j);
+            }
+        }
+        // swap max and min weights
+        weights[maxIndex] = minVal;
+        weights[minIndex] = maxVal;
     }
 
     /**
@@ -282,5 +296,9 @@ public class Graph {
      */
     public SnippetsJSON getJson() {
         return this.json;
+    }
+
+    public double getStandardWeight() {
+        return this.standardWeight;
     }
 }

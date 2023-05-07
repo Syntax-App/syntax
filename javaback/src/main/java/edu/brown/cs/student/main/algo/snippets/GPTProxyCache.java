@@ -10,8 +10,11 @@ import com.theokanning.openai.completion.chat.ChatMessageRole;
 import com.theokanning.openai.service.OpenAiService;
 import edu.brown.cs.student.main.server.config.APIKeys;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,4 +58,9 @@ public class GPTProxyCache {
     public String getExplanation(String snippet) {
         return this.cache.getUnchecked(snippet);
     }
+
+    public boolean isCachedExact(String snippet) {
+        return this.cache.asMap().containsKey(snippet);
+    }
+
 }
