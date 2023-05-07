@@ -23,8 +23,8 @@ export interface IAuthContext {
 }
 
 export interface IAuthMethods {
-  emailLogin: () => Promise<void>;
-  emailSignup: () => Promise<void>;
+  emailLogin: (email : string, password : string) => Promise<void>;
+  emailSignup: (displayName : string, email : string, password : string) => Promise<void>;
   googleLogin: () => Promise<void>;
   signout: () => Promise<void>;
   updateUserStats: (recentlpm: number, recentacc: number) => Promise<void>;
@@ -36,6 +36,10 @@ export interface IUserInfo {
   email: string;
   pic: string;
   stats: UserStats;
+}
+
+export interface IUserInfoResponse {
+  data: {user: IUserInfo}
 }
 
 const emptyFunc = async () => {
@@ -100,15 +104,17 @@ export function AuthProvider({ children }: any) {
     return unsubscribe;
   }, []);
 
-  async function emailLogin() {
+  async function emailLogin(email : string, password : string) {
     return signInWithEmailAndPassword(
       auth,
-      "daniel_liu2@brown.edu",
-      "supersecurepassword"
+      email,
+      password
     )
       .then((userCredentials: UserCredential) => {
-        console.log("loggedin as " + userCredentials.user.email);
-        setCurrentUser(userCredentials.user);
+        requestGetUser(email)
+        .then((userInf : IUserInfoResponse) => {
+          setUserInfo(userInf.data.user);
+        })
       })
       .catch((error: FirebaseError) => {
         console.log(error.code);
@@ -116,15 +122,20 @@ export function AuthProvider({ children }: any) {
       });
   }
 
-  async function emailSignup() {
+  async function emailSignup(displayName : string, email : string, password : string) {
     return createUserWithEmailAndPassword(
       auth,
-      "daniel_liu2@brown.edu",
-      "supersecurepassword"
+      email,
+      password
     )
       .then((userCredentials: UserCredential) => {
-        console.log("signedup as " + userCredentials.user.email);
-        setCurrentUser(userCredentials.user);
+        requestCreateUser(
+          displayName,
+          email,
+          undefined // will use default profile picture.
+        ).then((userInf : IUserInfoResponse) => {
+          setUserInfo(userInf.data.user);
+        }) 
       })
       .catch((error: FirebaseError) => {
         console.log(error.code);
@@ -144,7 +155,7 @@ export function AuthProvider({ children }: any) {
             result.user.displayName,
             result.user.email,
             result.user.photoURL
-          ).then((userInf) => {
+          ).then((userInf : IUserInfoResponse) => {
             setUserInfo(userInf.data.user);
           });
         }

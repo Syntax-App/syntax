@@ -37,16 +37,22 @@ export default function Signup() {
   const [confirmPass, setConfirmPass] = useState("");
   const [invalidSignup, setInvalidSignup] = useState(false);
   const [emptyFields, setEmptyFields] = useState(false);
-  const [username, setUserName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
   const router = useRouter();
-  async function signup() {
-    methods?.emailSignup();
-  }
+  // async function signup() {
+  //   methods?.emailSignup();
+  // }
 
-  async function login(isGoogle: boolean) {
-    isGoogle ? await methods?.googleLogin() : methods?.emailLogin();
+  // async function login(isGoogle: boolean) {
+  //   isGoogle ? await methods?.googleLogin() : methods?.emailLogin();
+  //   await router.push("/");
+  // }
+
+  async function handleLogin() {
+    // this is necessarily logging in with google, as this is the signup page
+    await methods?.googleLogin();
     await router.push("/");
   }
 
@@ -54,13 +60,13 @@ export default function Signup() {
     if (pass == confirmPass) setInvalidSignup(false);
       if (
         pass == confirmPass &&
-        username !== "" &&
+        name !== "" &&
         email !== "" &&
         pass !== "" &&
         confirmPass !== ""
       ) {
         // successfully register user
-        await signup();
+        await methods?.emailSignup(name, email, pass);
         await router.push("/");
       } else if (pass != confirmPass || pass === "" || confirmPass === "") {
         setInvalidSignup(true);
@@ -122,10 +128,10 @@ export default function Signup() {
               </Text>
             </Flex>
             <Input
-              value={username}
-              onChange={(e) => setUserName(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               variant={"solid"}
-              placeholder="USERNAME"
+              placeholder="NAME"
               _placeholder={{
                 fontFamily: "source code pro",
                 color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
@@ -266,7 +272,7 @@ export default function Signup() {
             leftIcon={<FcGoogle size="1.2rem" />}
             bg={useColorModeValue("light.extraLight", "#DBE7FF")}
             color={"#7786AE"}
-            onClick={() => login(true)}
+            onClick={() => handleLogin(true)}
           >
             Sign in with Google
           </Button>
