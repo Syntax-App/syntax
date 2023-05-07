@@ -235,5 +235,35 @@ public class TestSyntaxIntegration {
         assertEquals(successResponse.data().get("ranking").size(), this.states.getDb().collection("users").get().get().getDocuments().size());
     }
 
+    @Test
+    public void testStartHandlerValid() {
+
+    }
+
+    @Test
+    public void testStartHandlerNoEmail() {
+
+    }
+
+    @Test
+    public void testStartHandlerEmailNotFound() {
+
+    }
+
+    @Test
+    public void testEndHandlerValid() {
+
+    }
+
+    @Test
+    public void testEndHandlerNoEmail() {
+
+    }
+
+    @Test
+    public void testEndHandlerEmailNotFound() {
+
+    }
+
 
 }
