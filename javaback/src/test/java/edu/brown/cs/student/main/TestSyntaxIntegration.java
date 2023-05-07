@@ -13,10 +13,8 @@ import edu.brown.cs.student.main.server.handlers.user.UserCreateHandler;
 import edu.brown.cs.student.main.server.handlers.user.UserGetHandler;
 import edu.brown.cs.student.main.server.handlers.user.UserRankHandler;
 import edu.brown.cs.student.main.server.types.User;
-import edu.brown.cs.student.main.server.utils.JSONUtils;
 import okio.Buffer;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import spark.Spark;
@@ -32,8 +30,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestSyntaxIntegration {
@@ -227,6 +224,16 @@ public class TestSyntaxIntegration {
         UserGetHandler.GetUserFailureResponse failureResponse = getResponse(clientConnection, UserGetHandler.GetUserFailureResponse.class);
         assertEquals("error", failureResponse.status());
         assertEquals("No email parameter was provided!", failureResponse.error_message());
+    }
+
+    @Test
+    public void testRankUsers() throws IOException, ExecutionException, InterruptedException {
+        HttpURLConnection clientConnection = tryGETRequest("user/ranking");
+        assertEquals(200, clientConnection.getResponseCode());
+
+        UserRankHandler.RankSuccessResponse successResponse = getResponse(clientConnection, UserRankHandler.RankSuccessResponse.class);
+        assertEquals(successResponse.data().get("ranking").size(), this.states.getDb().collection("users").get().get().getDocuments().size());
+
     }
 
 

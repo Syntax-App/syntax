@@ -42,7 +42,7 @@ public class UserRankHandler implements Route {
 
             // case where there are no users returned
             if (users.isEmpty()) {
-                return new RankFailureResponse("error", "there are no users in the database").serialize();
+                return new RankFailureResponse("error", "There are no users in the database!").serialize();
             }
 
             // convert all users to User class
@@ -56,24 +56,30 @@ public class UserRankHandler implements Route {
                     u2.getStats().getHighlpm()*u2.getStats().getAvgacc(),
                     u1.getStats().getHighlpm()*u1.getStats().getAvgacc()));
 
-            return new RankSuccessResponse("success", userList).serialize();
+            return this.getSerializedSuccess(userList);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            return this.getSerializedFailure(e.getMessage());
         }
-
-        return new RankFailureResponse("error", "YUH").serialize();
     }
 
-    public record RankSuccessResponse(String status, List<User> users) {
+    public String getSerializedSuccess(List<User> users) {
+        HashMap<String, List<User>> dataMap = new HashMap<>();
+        dataMap.put("ranking", users);
+        return new RankSuccessResponse("success", dataMap).serialize();
+    }
+
+    public String getSerializedFailure(String errorMessage) {
+        return new RankFailureResponse("error", errorMessage).serialize();
+    }
+
+    public record RankSuccessResponse(String status, Map<String, List<User>> data) {
         /**
          * @return this response, serialized as Json
          */
         public String serialize() {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "success");
-            HashMap<String, List<User>> dataMap = new HashMap<>();
-            dataMap.put("ranking", this.users);
-            responseMap.put("data", dataMap);
+            responseMap.put("data", data);
             return SerializeHelper.helpSerialize(responseMap);
         }
     }
