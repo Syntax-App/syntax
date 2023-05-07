@@ -1,24 +1,79 @@
-# Sprint 3: Server
+# Term Project: Syntax
 
 
 ## Project Details
-cs logins: `hmasamur`, `abenjell` <br />
-Total estimated time: 12 hours <br />
-[Github Repo](https://github.com/cs0320-s2023/sprint-3-abenjell-hmasamur)  <br />
+cs logins: `hmasamur`, `abenjell`, `jwan8`, `dliu58` <br />
+Total estimated time: ~48 hours <br />
+[Github Repo](https://github.com/Syntax-App/syntax)  <br />
 
 ## Overview
-Our server project consists of one main class Server, 4 different handlers for the various commands, and additional
-classes/records to facilitate the handling of `loadcsv`, `searchcsv`, `viewcsv`, and `weather`. The handlers each have
-a `handle()` method which handles the commands and return a `SuccessResponse` or `FailureResponse` accordingly.
+Our term project Syntax is a typing-test website that helps users practice typing code syntax
+instead of English. In addition, our site uses ChatGPT to provide explanations for every code
+snippet generated from our custom graph-based weighted random-walk algorithm. User data
+is stored using Firestore, and authentication is performed using email/password or Google
+credentials through Firebase.
 
-The `States` class stores shared variables between these different handlers, and the `Response` class contains records
-that correspond to particular sections of the JSON response returned from the NWS Weather API.
-
-The `weather` directory also contains additional classes and records, which are all used to handle the `weather` command
-and facilitate the caching of responses from NWS. The details of these classes/records are outlined in Design Choices.
+The project consists of a frontend using React and Typescript along with ChakraUI, and a backend
+in Java.
+The backend has a `Server` with endpoints regarding users (user/get to get user info + user/create
+to create a new user) and races (race/start to generate snippets and explanations + race/end
+to update user statistics). The backend also houses our algorithm, which is based on a Graph
+of Nodes connected by Edges. Snippets are stored in JSON format in the backend as well, and are
+kept track of using a proxy cache that uses a requester to call OpenAI's API for GPT explanations.
 
 ### File Structure
 ```
+syntax
+├── front
+├── javaback/
+│   ├── src/
+│   │   ├── main/
+│   │   │   └── java/
+│   │   │       └── edu.brown.cs.student.main/
+│   │   │           ├── algo/
+│   │   │           │   ├── graph/
+│   │   │           │       ├── Edge.java
+│   │   │           │       ├── Graph.java
+│   │   │           │       └── Node.java
+│   │   │           │   └── snippets/
+│   │   │           │       ├── GPTProxyCache.java
+│   │   │           │       ├── GPTRequester.java
+│   │   │           │       ├── JavaSnippets.json
+│   │   │           │       ├── Snippets.java
+│   │   │           │       └── TSXSnippets.json
+│   │   │           └── server/
+│   │   │               ├── config/
+│   │   │               │   ├── APIKeysExample.java
+│   │   │               │   └── FirebaseConfig.java
+│   │   │               ├── handlers/
+│   │   │               │   ├── race/
+│   │   │               │   │   ├── EndHandler.java
+│   │   │               │   │   └── StartHandler.java
+│   │   │               │   └── user/
+│   │   │               │       ├── UserCreateHandler.java
+│   │   │               │       ├── UserGetHandler.java
+│   │   │               │       └── UserRankHandler.java
+│   │   │               ├── types/
+│   │   │               │   ├── NewStats.java
+│   │   │               │   ├── User.java
+│   │   │               │   └── UserStats.java
+│   │   │               ├── utils/
+│   │   │               │   └── JSONUtils.java
+│   │   │               ├── Server.java
+│   │   │               ├── States.java
+│   │   │               └── SerializeHelper.java
+│   │   └── test/
+│   │       └── java/
+│   │           └── edu.brown.cs.student.main/
+│   │               ├── mocks/
+│   │                   ├── MockJSON.java
+│   │                   └── MockStats.java
+│   │               ├── TestSyntaxIntegration.java
+│   │               └── TestSyntaxUnit.java
+│   ├── pom.xml
+│   ├── index.html
+│   └── README.md                  
+└── .gitignore
 sprint-3-abenjell-hmasamur/
 ├── data/
 │   ├── persons/
@@ -81,119 +136,79 @@ sprint-3-abenjell-hmasamur/
 
 ## Design Choices
 
-- For the CSV functionality of our API, we have created a class called `States`,
-  and instantiated one common instance that we passed in to the CSV related handlers.
-  This class keeps track of the "current" loaded CSV file, as well as its header if it exists.
+- For all handlers of our API, we have created a class called `States`,
+and instantiated one common instance that we passed in to the handlers.
+This class keeps track of the Firebase/Firestore configuration as well as
+each user's snippets.
 
-- We have created a `SerializeHelper` class, with a static method `helpSerialize` which, given a HashMap,
-takes care of serializing it into a JSON formatted `String`.
+- Each user's uuid, name, email, profile picture url, number of races, experience,
+highest lines per minute, average lpm, highest accuracy, and average accuracy are
+stored.
 
-- Given that handling weather requests required multiple sub-steps, 
-we created multiple specialized classes, most of which are under the `weather/` folder. 
-Here's how they work together:
+- We have created a `SerializeHelper` class, with a static method `helpSerialize` which, 
+given a HashMap, takes care of serializing it into a JSON formatted `String`.
 
-  - `WeatherUtils` houses essential helper methods for getting and parsing data from
-    the NWS API. Its methods are called in the `WeatherHandler`.
-  - `WeatherProxy` wraps a `WeatherUtils` class and adds on its functionality
-    to support caching. It makes use of the Google Guava library.
-  - `WeatherHandler` inherits from a standard Moshi handler and takes care of connecting
-    all the functionality together. Using the methods in the `WeatherUtils` and `WeatherProxy` (caching),
-    it fetches the API, parses the data, and returns it in a JSON form using Moshi's `serialize` method.
-  - `CacheParams` include default parameters for the caching system - the cache's max size and how long data
-    stays in the cache before expiry. Changing these parameters is explained in more details in the "How To" section
-    below.
-  - `GeoCoord` is a record representing a geographical coordinate (latitude, longitude). Instances of
-    this record are used as keys to fetch the data stored in the cache. We have chosen to use a record specifically
-    because it allowed us to store both coordinates into one structure, and had the `.equals` and `.hashCode` method
-    automatically implemented for us.
-  - `WeatherResponse` is a record meant to hold our Server's final Weather API responses, i.e.,
-    a temperature, the unit for the temperature, and the timestamp for the request.
-  - `Response`, housed outside the `weather/` folder, contains multiple classes
-    useful for parsing the different JSON data returned by the NWS API into queryable
-    records.
-- For backend testing, we have created two classes for the sole purpose of mocking:
-  `MockJSON` and `MockWeatherUtils`:
-  - `MockJSON` contains multiple mock responses from the NWS API/expected responses from our
-    server. The data is used extensively in backend tests (i.e., in the `TestAPIUtilities` file).
-  - `MockWeatherUtils` extends the `WeatherUtils` class and overrides the usual `getForecast` method
-    to provide mock data. This is mostly used to test caching.
+- `JSONUtils` in the `utils` packagehouses essential helper methods for getting 
+and parsing data from/to JSONs. Its methods are called in the various handlers.
+
+- `GPTProxyCache` wraps a `GPTRequester` class and adds on its functionality
+to support caching. It makes use of the Google Guava library. Caching was crucial to save
+time and money as new API calls to ChatGPT cause extended loading times and builds up financial
+costs over time.
+
+- `EndHandler` in the `race` package is called after every race, and updates the user's statistics
+using calculated stats from the race they just completed.
+
+- `StartHandler` in the `race` package is called before every race, and uses the algorithm to
+keep track of a list of snippets for the user and responds with a snippet alongside an explanation
+from the cache.
+
+- `UserCreateHandler` in the `user` package is called whenever a user signs in to Syntax for the
+first time. Their credentials and default data are stored in Firestore.
+
+- `UserGetHandler` in the `user` package is called whenever an existing user's data needs to be
+retrieved. The user's data is given as a response.
+
+- `UserRankHandler` in the `user` package is called to update the leaderboard given all users and
+their statistics. A sorted list based on highest lines per minute is given as a response.
+
+- `NewStats`, `User`, and `UserStats` in the `types` package are used to facilitate storing and
+updating user statistics in the various handlers.
+
+- We use ChakraUI in the frontend for an aesthetically-pleasing and easy-to-use library of
+  UI components to fit our specific needs.
+
+- The algorithm prioritizes user learning by giving greater weight (probability) to snippets
+  that have a lesser increase in difficulty. We also ensure that easier snippets are less likely
+  to appear as a user's experience level increases.
+
+- The frontend has a dark and light mode for accessibility.
 
 ## Testing
 
 ### Integration Tests
-- loadcsv
-  - loading with no filepath param
-  - loading a nonexistent file
-  - loading a file with invalid hasHeader
-  - loading an empty file
-  - loading without hasHeader param
-  - loading with hasHeader = true
-- viewcsv
-  - viewing before loading a file
-  - viewing with file loaded
-- searchcsv
-  - searching when file isn't loaded
-  - searching with no specified search value
-  - searching when column is out of range
-  - searching with nonexistent column header
-  - searching with specified column when there's no header in file
-  - searching a loaded file with header
-- weather
-  - getting weather for Providence coords
-  - getting weather with double coordinates with many digits
-  - getting weather with invalid coords
-  - getting weather without <lat> param
-  - getting weather without <lon> param
-  - getting weather with coords that are not numbers
+- Tests GET and POST requests
+- Creating user data
+- Ranking users
+- Getting user data
+- Invalid inputs for user handlers
 
 ### Unit Tests
-- converting Reader objects (from the API call)
-  to Strings properly.
-- given a set of coordinates, forming the NWS URL to call
-  properly.
-- given a set of coordinates with many decimal places, forming the
-  NWS URL by rounding these coords to the second decimal place.
-- extracting the URL with forecast data from the initial NWS API call.
-- parsing the forecast data into a queryable `ForecastResponse` record.
-- getting a final `WeatherResponse` instance from a `ForecastResponse`,
-  with valid temperature, unit, and timestamp.
-- serializing a `WeatherSuccess` from a `WeatherResponse` into a response JSON.
-- serializing a `WeatherFailure` into an error JSON response.
-- automatic caching by the `WeatherProxy` when attempting to get a forecast.
-- getting a forecast for coordinates close to previously cached coordinates -
-  we ensured that the forecast returned was the previously cached forecast.
-- expiration of the cache after the delay given, as a parameter, to
-  the `WeatherProxy`.
-- getting a forecast for uncached coordinates - we ensured that
-  the `WeatherProxy` does indeed pass in the exact coordinates to
-  the `WeatherUtils`'s getForecast.
-
+- Fuzz testing for weight calculation
+- Standard weight calculation
+- Mock requesting
+- Serialization
+- Weight swapping
+- Caching (size, expiration)
 
 ## Errors/Bugs
 There are no known bugs.
 
 ## How to...
 ### Run Tests
-We have written two test files:
-- `TestAPI.java` includes all Integration tests.
-- `TestAPIUtilities.java` includes all Backend unit tests.
-
-These are traditional JUnit tests and can be run using the Play button in IntelliJ!
+Our backend tests are traditional JUnit tests and can be run using the Play button in IntelliJ!
 
 ### Run the Program
 The program can be run by clicking the play button in the `Server.java` file,
 or by compiling it and running it with the `java` Shell command.
-
-### Change Cache Parameters
-We provide any developer using our Server with the ability to tweak parameters
-for the caching functionality. We provide a `CacheParams` class, which contains parameters directly used by
-the WeatherHandler for caching:
-- `PROXIMITY_RADIUS` is the parameter which determines the criteria
-  for proximity between two geo coordinates. Specifically, it is the maximum
-  Pythagorean distance tolerated between two latitude/longitude coordinates to
-  consider the points "close enough" to return the same forecast.
-  In other words, it determines the sphere around a specific geo
-  coordinate which forecast would be considered identical.
-- `CACHE_MAX_SIZE` determines the maximum number of entries in the cache.
-- `CACHE_EXPIRE_AFTER` and `CACHE_EXPIRE_AFTER_TIMEUNIT` determine how long
-  an entry is cached, and thus considered to be a valid forecast.
+You can run `npm run dev` in `front` while the server is running to access the site.
