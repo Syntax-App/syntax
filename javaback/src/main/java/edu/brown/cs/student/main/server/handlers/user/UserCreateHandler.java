@@ -36,16 +36,16 @@ public class UserCreateHandler implements Route {
     }
 
     /**
-     * Uses filepath and hasHeader params to parse a CSV and set the active file variables.
+     * Creates a user and their data for storage in FireStore
      *
      * @param request  the request to handle
      * @param response used to modify properties of the response
      * @return response content
-     * @throws Exception part of interface
      */
     @Override
     public Object handle(Request request, Response response) {
         try {
+            // get user based on email
             CollectionReference users = this.db.collection("users");
             String reqBody = request.body();
             JSONUtils jsonUtils = new JSONUtils();
@@ -59,6 +59,7 @@ public class UserCreateHandler implements Route {
             Query query = users.whereEqualTo("email", user.getEmail());
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
+            // check if user with given email already exists
             if (!querySnapshot.get().getDocuments().isEmpty()) {
                 return this.getSerializedFailure("User with given email already exists!", querySnapshot.get().getDocuments().get(0).getData());
             }
@@ -79,6 +80,9 @@ public class UserCreateHandler implements Route {
 
     }
 
+    /**
+     * Helper method to get the parameters of the request body
+     */
     public Map<String, Object> getBodyParams(String reqBody) throws IOException {
         JSONUtils jsonUtils = new JSONUtils();
         return jsonUtils.fromJson(reqBody);
@@ -109,7 +113,6 @@ public class UserCreateHandler implements Route {
     }
 
     public record CreateFailureResponse(String status, String error_message, Map<String, Object> data) {
-
         /**
          * @return this response, serialized as Json
          */
