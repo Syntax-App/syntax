@@ -4,6 +4,8 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import edu.brown.cs.student.main.server.types.User;
@@ -37,28 +39,32 @@ public class UserGetHandler implements Route {
      * @throws Exception part of interface
      */
     @Override
-    public Object handle(Request request, Response response) throws Exception {
-        // get user based on email
-        ApiFuture<QuerySnapshot> querySnapshot;
-        String email = request.queryParams("email");
+    public Object handle(Request request, Response response) {
+        try {
+            // get user based on email
+            ApiFuture<QuerySnapshot> querySnapshot;
+            String email = request.queryParams("email");
 
-        if (email == null) {
-            return this.getSerializedFailure("No email parameter was provided!");
+            if (email == null) {
+                return this.getSerializedFailure("No email parameter was provided!");
+            }
+
+            CollectionReference users = db.collection("users");
+            Query query = users.whereEqualTo("email", email);
+            querySnapshot = query.get();
+
+            // if there are no users with the given email, return a failure response
+            String res = this.checkEmpty(querySnapshot.get().getDocuments());
+            if (res != null) {
+                return res;
+            }
+
+            // otherwise, return a success res w the user data
+            response.status(200);
+            return this.getSerializedSuccess(querySnapshot.get().getDocuments().get(0).toObject(User.class));
+        } catch (ExecutionException | InterruptedException e) {
+            return this.getSerializedFailure("Error while communicating with Firestore: " + e.getMessage());
         }
-
-        CollectionReference users = db.collection("users");
-        Query query = users.whereEqualTo("email", email);
-        querySnapshot = query.get();
-
-        // if there are no users with the given email, return a failure response
-        String res = this.checkEmpty(querySnapshot.get().getDocuments());
-        if (res != null) {
-            return res;
-        }
-
-        // otherwise, return a success res w the user data
-        response.status(200);
-        return this.getSerializedSuccess(querySnapshot.get().getDocuments().get(0).toObject(User.class));
     }
 
     /**
