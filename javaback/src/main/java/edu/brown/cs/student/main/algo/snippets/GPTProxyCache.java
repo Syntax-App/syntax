@@ -37,7 +37,7 @@ public class GPTProxyCache {
                     @Override
                     /**
                      * This overridden method loads a snippet into the cache
-                     * and maps it to a String explanation
+                     * and maps it to a String explanation using a requestor
                      */
                     public String load(@NotNull String snippet) {
                         return gptRequester.getExplanation(snippet);

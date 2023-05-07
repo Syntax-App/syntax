@@ -11,9 +11,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class represents a GPTRequestor to make API calls to OpenAI's API
+ * for gpt responses
+ */
 public class GPTRequester {
     private final StringBuilder completionString;
 
+    /**
+     * GPTRequestor's constructor
+     */
     public GPTRequester() {
         this.completionString = new StringBuilder();
     }

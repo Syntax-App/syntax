@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class States {
     private Firestore db;
@@ -62,16 +61,28 @@ public class States {
         this.activeFileContent = new ArrayList<>();
     }
 
+    /**
+     * Initializes Firebase and sets the database
+     */
     public void setupFirebase() {
         FirebaseConfig firebaseConfig = new FirebaseConfig();
         firebaseConfig.initializeFirebase();
         this.db = firebaseConfig.getDb();
     }
 
+    /**
+     * Accessor method that gets the Firestore database
+     * @return - Firestore database
+     */
     public Firestore getDb() {
         return this.db;
     }
 
+    /**
+     * Accessor method that gets the Map from user emails to Lists of
+     * snippet IDs
+     * @return - Map from string emails to Lists of snippet ID integers
+     */
     public Map<String, LinkedList<Integer>> getSnippetStacks() {
         return this.snippetStacks;
     }

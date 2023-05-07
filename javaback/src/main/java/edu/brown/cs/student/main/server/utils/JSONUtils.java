@@ -6,16 +6,14 @@ import com.squareup.moshi.Types;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * This class represents JSONUtils, which encompasses various utilties and functions
+ * for JSON purposes
+ */
 public class JSONUtils {
     public JSONUtils() {}
-
-    public Reader getReaderFromJSONPath(String filepath) throws FileNotFoundException {
-        File jsonFile = new File(filepath);
-        return new FileReader(jsonFile);
-    }
 
     /**
      * Gets Map<String, Object> from a Reader object with JSON-formatted data.
@@ -23,7 +21,6 @@ public class JSONUtils {
      * @return - A Map<String, Object> representing the JSON data.
      * @throws IOException - in case readerToString throws it.
      */
-
     public Map<String, Object> getParsedJSON(Reader reader) throws IOException {
         String jsonString = this.readerToString(reader);
         return this.fromJson(jsonString);

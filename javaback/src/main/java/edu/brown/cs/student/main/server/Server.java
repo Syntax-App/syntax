@@ -13,19 +13,14 @@ import static spark.Spark.*;
 /**
  * Top-level class for this Server.
  *
- * Initializes the Server's four endpoints - loadcsv, viewcsv, searchcsv, and weather.
+ * Initializes the Server's endpoints.
  * The first three endpoints have shared states, which hold the CSV data and its header.
  */
 public class Server {
     public static void main(String[] args) {
         Spark.port(4000);
 
-//        after((request, response) -> {
-//            response.header("Access-Control-Allow-Origin", "*");
-//            response.header("Access-Control-Allow-Methods", "*");
-//            response.header("Access-Control-Allow-Headers","*");
-//        });
-
+        // credit: https://stackoverflow.com/questions/29114667/cross-origin-communication-between-nginx-and-spark-java
         options("/*",
                 (request, response) -> {
 

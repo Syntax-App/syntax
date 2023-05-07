@@ -5,34 +5,34 @@ import com.google.cloud.firestore.*;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
 import edu.brown.cs.student.main.server.types.User;
-import edu.brown.cs.student.main.server.types.UserStats;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import java.util.*;
 
+/**
+ * This class represents the
+ */
 public class UserRankHandler implements Route {
     private final Firestore db;
 
     /**
-     * LoadHandler constructor.
+     * UserRankHandler constructor.
      *
-     * @param states -  a class that keeps track of shared variables.
+     * @param states - a class that keeps track of shared variables.
      */
     public UserRankHandler(States states) {
         this.db = states.getDb();
     }
 
     /**
-     * Uses filepath and hasHeader params to parse a CSV and set the active file variables.
-     *
+     * Ranks users based on stored data
      * @param request  the request to handle
      * @param response used to modify properties of the response
      * @return response content
-     * @throws Exception part of interface
      */
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) {
         try {
             List<User> userList = new ArrayList<>();
 
