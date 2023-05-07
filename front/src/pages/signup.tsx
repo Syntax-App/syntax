@@ -1,16 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { app as firebaseApp } from "../config/firebase";
-import {
-  UserCredential,
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { FirebaseError } from "firebase/app";
-
-import { MdBuild, MdCall } from "react-icons/md";
 import {
   Button,
   Box,
@@ -25,10 +14,9 @@ import {
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { IAuthContext, useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 export default function Signup() {
   const { currentUser, methods } = useAuth();
@@ -41,14 +29,6 @@ export default function Signup() {
   const [email, setEmail] = useState("");
 
   const router = useRouter();
-  // async function signup() {
-  //   methods?.emailSignup();
-  // }
-
-  // async function login(isGoogle: boolean) {
-  //   isGoogle ? await methods?.googleLogin() : methods?.emailLogin();
-  //   await router.push("/");
-  // }
 
   async function handleLogin() {
     // this is necessarily logging in with google, as this is the signup page

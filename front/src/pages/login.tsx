@@ -1,23 +1,11 @@
 import React from "react";
-import { app as firebaseApp } from "../config/firebase";
-import {
-  UserCredential,
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { FirebaseError } from "firebase/app";
 import { useState } from "react";
-
-import { MdBuild, MdCall } from "react-icons/md";
 import { Button, Box, Flex, Input, InputGroup, InputRightElement, Divider, ButtonGroup, ChakraProvider, useColorModeValue } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { IAuthContext, useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 export default function Login() {
   const { currentUser, methods } = useAuth();
