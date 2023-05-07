@@ -1,23 +1,11 @@
 import React from "react";
-import { app as firebaseApp } from "../config/firebase";
-import {
-  UserCredential,
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { FirebaseError } from "firebase/app";
 import { useState } from "react";
-
-import { MdBuild, MdCall } from "react-icons/md";
 import { Button, Box, Flex, Input, InputGroup, InputRightElement, Divider, ButtonGroup, ChakraProvider, useColorModeValue } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { IAuthContext, useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 export default function Login() {
   const { currentUser, methods } = useAuth();
@@ -30,18 +18,18 @@ export default function Login() {
   const router = useRouter();
   const handleClick = () => setShow(!show)
   
-  async function login(isGoogle: boolean) {
-    isGoogle ? await methods?.googleLogin() : methods?.emailLogin();
-    await router.push("/");
-  }
-
-  async function handleLogin() {
-    if (email !== "" && pass !== "") {
-      setEmptyFields(false);
-      await login(false);
+  async function handleLogin(isGoogle : boolean) {
+    if (isGoogle) {
+      await methods?.googleLogin();
     } else {
-      setEmptyFields(true);
+      if (email !== "" && pass !== "") {
+        setEmptyFields(false);
+        await methods?.emailLogin(email, pass);
+      } else {
+        setEmptyFields(true);
+      }
     }
+    await router.push("/");
   }
 
   return (
@@ -83,7 +71,7 @@ export default function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           variant={"solid"}
-          placeholder="USERNAME"
+          placeholder="EMAIL"
           _placeholder={{
             fontFamily: "source code pro",
             color: useColorModeValue("light.darkGrey", "dark.dullblue"),
@@ -154,7 +142,7 @@ export default function Login() {
           bg={useColorModeValue("light.darkGrey", "#83BFF6")}
           color={useColorModeValue("light.backgroundGrey", "dark.blue")}
           my="1.8rem"
-          onClick={() => handleLogin()}
+          onClick={() => handleLogin(false)}
         >
           Sign In
         </Button>
@@ -167,7 +155,7 @@ export default function Login() {
           bg={useColorModeValue("light.extraLight", "#DBE7FF")}
           color={"#7786AE"}
           my="1.8rem"
-          onClick={() => login(true)}
+          onClick={() => handleLogin(true)}
         >
           Sign in with Google
         </Button>
