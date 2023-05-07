@@ -32,33 +32,28 @@ const colors = {
     vibrantblue: "#83BFF6",
   },
   light: {
-    extralight: "#DBE7FF",
-    lightblue: "#77A3CD",
-    indigo: "#56699B",
-    blue: "#3A496F",
-
-    backgroundGrey: "#B6BABE",
+    backgroundGrey: "#C9C9C9", //  bg
     lightGrey: "#B6BABE", // type box
     mediumGrey: "#919AA3", // logo, gpt box
     darkGrey: "#3E414A", // boldest
     forestGreen: "#587A72", // start button
-    superLight: "#E6E6E6", // google signin and signup
+    extraLight: "#E6E6E6", // google signin and signup
   },
 };
 
 const styles = {
   global: () => ({
     body: {
-      bg: useColorModeValue(colors.light.extralight, colors.dark.blue),
+      bg: useColorModeValue(colors.light.backgroundGrey, colors.dark.blue),
     },
     p: {
-      color: useColorModeValue(colors.light.blue, colors.dark.extralight),
+      color: useColorModeValue(colors.light.darkGrey, colors.dark.extralight),
     },
     h1: {
-      color: useColorModeValue(colors.light.blue, colors.dark.blue),
+      color: useColorModeValue(colors.light.darkGrey, colors.dark.blue),
     },
     a: {
-      color: useColorModeValue(colors.light.blue, colors.dark.vibrantblue),
+      color: useColorModeValue(colors.light.darkGrey, colors.dark.vibrantblue),
     },
   }),
 };
@@ -74,17 +69,17 @@ const components = {
   Button: {
     variants: {
       solid: () => ({
-        bg: useColorModeValue(colors.light.indigo, colors.dark.lightblue),
-        color: useColorModeValue(colors.light.extralight, colors.dark.blue),
+        bg: useColorModeValue(colors.light.mediumGrey, colors.dark.lightblue),
+        color: useColorModeValue(colors.light.backgroundGrey, colors.dark.blue),
         _hover: {
-          bg: useColorModeValue(colors.light.blue, colors.dark.extralight),
+          bg: useColorModeValue(colors.light.lightGrey, colors.dark.extralight),
         },
       }),
       outline: () => ({
-        color: useColorModeValue(colors.light.blue, colors.dark.lightblue),
+        color: useColorModeValue(colors.light.forestGreen, colors.dark.lightblue),
         outline: "1px solid",
         _hover: {
-          bg: useColorModeValue(colors.blue[300], colors.blue[500]),
+          bg: useColorModeValue(colors.light.lightGrey, colors.blue[500]),
         },
       }),
     },
@@ -109,7 +104,7 @@ const components = {
         borderWidth: "3px", // change the width of the border
         borderStyle: "solid", // change the style of the border
         borderRadius: 10,
-        bg: useColorModeValue(colors.light.extralight, colors.dark.blue),
+        bg: useColorModeValue(colors.light.backgroundGrey, colors.dark.blue),
         width: "10%",
         my: "1rem",
       }),
@@ -122,6 +117,7 @@ const components = {
         fontFamily: fonts.code,
         fontSize: ".8rem",
         textTransform: "uppercase",
+        color: useColorModeValue(colors.light.darkGrey, "#77A3CD"),
       }),
       // for numbers
       bigNumber: () => ({
@@ -129,7 +125,7 @@ const components = {
         fontWeight: "700",
         fontSize: "4rem",
         color: useColorModeValue(
-          colors.light.blue,
+          colors.light.darkGrey,
           colors.dark.mediumlightblue
         ),
         height: "4rem",
@@ -140,7 +136,6 @@ const components = {
       signupDescription: () => ({
         fontFamily: fonts.code,
         fontSize: "1.1rem",
-       
       }),
       header: () => ({
         fontFamily: fonts.heading,
@@ -149,17 +144,6 @@ const components = {
       }),
     },
   },
-
-  // Flex: {
-  //   variants: {
-  //     numberDisplay: () => ({
-  //       flexDir: "column",
-  //       alignItems: "center",
-  //       justifyContent: "flex-end",
-  //       bg: "blue"
-  //     })
-  //   }
-  // }
 };
 
 const customTheme = {

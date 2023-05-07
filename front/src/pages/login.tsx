@@ -1,23 +1,11 @@
 import React from "react";
-import { app as firebaseApp } from "../config/firebase";
-import {
-  UserCredential,
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { FirebaseError } from "firebase/app";
 import { useState } from "react";
-
-import { MdBuild, MdCall } from "react-icons/md";
 import { Button, Box, Flex, Input, InputGroup, InputRightElement, Divider, ButtonGroup, ChakraProvider, useColorModeValue } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { IAuthContext, useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 export default function Login() {
   const { currentUser, methods } = useAuth();
@@ -30,18 +18,18 @@ export default function Login() {
   const router = useRouter();
   const handleClick = () => setShow(!show)
   
-  async function login(isGoogle: boolean) {
-    isGoogle ? await methods?.googleLogin() : methods?.emailLogin();
-    await router.push("/");
-  }
-
-  async function handleLogin() {
-    if (email !== "" && pass !== "") {
-      setEmptyFields(false);
-      await login(false);
+  async function handleLogin(isGoogle : boolean) {
+    if (isGoogle) {
+      await methods?.googleLogin();
     } else {
-      setEmptyFields(true);
+      if (email !== "" && pass !== "") {
+        setEmptyFields(false);
+        await methods?.emailLogin(email, pass);
+      } else {
+        setEmptyFields(true);
+      }
     }
+    await router.push("/");
   }
 
   return (
@@ -53,7 +41,7 @@ export default function Login() {
     >
       <Text>{currentUser?.email}</Text>
       <Box
-        bg={"#7786AE"}
+        bg={useColorModeValue("light.mediumGrey", "#7786AE")}
         width="25%"
         height="80%"
         maxH="80%"
@@ -74,7 +62,7 @@ export default function Login() {
         >
           <Text
             variant="header"
-            color={useColorModeValue("light.lightblue", "dark.darkblue")}
+            color={useColorModeValue("light.backgroundGrey", "dark.darkblue")}
           >
             Welcome
           </Text>
@@ -83,13 +71,13 @@ export default function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           variant={"solid"}
-          placeholder="USERNAME"
+          placeholder="EMAIL"
           _placeholder={{
             fontFamily: "source code pro",
-            color: useColorModeValue("light.lightblue", "dark.dullblue"),
+            color: useColorModeValue("light.darkGrey", "dark.dullblue"),
           }}
-          color={useColorModeValue("light.lightblue", "dark.dullblue")}
-          bg={useColorModeValue("light.lightblue", "dark.blue")}
+          color={useColorModeValue("light.darkGrey", "dark.dullblue")}
+          bg={useColorModeValue("light.extraLight", "dark.blue")}
           isRequired={true}
         />
         <InputGroup size="md" mt="1rem" mb=".3rem">
@@ -101,10 +89,10 @@ export default function Login() {
             placeholder="PASSWORD"
             _placeholder={{
               fontFamily: "source code pro",
-              color: useColorModeValue("light.lightblue", "dark.dullblue"),
+              color: useColorModeValue("light.darkGrey", "dark.dullblue"),
             }}
-            color={useColorModeValue("light.lightblue", "dark.dullblue")}
-            bg={useColorModeValue("light.lightblue", "dark.blue")}
+            color={useColorModeValue("light.darkGrey", "dark.dullblue")}
+            bg={useColorModeValue("light.extraLight", "dark.blue")}
             isRequired={true}
           />
           <InputRightElement width="2.8rem">
@@ -133,7 +121,7 @@ export default function Login() {
         </InputGroup>
         <Flex justifyContent={"flex-start"} alignItems={"flex-start"}>
           <Text
-            color="#4C597B"
+            color={useColorModeValue("light.darkGrey", "#4C597B")}
             fontWeight={"bold"}
             cursor={"pointer"}
             fontSize={".8rem"}
@@ -151,9 +139,10 @@ export default function Login() {
         <Button
           width="100%"
           borderRadius="3rem"
-          bg="#83BFF6"
+          bg={useColorModeValue("light.darkGrey", "#83BFF6")}
+          color={useColorModeValue("light.backgroundGrey", "dark.blue")}
           my="1.8rem"
-          onClick={() => handleLogin()}
+          onClick={() => handleLogin(false)}
         >
           Sign In
         </Button>
@@ -163,15 +152,16 @@ export default function Login() {
           width="100%"
           borderRadius="3rem"
           leftIcon={<FcGoogle size="1.2rem" />}
-          bg="#DBE7FF"
+          bg={useColorModeValue("light.extraLight", "#DBE7FF")}
+          color={"#7786AE"}
           my="1.8rem"
-          onClick={() => login(true)}
+          onClick={() => handleLogin(true)}
         >
           Sign in with Google
         </Button>
       </Box>
-      <Text color="#7786AE" mt=".3rem">
-        New to syntax? &nbsp; &nbsp;<a>Join Now</a>
+      <Text color={useColorModeValue("light.mediumGrey", "#7786AE")} mt=".3rem">
+        New to syntax? &nbsp; &nbsp;<a href="/signup">Join Now</a>
       </Text>
     </Flex>
   );

@@ -1,4 +1,4 @@
-import { Button, IconButton, Text, Flex} from "@chakra-ui/react";
+import { Button, IconButton, Text, Flex, useColorModeValue} from "@chakra-ui/react";
 import { MdRefresh } from "react-icons/md";
 import { useRef } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
@@ -31,7 +31,7 @@ const RestartButton = (props: RestartProps) => {
           onClick={handleClick}
           ref={buttonRef}
           size={"lg"}
-          color={"#77A3CD"}
+          color={useColorModeValue("light.darkGrey", "#77A3CD")}
           bg="none"
           justifyContent={"center"}
           alignItems={"center"}

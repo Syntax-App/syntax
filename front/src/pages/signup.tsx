@@ -1,16 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { app as firebaseApp } from "../config/firebase";
-import {
-  UserCredential,
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { FirebaseError } from "firebase/app";
-
-import { MdBuild, MdCall } from "react-icons/md";
 import {
   Button,
   Box,
@@ -25,10 +14,9 @@ import {
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { IAuthContext, useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 export default function Signup() {
   const { currentUser, methods } = useAuth();
@@ -37,16 +25,14 @@ export default function Signup() {
   const [confirmPass, setConfirmPass] = useState("");
   const [invalidSignup, setInvalidSignup] = useState(false);
   const [emptyFields, setEmptyFields] = useState(false);
-  const [username, setUserName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
   const router = useRouter();
-  async function signup() {
-    methods?.emailSignup();
-  }
 
-  async function login(isGoogle: boolean) {
-    isGoogle ? await methods?.googleLogin() : methods?.emailLogin();
+  async function handleLogin() {
+    // this is necessarily logging in with google, as this is the signup page
+    await methods?.googleLogin();
     await router.push("/");
   }
 
@@ -54,13 +40,13 @@ export default function Signup() {
     if (pass == confirmPass) setInvalidSignup(false);
       if (
         pass == confirmPass &&
-        username !== "" &&
+        name !== "" &&
         email !== "" &&
         pass !== "" &&
         confirmPass !== ""
       ) {
         // successfully register user
-        await signup();
+        await methods?.emailSignup(name, email, pass);
         await router.push("/");
       } else if (pass != confirmPass || pass === "" || confirmPass === "") {
         setInvalidSignup(true);
@@ -96,7 +82,7 @@ export default function Signup() {
         >
           <Text>{currentUser?.email}</Text>
           <Box
-            bg={useColorModeValue("light.lightblue", "dark.darkblue")}
+            bg={useColorModeValue("light.extraLight", "dark.darkblue")}
             height="80%"
             maxH="80%"
             width="100%"
@@ -116,22 +102,22 @@ export default function Signup() {
             >
               <Text
                 variant="header"
-                color={useColorModeValue("light.lightblue", "dark.vibrantblue")}
+                color={useColorModeValue("light.darkGrey", "dark.vibrantblue")}
               >
                 Join Syntax
               </Text>
             </Flex>
             <Input
-              value={username}
-              onChange={(e) => setUserName(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               variant={"solid"}
-              placeholder="USERNAME"
+              placeholder="NAME"
               _placeholder={{
                 fontFamily: "source code pro",
-                color: useColorModeValue("light.lightblue", "dark.darkblue"),
+                color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
               }}
-              color={useColorModeValue("light.lightblue", "dark.darkblue")}
-              bg={useColorModeValue("light.lightblue", "light.extralight")}
+              color={useColorModeValue("light.darkGrey", "dark.darkblue")}
+              bg={useColorModeValue("light.backgroundGrey", "light.extralight")}
               isRequired={true}
             />
             <Input
@@ -142,9 +128,12 @@ export default function Signup() {
               placeholder="EMAIL"
               _placeholder={{
                 fontFamily: "source code pro",
-                color: useColorModeValue("light.lightblue", "dark.darkblue"),
+                color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
               }}
-              bg={useColorModeValue("light.lightblue", "dark.mediumlightblue")}
+              bg={useColorModeValue(
+                "light.backgroundGrey",
+                "dark.mediumlightblue"
+              )}
               isRequired={true}
             />
             <InputGroup size="md" mt="1rem">
@@ -156,10 +145,10 @@ export default function Signup() {
                 variant={"solid"}
                 _placeholder={{
                   fontFamily: "source code pro",
-                  color: useColorModeValue("light.lightblue", "dark.darkblue"),
+                  color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
                 }}
                 bg={useColorModeValue(
-                  "light.lightblue",
+                  "light.backgroundGrey",
                   "dark.mediumlightblue"
                 )}
                 isRequired={true}
@@ -197,10 +186,10 @@ export default function Signup() {
                 variant={"solid"}
                 _placeholder={{
                   fontFamily: "source code pro",
-                  color: useColorModeValue("light.lightblue", "dark.darkblue"),
+                  color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
                 }}
                 bg={useColorModeValue(
-                  "light.lightblue",
+                  "light.backgroundGrey",
                   "dark.mediumlightblue"
                 )}
                 isRequired={true}
@@ -247,7 +236,8 @@ export default function Signup() {
             <Button
               width="100%"
               borderRadius="3rem"
-              bg="#83BFF6"
+              bg={useColorModeValue("light.darkGrey", "#83BFF6")}
+              color={useColorModeValue("light.extraLight", "dark.blue")}
               my="1.8rem"
               onClick={() => handleSignUp()}
             >
@@ -260,13 +250,17 @@ export default function Signup() {
             width="80%"
             borderRadius="3rem"
             leftIcon={<FcGoogle size="1.2rem" />}
-            bg="#DBE7FF"
-            onClick={() => login(true)}
+            bg={useColorModeValue("light.extraLight", "#DBE7FF")}
+            color={"#7786AE"}
+            onClick={() => handleLogin()}
           >
             Sign in with Google
           </Button>
-          <Text color="#7786AE" mt="3rem">
-            Already a Syntax user? &nbsp; &nbsp;<a>Sign In</a>
+          <Text
+            color={useColorModeValue("light.mediumGrey", "#7786AE")}
+            mt="3rem"
+          >
+            Already a Syntax user? &nbsp; &nbsp;<a href="/login">Sign In</a>
           </Text>
         </Flex>
       </Flex>
@@ -278,7 +272,7 @@ export default function Signup() {
         width={"40%"}
       >
         <Box
-          bg={useColorModeValue("light.lightblue", "dark.darkblue")}
+          bg={useColorModeValue("light.lightGrey", "dark.darkblue")}
           height={"100vh"}
           borderLeftRadius={"2rem"}
           width="100%"
@@ -290,7 +284,7 @@ export default function Signup() {
         >
           <Text
             variant="header"
-            color={useColorModeValue("light.lightblue", "dark.vibrantblue")}
+            color={useColorModeValue("light.darkGrey", "dark.vibrantblue")}
           >
             SYNTAX
           </Text>
@@ -298,7 +292,7 @@ export default function Signup() {
           <br></br>
           <Text
             variant="signupDescription"
-            color={useColorModeValue("light.lightblue", "dark.mediumlightblue")}
+            color={useColorModeValue("light.darkGrey", "dark.mediumlightblue")}
           >
             Higher productivity, fluency with syntax, and building of muscle
             memory are all improvements to be gained from practicing typing out
