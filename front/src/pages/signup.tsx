@@ -252,7 +252,7 @@ export default function Signup() {
             leftIcon={<FcGoogle size="1.2rem" />}
             bg={useColorModeValue("light.extraLight", "#DBE7FF")}
             color={"#7786AE"}
-            onClick={() => handleLogin(true)}
+            onClick={() => handleLogin()}
           >
             Sign in with Google
           </Button>
