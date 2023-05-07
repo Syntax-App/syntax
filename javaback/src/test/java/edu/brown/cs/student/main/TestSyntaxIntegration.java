@@ -233,7 +233,6 @@ public class TestSyntaxIntegration {
 
         UserRankHandler.RankSuccessResponse successResponse = getResponse(clientConnection, UserRankHandler.RankSuccessResponse.class);
         assertEquals(successResponse.data().get("ranking").size(), this.states.getDb().collection("users").get().get().getDocuments().size());
-
     }
 
 

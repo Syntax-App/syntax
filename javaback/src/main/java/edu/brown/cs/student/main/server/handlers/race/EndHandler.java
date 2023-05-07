@@ -15,6 +15,7 @@ import edu.brown.cs.student.main.server.utils.JSONUtils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import spark.Request;
 import spark.Response;
@@ -43,70 +44,84 @@ public class EndHandler implements Route {
      * @return response content
      */
     @Override
-    public Object handle(Request request, Response response)
-        throws ExecutionException, InterruptedException, IOException {
-        // access collection of user data from Firestore
-        CollectionReference users = this.db.collection("users");
-        // get request data
-        String reqBody = request.body();
+    public Object handle(Request request, Response response) {
+        try {
+            // access collection of user data from Firestore
+            CollectionReference users = this.db.collection("users");
+            // get request data
+            String reqBody = request.body();
 
-        JSONUtils jsonUtils = new JSONUtils();
+            JSONUtils jsonUtils = new JSONUtils();
 
-        NewStats new_stats = jsonUtils.fromJson(NewStats.class, reqBody);
+            NewStats new_stats = jsonUtils.fromJson(NewStats.class, reqBody);
 
-        // get the user data corresponding to the email
-        Query query = users.whereEqualTo("email", new_stats.email());
-        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            // get the user data corresponding to the email
+            Query query = users.whereEqualTo("email", new_stats.email());
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
-        // check if user with email exists
-        if (querySnapshot.get().getDocuments().isEmpty()) {
-            return new EndFailureResponse("error", "User with given email does not exist!").serialize();
+            // check if user with email exists
+            if (querySnapshot.get().getDocuments().isEmpty()) {
+                return this.getSerializedFailure("User with given email does not exist!");
+            }
+
+            User currUser = querySnapshot.get().getDocuments().get(0).toObject(User.class);
+            UserStats curr_stats = currUser.getStats();
+            int curr_highlpm = curr_stats.getHighlpm();
+            double curr_highacc = curr_stats.getHighacc();
+
+            // update if a new stat is higher
+            if (new_stats.recentlpm() > curr_highlpm) {
+                curr_highlpm = new_stats.recentlpm();
+            }
+            if (new_stats.recentacc() > curr_highacc) {
+                curr_highacc = new_stats.recentacc();
+            }
+
+            // calculate new averages
+            int new_numraces = curr_stats.getNumraces() + 1;
+            double new_avglpm = (curr_stats.getAvglpm() * curr_stats.getNumraces() + new_stats.recentlpm()) / new_numraces;
+            double new_avgacc = (curr_stats.getAvgacc() * curr_stats.getNumraces() + new_stats.recentacc()) / new_numraces;
+            double new_exp = curr_stats.getExp() + .1;
+            // keep experience at 10 or lower
+            if (curr_stats.getExp() >= 10) new_exp = 10;
+
+            UserStats updatedStats = new UserStats(curr_highlpm, curr_highacc, new_numraces, new_avglpm, new_avgacc, new_exp);
+
+            // get document id
+            DocumentReference docRef = users.document(querySnapshot.get().getDocuments().get(0).getId());
+
+            // update user at id
+            docRef.update("stats", updatedStats);
+
+            return this.getSerializedSuccess(updatedStats);
+        } catch (ExecutionException | InterruptedException e) {
+            return this.getSerializedFailure("Error while communicating with Firestore: " + e.getMessage());
+        } catch (IOException e) {
+            return this.getSerializedFailure("One or more fields were not provided!");
         }
 
-        User currUser = querySnapshot.get().getDocuments().get(0).toObject(User.class);
-        UserStats curr_stats = currUser.getStats();
-        int curr_highlpm = curr_stats.getHighlpm();
-        double curr_highacc = curr_stats.getHighacc();
+    }
 
-        // update if a new stat is higher
-        if (new_stats.recentlpm() > curr_highlpm) {
-            curr_highlpm = new_stats.recentlpm();
-        }
-        if (new_stats.recentacc() > curr_highacc) {
-            curr_highacc = new_stats.recentacc();
-        }
+    private String getSerializedSuccess(UserStats stats) {
+        HashMap<String, UserStats> dataMap = new HashMap<>();
+        dataMap.put("updated_stats", stats);
+        return new EndSuccessResponse("success", dataMap).serialize();
+    }
 
-        // calculate new averages
-        int new_numraces = curr_stats.getNumraces() + 1;
-        double new_avglpm = (curr_stats.getAvglpm() * curr_stats.getNumraces() + new_stats.recentlpm()) / new_numraces;
-        double new_avgacc = (curr_stats.getAvgacc() * curr_stats.getNumraces() + new_stats.recentacc()) / new_numraces;
-        double new_exp = curr_stats.getExp() + .1;
-        // keep experience at 10 or lower
-        if (curr_stats.getExp() >= 10) new_exp = 10;
-
-        UserStats updatedStats = new UserStats(curr_highlpm, curr_highacc, new_numraces, new_avglpm, new_avgacc, new_exp);
-
-        // get document id
-        DocumentReference docRef = users.document(querySnapshot.get().getDocuments().get(0).getId());
-
-        // update user at id
-        docRef.update("stats", updatedStats);
-
-        return new EndSuccessResponse("success", updatedStats).serialize();
+    private String getSerializedFailure(String errorMessage) {
+        return new EndFailureResponse("error", errorMessage).serialize();
     }
 
     /**
      * Success response for ending a race. Serializes the result ("success") and the updated stats
      */
-    public record EndSuccessResponse(String status, UserStats stats) {
+    public record EndSuccessResponse(String status, Map<String, UserStats> dataMap) {
         /**
          * @return this response, serialized as Json
          */
         public String serialize() {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "success");
-            HashMap<String, UserStats> dataMap = new HashMap<>();
-            dataMap.put("updated_stats", this.stats);
             responseMap.put("data", dataMap);
             return SerializeHelper.helpSerialize(responseMap);
         }
