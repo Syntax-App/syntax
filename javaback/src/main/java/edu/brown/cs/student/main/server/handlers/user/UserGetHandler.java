@@ -4,7 +4,11 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import edu.brown.cs.student.main.server.SerializeHelper;
 import edu.brown.cs.student.main.server.States;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import edu.brown.cs.student.main.server.types.User;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -35,23 +39,32 @@ public class UserGetHandler implements Route {
      * @throws Exception part of interface
      */
     @Override
-    public Object handle(Request request, Response response) throws Exception {
-        // get user based on email
-        ApiFuture<QuerySnapshot> querySnapshot;
-        String email = request.queryParams("email");
-        CollectionReference users = db.collection("users");
-        Query query = users.whereEqualTo("email", email);
-        querySnapshot = query.get();
+    public Object handle(Request request, Response response) {
+        try {
+            // get user based on email
+            ApiFuture<QuerySnapshot> querySnapshot;
+            String email = request.queryParams("email");
 
-        // if there are no users with the given email, return a failure response
-        String res = this.checkEmpty(querySnapshot.get().getDocuments());
-        if (res != null) {
-            return res;
+            if (email == null) {
+                return this.getSerializedFailure("No email parameter was provided!");
+            }
+
+            CollectionReference users = db.collection("users");
+            Query query = users.whereEqualTo("email", email);
+            querySnapshot = query.get();
+
+            // if there are no users with the given email, return a failure response
+            String res = this.checkEmpty(querySnapshot.get().getDocuments());
+            if (res != null) {
+                return res;
+            }
+
+            // otherwise, return a success res w the user data
+            response.status(200);
+            return this.getSerializedSuccess(querySnapshot.get().getDocuments().get(0).toObject(User.class));
+        } catch (ExecutionException | InterruptedException e) {
+            return this.getSerializedFailure("Error while communicating with Firestore: " + e.getMessage());
         }
-
-        // otherwise, return a success res w the user data
-        response.status(200);
-        return this.getSerializedSuccess("success", querySnapshot.get().getDocuments().get(0).getData());
     }
 
     /**
@@ -59,7 +72,7 @@ public class UserGetHandler implements Route {
      */
     public <T> String checkEmpty(List<T> docs) {
         if (docs.isEmpty()) {
-            return this.getSerializedFailure("error", "user with given email does not exist!");
+            return this.getSerializedFailure("User with given email does not exist!");
         }
         return null;
     }
@@ -67,21 +80,23 @@ public class UserGetHandler implements Route {
     /**
      * Helper method to serialize success response
      */
-    public String getSerializedSuccess(String status, Map<String, Object> data) {
-        return new GetUserSuccessResponse(status, data).serialize();
+    public String getSerializedSuccess(User user) {
+        Map<String, User> dataMap = new HashMap<>();
+        dataMap.put("user", user);
+        return new GetUserSuccessResponse("success", dataMap).serialize();
     }
 
     /**
      * Helper method to serialize failure response
      */
-    public String getSerializedFailure(String status, String errorMessage) {
-        return new GetUserFailureResponse(status, errorMessage).serialize();
+    public String getSerializedFailure(String errorMessage) {
+        return new GetUserFailureResponse("error", errorMessage).serialize();
     }
 
     /**
      * Success response for getting user data. Serializes the result ("success") and the user data.
      */
-    public record GetUserSuccessResponse(String status, Map<String, Object> userData) {
+    public record GetUserSuccessResponse(String status, Map<String, User> data) {
 
         /**
          * @return this response, serialized as Json
@@ -89,10 +104,7 @@ public class UserGetHandler implements Route {
         public String serialize() {
             LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
             responseMap.put("status", "success");
-
-            HashMap<String, Map<String, Object>> dataMap = new HashMap<>();
-            dataMap.put("user", this.userData);
-            responseMap.put("data", dataMap);
+            responseMap.put("data", data);
             return SerializeHelper.helpSerialize(responseMap);
         }
     }
