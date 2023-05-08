@@ -32,7 +32,6 @@ export default function Home() {
   } = useEngine();
 
   async function getNewSnippet() {
-    
     setLoadGpt(true);
     requestCode(currLang, userInfo?.email)
       .then((data) => {

@@ -90,9 +90,11 @@ export function AuthProvider({ children }: any) {
           //  Therefore, requestGetUser WILL RETURN AN ERROR. If so, nothing happens, and we patiently
           //  wait for the handler to finish its job AND UPDATE USERINFO ITSELF.
           requestGetUser(user.email).then((r) => {
-            if (r.status === "success") {
+            if (r.status === "success" && isUserDataSuccessResponse(r.data.user)) {
               setUserInfo(r.data.user);
               setloading(false);
+            } else {
+              console.log("Invalid user data info.")
             }
           });
         }
@@ -113,7 +115,11 @@ export function AuthProvider({ children }: any) {
       .then((userCredentials: UserCredential) => {
         requestGetUser(email)
         .then((userInf : IUserInfoResponse) => {
+          if (isUserDataSuccessResponse(userInf.data.user)){
           setUserInfo(userInf.data.user);
+          } else {
+            console.log("Attempted email login with invalid UserInfo.")
+          }
         })
       })
       .catch((error: FirebaseError) => {
@@ -178,6 +184,16 @@ export function AuthProvider({ children }: any) {
   async function signout() {
     setUserInfo(undefined);
     return signOut(auth);
+  }
+
+  function isUserDataSuccessResponse(json: any): json is IUserInfo {
+    if (!("uuid" in json)) return false;
+    if (!("name" in json)) return false;
+    if (!("email" in json)) return false;
+    if (!("pic" in json)) return false;
+    if (!("stats" in json)) return false;
+
+    return true;
   }
 
   const value: IAuthContext = {
