@@ -101,6 +101,7 @@ public class StartHandler implements Route {
                     snippetId = this.snippetStack.get(email).pop();
                     // construct new graph and find new path
                     Graph graph = new Graph(lang);
+                    this.json = graph.getJson();
                     graph.constructGraph(userExperience);
                     List<Integer> snippetIDs = graph.findPath(graph.getHead());
                     LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
@@ -111,6 +112,7 @@ public class StartHandler implements Route {
                 // if it's the user's first time ever racing
                 // construct a new graph and find a new path
                 Graph graph = new Graph(lang);
+                this.json = graph.getJson();
                 graph.constructGraph(userExperience);
                 List<Integer> snippetIDs = graph.findPath(graph.getHead());
                 LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
@@ -121,6 +123,7 @@ public class StartHandler implements Route {
             }
             // get snippet text and explanation
             String snippetContent = this.json.array()[snippetId].text();
+
             String explanation = this.cache.getExplanation(snippetContent);
 
             return new StartSuccessResponse("success", snippetContent, explanation).serialize();
