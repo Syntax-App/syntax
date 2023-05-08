@@ -5,7 +5,7 @@ import TopButtons from "@/components/TopButtons";
 import ControlButtons from "@/components/ControlButtons";
 import WordsContainer from "@/components/WordsContainer";
 import { SkeletonText } from "@chakra-ui/react";
-import { State } from "@/pages/TypingTestInterface/hooks/useEngine";
+import { State } from "@/components/TypingTestInterface/hooks/useEngine";
 import Hotkeys from "react-hot-keys";
 import { BsFillChatRightDotsFill } from "react-icons/bs";
 
