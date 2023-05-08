@@ -43,7 +43,7 @@ public class Graph {
             // extensible for multiple different languages
             switch(this.lang) {
                 // typescript if specified
-                case "script":
+                case "TYPESCRIPT":
                     snippetsFile = new File("src/main/java/edu/brown/cs/student/main/algo/snippets/TSXSnippets.json");
                     break;
                 // java by default
