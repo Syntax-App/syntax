@@ -27,7 +27,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { State } from "@/pages/TypingTestInterface/hooks/useEngine";
+import { State } from "@/components/TypingTestInterface/hooks/useEngine";
 
 const ChatGPTIcon = createIcon({
   displayName: 'ChatGPTIcon',

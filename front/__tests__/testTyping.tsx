@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 import { createMockRouter } from '../__mocks__/routerMock';
 import { TEXT_start_accessible_name, TEXT_skip_accessible_name, TEXT_restart_accessible_name } from '@/components/ControlButtons';
 import { TEXT_timer_accessible_name } from '@/components/TopButtons';
-import { COUNTDOWN_SECONDS } from '@/pages/TypingTestInterface/hooks/useEngine';
+import { COUNTDOWN_SECONDS } from '@/components/TypingTestInterface/hooks/useEngine';
 
 let startButton: HTMLElement;
 
