@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
-import { calculateAccuracy } from "../pages/TypingTestInterface/utils/typetesthelper";
+import { calculateAccuracy } from "./TypingTestInterface/utils/typetesthelper";
 
 export const TEXT_timer_accessible_name = "time-left";
 

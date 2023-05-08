@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class States {
     private Firestore db;
-    private Map<String, LinkedList<Integer>> snippetStacks;
+    private Map<String, Map<String, LinkedList<Integer>>> snippetStacks;
     private List<String> activeFileHeader;
     private List<List<String>> activeFileContent;
 
@@ -83,7 +83,7 @@ public class States {
      * snippet IDs
      * @return - Map from string emails to Lists of snippet ID integers
      */
-    public Map<String, LinkedList<Integer>> getSnippetStacks() {
+    public Map<String, Map<String, LinkedList<Integer>>> getSnippetStacks() {
         return this.snippetStacks;
     }
 }

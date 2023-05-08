@@ -4,7 +4,7 @@ import {
   HStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import RestartButton from "../pages/TypingTestInterface/TypeTestComponents/RestartButton";
+import RestartButton from "./TypingTestInterface/TypeTestComponents/RestartButton";
 
 export const TEXT_start_accessible_name = "start-button";
 export const TEXT_skip_accessible_name = "skip-button";

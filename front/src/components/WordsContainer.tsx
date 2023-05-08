@@ -1,4 +1,4 @@
-import UserType from "../pages/TypingTestInterface/TypeTestComponents/UserType";
+import UserType from "./TypingTestInterface/TypeTestComponents/UserType";
 import { useEffect, useRef, useState } from "react";
 import { SkeletonText, Flex, Box, useColorModeValue } from "@chakra-ui/react";
 

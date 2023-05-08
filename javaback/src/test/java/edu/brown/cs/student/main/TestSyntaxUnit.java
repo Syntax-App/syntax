@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit testing class - includes mocking, serialization testing, algo testing, and cache testing
+ * Unit testing class - includes mocking, serialization testing, algo testing, and cache testing, and fuzz testing
  */
 public class TestSyntaxUnit {
 
@@ -42,7 +42,8 @@ public class TestSyntaxUnit {
         JSONUtils jsonUtils = new JSONUtils();
         Map<String, Object> response = jsonUtils.fromJson(getHandler.checkEmpty(data));
         assert response.get("status").equals("error");
-        assert response.get("error_message").equals("user with given email does not exist!");
+        System.out.println(response.get("error_message"));
+        assert response.get("error_message").equals("User with given email does not exist!");
     }
 
     // test proper serialization of success response

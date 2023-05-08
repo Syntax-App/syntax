@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class StartHandler implements Route {
     private Firestore db;
-    private Map<String, LinkedList<Integer>> snippetStack;
+    private Map<String, Map<String, LinkedList<Integer>>> snippetStack;
     private GPTProxyCache cache;
     private SnippetsJSON json;
 
@@ -92,21 +92,35 @@ public class StartHandler implements Route {
 
             // if user has done races before
             if (this.snippetStack.containsKey(email)) {
-                // if there's more than one snippet left for the user,
-                // pop it off the stack and use it
-                if (this.snippetStack.get(email).size() > 1) {
-                    snippetId = this.snippetStack.get(email).pop();
-                } else {
-                    // if there's one snippet left, pop the last snippet
-                    snippetId = this.snippetStack.get(email).pop();
-                    // construct new graph and find new path
+                // if user chooses new lang
+                if (!this.snippetStack.get(email).containsKey(lang)) {
                     Graph graph = new Graph(lang);
                     this.json = graph.getJson();
                     graph.constructGraph(userExperience);
                     List<Integer> snippetIDs = graph.findPath(graph.getHead());
                     LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
-                    // refresh stack with new snippet order
-                    this.snippetStack.put(email, linkedSnippetIDs);
+                    snippetId = linkedSnippetIDs.pop();
+                    // create new snippet path for new lang
+                    this.snippetStack.get(email).put(lang, linkedSnippetIDs);
+                } else {
+                    // if there's more than one snippet left for the user,
+                    // pop it off the stack and use it
+                    if (this.snippetStack.get(email).get(lang).size() > 1) {
+                        Graph graph = new Graph(lang);
+                        this.json = graph.getJson();
+                        snippetId = this.snippetStack.get(email).get(lang).pop();
+                    } else {
+                        // if there's one snippet left, pop the last snippet
+                        snippetId = this.snippetStack.get(email).get(lang).pop();
+                        // construct new graph and find new path
+                        Graph graph = new Graph(lang);
+                        this.json = graph.getJson();
+                        graph.constructGraph(userExperience);
+                        List<Integer> snippetIDs = graph.findPath(graph.getHead());
+                        LinkedList<Integer> linkedSnippetIDs = new LinkedList<>(snippetIDs);
+                        // refresh stack with new snippet order
+                        this.snippetStack.get(email).put(lang, linkedSnippetIDs);
+                    }
                 }
             } else {
                 // if it's the user's first time ever racing
@@ -119,13 +133,14 @@ public class StartHandler implements Route {
                 // pop a snippet off the path for use
                 snippetId = linkedSnippetIDs.pop();
                 // set stack with snippets
-                this.snippetStack.put(email, linkedSnippetIDs);
+                Map<String, LinkedList<Integer>> langMap = new HashMap<>();
+                langMap.put(lang, linkedSnippetIDs);
+                this.snippetStack.put(email, langMap);
             }
             // get snippet text and explanation
             String snippetContent = this.json.array()[snippetId].text();
 
             String explanation = this.cache.getExplanation(snippetContent);
-
             return new StartSuccessResponse("success", snippetContent, explanation).serialize();
         } catch (ExecutionException | InterruptedException e) {
             return new StartFailureResponse("error", "Snippet file not found!").serialize();
