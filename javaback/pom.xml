@@ -16,6 +16,13 @@
                     <source>17</source>
                     <target>17</target>
                 </configuration>
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <!-- here we specify that we want to use the main method within the App class -->
+                        <mainClass>edu.brown.cs.student.main.server.Server</mainClass>
+                    </manifest>
+			    </archive>
             </plugin>
 
             <!-- Without this, Maven will not run JUnit tests with
