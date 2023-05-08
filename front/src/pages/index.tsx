@@ -6,10 +6,10 @@ import TypeTest from "@/components/TypeTest";
 import { requestCode } from "@/helpers/user";
 import { useAuth } from "@/contexts/AuthContext";
 
-const languages = ["JAVA", "JAVASCRIPT"];
+const languages = ["JAVA", "TYPESCRIPT"];
 
 export default function Home() {
-  const [currLang, setCurrLang] = useState("PYTHON");
+  const [currLang, setCurrLang] = useState("JAVA");
   const [typeMode, setMode] = useState(false);
   const [stats, setStats] = useState({ acc: 0, lpm: 0 });
   const { userInfo, methods, loading } = useAuth();

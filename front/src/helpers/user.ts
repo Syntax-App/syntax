@@ -43,6 +43,9 @@ export async function requestRankings() {
 export async function requestCode(lang: string, email?: string) {
   let response;
 
+  console.log(lang);
+  console.log(email);
+
   if (email) {
     response = await fetch("http://localhost:4000/race/start?email=" + email + "&lang=" + lang);
   } else {
