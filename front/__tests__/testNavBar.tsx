@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 import { createMockRouter } from '../__mocks__/routerMock';
 import NavBar from '@/components/NavBar';
 import TypeTest from '@/components/TypeTest';
-import UserType from '@/pages/TypingTestInterface/TypeTestComponents/UserType';
+import UserType from '@/components/TypingTestInterface/TypeTestComponents/UserType';
 import { TEXT_profile_accessible_name, TEXT_ranking_accessible_name } from '@/components/NavBar';
 
 // it('should render the app', () => {

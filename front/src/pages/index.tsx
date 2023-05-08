@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import useEngine from "./TypingTestInterface/hooks/useEngine";
+import useEngine from "../components/TypingTestInterface/hooks/useEngine";
 import Result from "@/components/Result";
 import TypeTest from "@/components/TypeTest";
 import { requestCode } from "@/helpers/user";
