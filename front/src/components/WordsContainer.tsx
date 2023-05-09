@@ -98,8 +98,14 @@ export default function WordsContainer(props: WordsProps) {
               spacing={4}
               skeletonHeight={4}
               fadeDuration={30}
-              startColor="dark.darkblue"
-              endColor="dark.blue"
+              startColor={useColorModeValue(
+                "light.mediumGrey",
+                "dark.darkblue"
+              )}
+              endColor={useColorModeValue(
+                "light.lightGrey",
+                "dark.blue"
+              )}
             />
           </Box>
         ) : (
