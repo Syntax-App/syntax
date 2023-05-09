@@ -14,6 +14,7 @@ interface ButtonsInterface{
     typeMode: boolean;
     startTest: () => void;
     restart: () => void;
+    loading: boolean;
 }
 
 export default function ControlButtons(props: ButtonsInterface) {
@@ -27,6 +28,7 @@ export default function ControlButtons(props: ButtonsInterface) {
             bgColor={useColorModeValue("light.forestGreen","green.200")}
             onClick={props.startTest}
             display={props.typeMode ? "none" : "show"}
+            isDisabled={props.loading}
             aria-label={TEXT_start_accessible_name}
         >
             START
@@ -38,6 +40,7 @@ export default function ControlButtons(props: ButtonsInterface) {
             variant="outline"
             onClick={props.startTest}
             display={props.typeMode ? "none" : "show"}
+            isDisabled={props.loading}
             aria-label={TEXT_skip_accessible_name}
         >
             SKIP

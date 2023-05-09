@@ -177,6 +177,7 @@ export default function TypeTest(props: TypeTestProps) {
               typeMode={props.typeMode}
               startTest={props.startTest}
               restart={props.restart}
+              loading={props.loadGpt}
             />
           </Flex>
         </Flex>
