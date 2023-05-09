@@ -45,6 +45,9 @@ public class EndHandler implements Route {
      */
     @Override
     public Object handle(Request request, Response response) {
+        if (!request.headers("Host").equals("https://syntax-front.vercel.app/") || !request.headers("Host").equals("localhost:4000")) {
+            return this.getSerializedFailure("Unauthorized");
+        }
         try {
             // access collection of user data from Firestore
             CollectionReference users = this.db.collection("users");

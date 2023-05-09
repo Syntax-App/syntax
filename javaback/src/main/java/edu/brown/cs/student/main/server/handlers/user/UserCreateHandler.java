@@ -44,6 +44,9 @@ public class UserCreateHandler implements Route {
      */
     @Override
     public Object handle(Request request, Response response) {
+        if (!request.headers("Host").equals("https://syntax-front.vercel.app/") || !request.headers("Host").equals("localhost:4000")) {
+            return this.getSerializedFailure("Unauthorized", new HashMap<>());
+        }
         try {
             // get user based on email
             CollectionReference users = this.db.collection("users");

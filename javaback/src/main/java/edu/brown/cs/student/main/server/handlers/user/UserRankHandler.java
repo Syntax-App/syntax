@@ -33,6 +33,9 @@ public class UserRankHandler implements Route {
      */
     @Override
     public Object handle(Request request, Response response) {
+        if (!request.headers("Host").equals("https://syntax-front.vercel.app/") || !request.headers("Host").equals("localhost:4000")) {
+            return this.getSerializedFailure("Unauthorized");
+        }
         try {
             List<User> userList = new ArrayList<>();
 
