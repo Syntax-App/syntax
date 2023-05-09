@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import useWords from "./useWords";
 import useCountdownTimer from "./useCountdownTimer";
 import useTypings from "./useTypings";
 import { countErrors } from "../utils/typetesthelper";
@@ -11,7 +10,7 @@ import { type } from "os";
 export type State = "start" | "run" | "finish" | "idle";
 
 export const NUMBER_WORDS = 20;
-export const COUNTDOWN_SECONDS = 10;
+export const COUNTDOWN_SECONDS = 100;
 
 const useEngine = () => {
   const [state, setState] = useState<State>("start");
@@ -43,6 +42,14 @@ const useEngine = () => {
       setState("finish");
     }
   }, [timeLeft, state]);
+
+  // when user finishes typing
+  useEffect(() => {
+    console.log("finished typing: ", finishedTyping);
+    if (timeLeft && finishedTyping && state === "run") {
+      setState("finish");
+    }
+  }, [finishedTyping]);
 
   useEffect(() => {
     const wordsReached = words.substring(0, cursor);
