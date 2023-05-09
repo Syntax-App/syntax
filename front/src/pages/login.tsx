@@ -1,11 +1,24 @@
 import React from "react";
 import { useState } from "react";
-import { Button, Box, Flex, Input, InputGroup, InputRightElement, Divider, ButtonGroup, ChakraProvider, useColorModeValue } from "@chakra-ui/react";
+import {
+  Button,
+  Box,
+  Flex,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Divider,
+  ButtonGroup,
+  ChakraProvider,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { useAuth } from "@/contexts/AuthContext";
 import { Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+
+export const TEXT_login_accessible_name = "Login Button";
 
 export default function Login() {
   const { currentUser, methods } = useAuth();
@@ -14,11 +27,10 @@ export default function Login() {
   const [emptyFields, setEmptyFields] = useState(false);
   const [email, setEmail] = useState("");
 
-
   const router = useRouter();
-  const handleClick = () => setShow(!show)
-  
-  async function handleLogin(isGoogle : boolean) {
+  const handleClick = () => setShow(!show);
+
+  async function handleLogin(isGoogle: boolean) {
     if (isGoogle) {
       await methods?.googleLogin();
     } else {
@@ -68,6 +80,7 @@ export default function Login() {
           </Text>
         </Flex>
         <Input
+          data-testid="testid_username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           variant={"solid"}
@@ -82,6 +95,7 @@ export default function Login() {
         />
         <InputGroup size="md" mt="1rem" mb=".3rem">
           <Input
+            data-testid="testid_password"
             type={show ? "text" : "password"}
             value={pass}
             onChange={(e) => setPass(e.target.value)}
@@ -137,6 +151,7 @@ export default function Login() {
           * Please enter all fields.
         </Text>
         <Button
+          aria-label={TEXT_login_accessible_name}
           width="100%"
           borderRadius="3rem"
           bg={useColorModeValue("light.darkGrey", "#83BFF6")}
