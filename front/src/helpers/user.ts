@@ -1,9 +1,12 @@
+let baseUrl = process.env.NEXT_PUBLIC_SPARK_BACKEND_URL; 
+baseUrl = "http://localhost:4000";
+
 export async function requestCreateUser(
   name: string,
   email: string,
   pic: string | undefined
 ) {
-  const response = await postData(process.env.NEXT_PUBLIC_SPARK_BACKEND_URL + "/user/create", {
+  const response = await postData(baseUrl + "/user/create", {
     name: name,
     email: email,
     pic: pic
@@ -18,7 +21,7 @@ export async function requestUpdateUserStats(
   recentlpm: number,
   recentacc: number
 ) {
-  const response = await postData(process.env.NEXT_PUBLIC_SPARK_BACKEND_URL + "/race/end", {
+  const response = await postData(baseUrl + "/race/end", {
     email: email,
     recentlpm: recentlpm,
     recentacc: recentacc,
@@ -28,12 +31,12 @@ export async function requestUpdateUserStats(
 }
 
 export async function requestGetUser(email: string) {
-  const response = await fetch(process.env.NEXT_PUBLIC_SPARK_BACKEND_URL + "/user/get?email=" + email);
+  const response = await fetch(baseUrl + "/user/get?email=" + email);
   return await response.json();
 }
 
 export async function requestRankings() {
-  const response = await fetch(process.env.NEXT_PUBLIC_SPARK_BACKEND_URL + "/user/ranking");
+  const response = await fetch(baseUrl + "/user/ranking");
   const json = await response.json();
   return (
     json.data.ranking
@@ -44,12 +47,13 @@ export async function requestCode(lang: string, email?: string) {
   let response;
 
   if (email) {
-    response = await fetch(process.env.NEXT_PUBLIC_SPARK_BACKEND_URL + "/race/start?email=" + email + "&lang=" + lang);
+    response = await fetch(baseUrl + "/race/start?email=" + email + "&lang=" + lang);
   } else {
-    response = await fetch(process.env.NEXT_PUBLIC_SPARK_BACKEND_URL + "/race/start?lang=" + lang);
+    response = await fetch(baseUrl + "/race/start?lang=" + lang);
   }
 
   const json = await response.json();
+
   return (
     json.data
   );

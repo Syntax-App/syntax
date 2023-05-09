@@ -90,7 +90,8 @@ export default function WordsContainer(props: WordsProps) {
             : useColorModeValue("light.darkGrey", "#4C597B")}
         justifyContent="center"
       >
-        <Box w="55vw">
+        {props.loadGpt ? (
+          <Box w="55vw">
             <SkeletonText
               height="20px"
               noOfLines={10}
@@ -99,14 +100,13 @@ export default function WordsContainer(props: WordsProps) {
               fadeDuration={30}
               startColor="dark.darkblue"
               endColor="dark.blue"
-            ></SkeletonText>
+            />
           </Box>
-        
+        ) : (
           <pre>
             <code>{props.words}</code>
           </pre>
-        
-        
+        )}
       </Flex>
     </Box>
   );
