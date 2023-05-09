@@ -1,5 +1,4 @@
 let baseUrl = process.env.NEXT_PUBLIC_SPARK_BACKEND_URL; 
-baseUrl = "http://localhost:4000";
 
 export async function requestCreateUser(
   name: string,
