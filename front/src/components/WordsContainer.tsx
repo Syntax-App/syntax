@@ -24,17 +24,13 @@ export default function WordsContainer(props: WordsProps) {
     if (typingBox && props.state !== "finish") {
       // selects elements that are focusable
       const allFocusableElems = document.querySelectorAll(
-        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'div, a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
 
       // sets their tabindex to -1 so they are not focusable
       allFocusableElems.forEach((elem) => {
         elem.setAttribute("tabIndex", "-1");
       });
-
-      // sets focus on the typing box
-      typingBox.setAttribute("tabIndex", "0");
-      typingBox.focus();
 
       // resets the tab indices when the component unmounts
       return () => {
@@ -91,12 +87,11 @@ export default function WordsContainer(props: WordsProps) {
         color={
           props.typeMode
             ? useColorModeValue("light.mediumGrey", "#4C597B")
-            : useColorModeValue("light.darkGrey", "#4C597B")        }
+            : useColorModeValue("light.darkGrey", "#4C597B")}
         justifyContent="center"
       >
-        {props.loadGpt ? (
-          <Box w="55vw">
-            <SkeletonText
+        <Box w="55vw">
+            {/* <SkeletonText
               height="20px"
               noOfLines={10}
               spacing={4}
@@ -104,13 +99,14 @@ export default function WordsContainer(props: WordsProps) {
               fadeDuration={30}
               startColor="dark.darkblue"
               endColor="dark.blue"
-            />
+            ></SkeletonText> */}
           </Box>
-        ) : (
+        
           <pre>
             <code>{props.words}</code>
           </pre>
-        )}
+        
+        
       </Flex>
     </Box>
   );

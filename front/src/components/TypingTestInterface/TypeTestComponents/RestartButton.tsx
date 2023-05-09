@@ -39,7 +39,7 @@ const RestartButton = (props: RestartProps) => {
         ></IconButton>
         <Text variant={"label"}>
           
-          SHIFT+R TO RESTART
+          OPTION+R TO RESTART
         </Text>
       </Flex>
     );

@@ -34,10 +34,12 @@ const useTypings = (enabled: boolean) => {
             break;
           case "Enter":
             setTyped((prev) => prev.concat("\n"));
+            setCursor(cursor + 1);
             break;
           case "Tab":
             keyEvent.preventDefault();
             setTyped((prev) => prev.concat("\t"));
+            setCursor(cursor + 1);
             break;
           default:
             setTyped((prev) => prev.concat(keyEvent.key)); // otherwise add character to typed string

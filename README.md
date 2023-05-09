@@ -15,6 +15,12 @@ credentials through Firebase.
 
 The project consists of a frontend using React and Typescript along with ChakraUI, and a backend
 in Java.
+
+The frontend communicates with the backend via get and post requests, using React states to maintain
+and update user specific data, as well as global data such as leaderboard statistics. The frontend 
+dictates the type test interface, uses finalized result data from each test to pass to the backend
+server and update the user database. 
+
 The backend has a `Server` with endpoints regarding users (user/get to get user info + user/create
 to create a new user) and races (race/start to generate snippets and explanations + race/end
 to update user statistics). The backend also houses our algorithm, which is based on a Graph
@@ -78,6 +84,7 @@ syntax
 
 ## Design Choices
 
+### BACKEND:
 - For all handlers of our API, we have created a class called `States`,
 and instantiated one common instance that we passed in to the handlers.
 This class keeps track of the Firebase/Firestore configuration as well as
@@ -117,16 +124,17 @@ their statistics. A sorted list based on highest lines per minute is given as a 
 - `NewStats`, `User`, and `UserStats` in the `types` package are used to facilitate storing and
 updating user statistics in the various handlers.
 
-- We use ChakraUI in the frontend for an aesthetically-pleasing and easy-to-use library of
-  UI components to fit our specific needs.
-
 - The algorithm prioritizes user learning by giving greater weight (probability) to snippets
   that have a lesser increase in difficulty. We also ensure that easier snippets are less likely
   to appear as a user's experience level increases.
 
+### FRONTEND: 
+- We use ChakraUI in the frontend for an aesthetically-pleasing and easy-to-use library of
+  UI components to fit our specific needs.
+  
 - The frontend has a dark and light mode for accessibility.
 
-## Testing
+## Backend Testing
 
 ### Integration Tests
 - Tests GET and POST requests
@@ -143,12 +151,22 @@ updating user statistics in the various handlers.
 - Weight swapping
 - Caching (size, expiration)
 
+## Frontend Testing
+
+### Integration Tests
+
+### Unit Tests
+- Tests that all inputs are valid during sign up / log in 
+- Tests that user is redirected to home page after successful sign up / login
+- Tests components are rendered to screen
+
 ## Errors/Bugs
 There are no known bugs.
 
 ## How to...
 ### Run Tests
 Our backend tests are traditional JUnit tests and can be run using the Play button in IntelliJ!
+Our front end tests can be run in the `front` directory, via `npm run test`.
 
 ### Run the Program
 The program can be run by clicking the play button in the `Server.java` file,

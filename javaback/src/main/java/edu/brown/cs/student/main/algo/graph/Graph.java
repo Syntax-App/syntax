@@ -112,6 +112,7 @@ public class Graph {
         // build graph
         this.head = this.addEdges(this.availableIDs.size(), userExperience,
             this.availableIDs, minIndex);
+        this.snippetIDs.add(this.head.getSnippetID());
     }
 
     /**
@@ -280,6 +281,14 @@ public class Graph {
      */
     public Node getHead() {
         return this.head;
+    }
+
+    /**
+     * This accessor method gets the head node's ID
+     * @return - ID of head node
+     */
+    public int getHeadID() {
+        return this.head.getSnippetID();
     }
 
     /**

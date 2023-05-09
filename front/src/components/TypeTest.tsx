@@ -62,7 +62,7 @@ export default function TypeTest(props: TypeTestProps) {
   return (
     <>
       <Hotkeys
-        keyName="shift+r"
+        keyName="option+r"
         onKeyDown={() => {
           console.log("pressed shortcut");
           setRestartShortcut(true);
@@ -141,7 +141,7 @@ export default function TypeTest(props: TypeTestProps) {
                   Says...
                 </Text>
                 <br />
-                {props.loadGpt ? (
+                {/* {props.loadGpt ? (
                   <Box w="27vw">
                     <SkeletonText
                       height="20px"
@@ -159,7 +159,7 @@ export default function TypeTest(props: TypeTestProps) {
                       )}
                     />
                   </Box>
-                ) : (
+                ) :  */}
                   <Text
                     fontSize="md"
                     fontWeight="medium"
@@ -169,7 +169,7 @@ export default function TypeTest(props: TypeTestProps) {
                   >
                     {props.gptSays}
                   </Text>
-                )}
+                
               </Box>
             </Flex>
             {/* start, skip, restart buttons */}

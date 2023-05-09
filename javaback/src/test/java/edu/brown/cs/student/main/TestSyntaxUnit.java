@@ -174,6 +174,7 @@ public class TestSyntaxUnit {
         assert cache.getExplanation("this is a test").equals(explanation);
     }
 
+    // test proxy cache expiration
     @Test
     public void testGPTProxyCacheExpiry() throws InterruptedException {
         GPTProxyCache cache = new GPTProxyCache(new GPTRequester(), 100, 1, TimeUnit.SECONDS);
@@ -183,6 +184,7 @@ public class TestSyntaxUnit {
         assert !(cache.isCachedExact("testing"));
     }
 
+    // test proxy cache replacement if size is filled
     @Test
     public void testGPTProxyCacheSize() {
         GPTProxyCache cache = new GPTProxyCache(new GPTRequester(), 1, 24, TimeUnit.HOURS);
@@ -191,5 +193,13 @@ public class TestSyntaxUnit {
         cache.getExplanation("test2");
         assert cache.isCachedExact("test2");
         assert !(cache.isCachedExact("test1"));
+    }
+
+    // tests that fresh user should start with easiest snippet, Add
+    @Test
+    public void testDetermineHead() {
+        Graph graph = new Graph("");
+        graph.constructGraph(0.0);
+        assert graph.getHeadID() == 6;
     }
 }
