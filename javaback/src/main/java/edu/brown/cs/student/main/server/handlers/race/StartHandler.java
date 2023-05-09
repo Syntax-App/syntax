@@ -56,8 +56,8 @@ public class StartHandler implements Route {
      */
     @Override
     public Object handle(Request request, Response response) {
-        if (!request.headers("Host").equals("https://syntax-front.vercel.app/") || !request.headers("Host").equals("localhost:4000")) {
-            new StartFailureResponse("error", "Unauthorized").serialize();
+        if (!request.headers("Host").equals("syntax-front.vercel.app") || !request.headers("Host").equals("localhost:4000")) {
+            return new StartFailureResponse("error", "Unauthorized").serialize();
         }
         // this is where we call our algorithm!
         try {
