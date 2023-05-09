@@ -12,7 +12,11 @@ import { FirebaseError } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase";
 import React, { useContext, createContext, useState, useEffect } from "react";
-import { requestCreateUser, requestGetUser, requestUpdateUserStats } from "@/helpers/user";
+import {
+  requestCreateUser,
+  requestGetUser,
+  requestUpdateUserStats,
+} from "@/helpers/user";
 import { UserStats } from "@/pages/profile";
 
 export interface IAuthContext {
@@ -22,9 +26,13 @@ export interface IAuthContext {
   loading: boolean;
 }
 
-export interface IAuthMethods { 
-  emailLogin: (email : string, password : string) => Promise<void>;
-  emailSignup: (displayName : string, email : string, password : string) => Promise<void>;
+export interface IAuthMethods {
+  emailLogin: (email: string, password: string) => Promise<void>;
+  emailSignup: (
+    displayName: string,
+    email: string,
+    password: string
+  ) => Promise<void>;
   googleLogin: () => Promise<void>;
   signout: () => Promise<void>;
   updateUserStats: (recentlpm: number, recentacc: number) => Promise<void>;
@@ -39,7 +47,7 @@ export interface IUserInfo {
 }
 
 export interface IUserInfoResponse {
-  data: {user: IUserInfo}
+  data: { user: IUserInfo };
 }
 
 const emptyFunc = async () => {
@@ -89,11 +97,14 @@ export function AuthProvider({ children }: any) {
           //  Therefore, requestGetUser WILL RETURN AN ERROR. If so, nothing happens, and we patiently
           //  wait for the handler to finish its job AND UPDATE USERINFO ITSELF.
           requestGetUser(user.email).then((r) => {
-            if (r.status === "success" && isUserDataSuccessResponse(r.data.user)) {
+            if (
+              r.status === "success" &&
+              isUserDataSuccessResponse(r.data.user)
+            ) {
               setUserInfo(r.data.user);
               setLoading(false);
             } else {
-              console.log("Invalid user data info.")
+              console.log("Invalid user data info.");
             }
           });
         }
@@ -105,23 +116,18 @@ export function AuthProvider({ children }: any) {
     return unsubscribe;
   }, []);
 
-  async function emailLogin(email : string, password : string) {
-    return signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    )
+  async function emailLogin(email: string, password: string) {
+    return signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials: UserCredential) => {
-        requestGetUser(email)
-        .then((userInf : IUserInfoResponse) => {
-          if (isUserDataSuccessResponse(userInf.data.user)){
-          setUserInfo(userInf.data.user);
-          setLoading(false);
+        requestGetUser(email).then((userInf: IUserInfoResponse) => {
+          if (isUserDataSuccessResponse(userInf.data.user)) {
+            setUserInfo(userInf.data.user);
+            setLoading(false);
           } else {
             console.log("Attempted email login with invalid UserInfo.");
             setLoading(false);
           }
-        })
+        });
       })
       .catch((error: FirebaseError) => {
         console.log(error.code);
@@ -129,21 +135,21 @@ export function AuthProvider({ children }: any) {
       });
   }
 
-  async function emailSignup(displayName : string, email : string, password : string) {
-    return createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    )
+  async function emailSignup(
+    displayName: string,
+    email: string,
+    password: string
+  ) {
+    return createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials: UserCredential) => {
         requestCreateUser(
           displayName,
           email,
           undefined // will use default profile picture.
-        ).then((userInf : IUserInfoResponse) => {
+        ).then((userInf: IUserInfoResponse) => {
           setUserInfo(userInf.data.user);
           setLoading(false);
-        }) 
+        });
       })
       .catch((error: FirebaseError) => {
         console.log(error.code);
@@ -164,9 +170,16 @@ export function AuthProvider({ children }: any) {
             result.user.displayName,
             result.user.email,
             result.user.photoURL
-          ).then((userInf : IUserInfoResponse) => {
-            setUserInfo(userInf.data.user);
-            setLoading(false);
+          ).then((userInf: IUserInfoResponse) => {
+            if (isUserDataSuccessResponse(userInf.data.user)) {
+              setUserInfo(userInf.data.user);
+              setLoading(false);
+            } else {
+              console.log("Attempted email login with invalid UserInfo.");
+              setLoading(false);
+            }
+            // setUserInfo(userInf.data.user);
+            // setLoading(false);
           });
         }
       })
@@ -180,9 +193,11 @@ export function AuthProvider({ children }: any) {
     //TODO: decide what to do if user is a guest
     if (userInfo === undefined) return;
     // update stats if logged in
-    return requestUpdateUserStats(userInfo.email, recentlpm, recentacc).then((res) => {
-      console.log(res);
-    });
+    return requestUpdateUserStats(userInfo.email, recentlpm, recentacc).then(
+      (res) => {
+        console.log(res);
+      }
+    );
   }
 
   async function signout() {
