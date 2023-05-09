@@ -13,7 +13,7 @@
     "difficulty": 4.0
   },
   {
-    "text": "public static <T> T[] shuffle(T[] input) {\n\t\tT[] arr = Arrays.copyOf(input, input.length);\n\t\tint length = arr.length;\n\t\tint m = length;\n\t\twhile (m > 0) {\n\t\t\tint i = (int) Math.floor(Math.random() * m--);\n\t\t\tT tmp = arr[i];\n\t\t\tarr[i] = arr[m];\n\t\t\tarr[m] = tmp;\n\t\t}\n\t\treturn arr;\n\t}",
+    "text": "public static <T> T[] shuffle(T[] input) {\n\tT[] arr = Arrays.copyOf(input, input.length);\n\tint length = arr.length;\n\tint m = length;\n\twhile (m > 0) {\n\t\tint i = (int) Math.floor(Math.random() * m--);\n\t\tT tmp = arr[i];\n\t\tarr[i] = arr[m];\n\t\tarr[m] = tmp;\n\t}\n\treturn arr;\n}",
     "difficulty": 2.0
   },
   {
