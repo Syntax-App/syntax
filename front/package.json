@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch",
-    "test:ci": "jest --ci"
+    "test": "jest --maxWorkers=6",
+    "test:ci": "jest --runInBand"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.18",
