@@ -62,7 +62,7 @@ export default function TypeTest(props: TypeTestProps) {
   return (
     <>
       <Hotkeys
-        keyName="shift+r"
+        keyName="option+r"
         onKeyDown={() => {
           console.log("pressed shortcut");
           setRestartShortcut(true);

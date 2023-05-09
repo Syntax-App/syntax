@@ -28,8 +28,9 @@ it('should render typing page on start button', () => {
   expect(screen.getByText(COUNTDOWN_SECONDS)).toBeInTheDocument();
 });
 
-// it('should start timer on user type', () => {
-//   userEvent.click(startButton);
-//   userEvent.type(screen.getByTestId('usertype'), "hi");
-//   expect(screen.getByText(COUNTDOWN_SECONDS)).not.toBeInTheDocument();
-// });
+it('should start timer on user type', () => {
+  userEvent.click(startButton);
+  expect(screen.getByRole("text", { name: TEXT_timer_accessible_name })).toBeInTheDocument();
+  userEvent.type(screen.getByTestId('usertype'), "hi");
+  expect(screen.getByText(COUNTDOWN_SECONDS)).not.toBeInTheDocument();
+});
