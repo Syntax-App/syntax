@@ -33,15 +33,18 @@ export default function Login() {
   async function handleLogin(isGoogle: boolean) {
     if (isGoogle) {
       await methods?.googleLogin();
+      await router.push("/");
+
     } else {
       if (email !== "" && pass !== "") {
         setEmptyFields(false);
         await methods?.emailLogin(email, pass);
+        await router.push("/");
+
       } else {
         setEmptyFields(true);
       }
     }
-    await router.push("/");
   }
 
   return (
