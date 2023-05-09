@@ -41,6 +41,7 @@ public class UserGetHandler implements Route {
     @Override
     public Object handle(Request request, Response response) {
         System.out.println(request.headers("Host"));
+        System.out.println(request.headers("Referer"));
         if (!request.headers("Host").equals("syntax-front.vercel.app") || !request.headers("Host").equals("localhost:4000")) {
             return this.getSerializedFailure("Unauthorized");
         }
