@@ -90,8 +90,8 @@ export default function WordsContainer(props: WordsProps) {
             : useColorModeValue("light.darkGrey", "#4C597B")}
         justifyContent="center"
       >
-        {/* <Box w="55vw">
-            <SkeletonText
+        <Box w="55vw">
+            {/* <SkeletonText
               height="20px"
               noOfLines={10}
               spacing={4}
@@ -99,8 +99,8 @@ export default function WordsContainer(props: WordsProps) {
               fadeDuration={30}
               startColor="dark.darkblue"
               endColor="dark.blue"
-            />
-          </Box> */}
+            ></SkeletonText> */}
+          </Box>
         
           <pre>
             <code>{props.words}</code>
