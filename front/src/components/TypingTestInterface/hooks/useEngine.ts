@@ -10,7 +10,7 @@ import { type } from "os";
 export type State = "start" | "run" | "finish" | "idle";
 
 export const NUMBER_WORDS = 20;
-export const COUNTDOWN_SECONDS = 100;
+export const COUNTDOWN_SECONDS = 30;
 
 const useEngine = () => {
   const [state, setState] = useState<State>("start");
@@ -45,7 +45,6 @@ const useEngine = () => {
 
   // when user finishes typing
   useEffect(() => {
-    console.log("finished typing: ", finishedTyping);
     if (timeLeft && finishedTyping && state === "run") {
       setState("finish");
     }
