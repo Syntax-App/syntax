@@ -15,55 +15,61 @@ import Profile from "@/pages/profile";
 const mockedRouter = jest.fn();
 const router = createMockRouter({});
 
-
 let username: HTMLInputElement;
 let password: HTMLElement;
+let email: HTMLInputElement;
+let confirmPassword: HTMLInputElement;
 
-/// TEST LOGIN ////
-
-it("should show error message when empty fields", async () => {
-  // to recognize scrollIntoView as func
+it("should show error message when empty fields", () => {
   window.HTMLElement.prototype.scrollIntoView = function () {};
   render(
     <RouterContext.Provider value={router}>
-      <Login />
+      <Signup />
     </RouterContext.Provider>
   );
   username = screen.getByTestId("testid_username");
+  email = screen.getByTestId("testid_email");
   password = screen.getByTestId("testid_password");
+  confirmPassword = screen.getByTestId("testid_confirmpassword");
+
   // check button is rendered
-  expect(await screen.getByText("Sign In")).toBeInTheDocument();
+  expect(screen.getByText("Join Syntax")).toBeInTheDocument();
 
   // if fields are empty
-  const loginButton = screen.getByRole("button", {
-    name: TEXT_login_accessible_name,
+  const signupButton = screen.getByRole("button", {
+    name: TEXT_signup_accessible_name,
   });
-  await fireEvent.click(loginButton);
-  expect(await screen.getByText("* Please enter all fields.")).toBeInTheDocument();
+  fireEvent.click(signupButton);
+  expect(screen.getByText("* Please enter all fields.")).toBeInTheDocument();
+  //expect(router.push).toBeCalledTimes(0);
 });
 
-it("should navigate to home page after pressing login", async () => {
-  // to recognize scrollIntoView as func
+it("show show error message when non-matching passwords", () => {
   window.HTMLElement.prototype.scrollIntoView = function () {};
   render(
     <RouterContext.Provider value={router}>
-      <Login />
+      <Signup />
     </RouterContext.Provider>
   );
   username = screen.getByTestId("testid_username");
+  email = screen.getByTestId("testid_email");
   password = screen.getByTestId("testid_password");
+  confirmPassword = screen.getByTestId("testid_confirmpassword");
 
-  expect(await screen.getByText("Sign In")).toBeInTheDocument();
+  expect(screen.getByText("Join Syntax")).toBeInTheDocument();
 
   // if fields are not empty
   let user = userEvent.setup();
-  await user.type(username, "myusername");
-  await user.type(password, "mypass");
+  user.type(username, "myusername");
+  user.type(email, "myemail");
+  user.type(password, "mypass");
+  user.type(confirmPassword, "fdslfsjf");
 
-  // click login button, and expect router to have pushed to index page
-  const loginButton = screen.getByRole("button", {
-    name: TEXT_login_accessible_name,
+  const signupButton = screen.getByRole("button", {
+    name: TEXT_signup_accessible_name,
   });
-  await fireEvent.click(loginButton);
-  //expect(router.push).toHaveBeenCalledWith("/");
+  fireEvent.click(signupButton);
+  expect(
+    screen.getByText("* Passwords should match. Please try again.")
+  ).toBeInTheDocument();
 });
