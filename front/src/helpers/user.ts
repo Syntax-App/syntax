@@ -43,9 +43,6 @@ export async function requestRankings() {
 export async function requestCode(lang: string, email?: string) {
   let response;
 
-  console.log(lang);
-  console.log(email);
-
   if (email) {
     response = await fetch(process.env.NEXT_PUBLIC_SPARK_BACKEND_URL + "/race/start?email=" + email + "&lang=" + lang);
   } else {
