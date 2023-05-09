@@ -23,10 +23,10 @@ const useTypings = (enabled: boolean) => {
     const [typed, setTyped] = useState<string>("");
     const totalTyped = useRef(0);
 
-    const keydownHandler = useCallback(({key, code}: KeyboardEvent) => {
-        if (!enabled || !isKeyboardCodeAllowed(code)) return;
+    const keydownHandler = useCallback((keyEvent: KeyboardEvent) => {
+        if (!enabled || !isKeyboardCodeAllowed(keyEvent.code)) return;
 
-        switch (key) {
+        switch (keyEvent.key) {
           case "Backspace":
             setTyped((prev) => prev.slice(0, -1)); // remove from typed string
             setCursor(cursor - 1); // set cursor back by 1
@@ -36,10 +36,11 @@ const useTypings = (enabled: boolean) => {
             setTyped((prev) => prev.concat("\n"));
             break;
           case "Tab":
+            keyEvent.preventDefault();
             setTyped((prev) => prev.concat("\t"));
             break;
           default:
-            setTyped((prev) => prev.concat(key)); // otherwise add character to typed string
+            setTyped((prev) => prev.concat(keyEvent.key)); // otherwise add character to typed string
             setCursor(cursor + 1);
             totalTyped.current += 1;
             break;
