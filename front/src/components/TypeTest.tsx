@@ -60,87 +60,88 @@ export default function TypeTest(props: TypeTestProps) {
   }, [restartShortcut, setRestartShortcut]);
 
   return (
-    <Hotkeys
-      keyName="option+r"
-      onKeyDown={() => {
-        console.log("pressed shortcut");
-        setRestartShortcut(true);
-      }}
-      onKeyUp={() => {
-        setRestartShortcut(true);
-      }}
-    >
-      <Flex justifyContent="center" data-testid="typetest">
-        <Flex
-          direction="column"
-          alignContent="center"
-          alignItems="center"
-          w="80%"
-          gap={props.typeMode ? 5 : 14}
-          paddingY="14"
-        >
-          {/* language dropdown and regenerate button // accuracy and lpm in type mode */}
-          <TopButtons
-            typeMode={props.typeMode}
-            languages={props.languages}
-            currLang={props.currLang}
-            setCurrLang={props.setCurrLang}
-            timeLeft={props.timeLeft}
-            errors={props.errors}
-            totalTyped={props.totalTyped}
-            stats={props.stats}
-            setStats={props.setStats}
-            lpm={lpm}
-            getNewSnippet={props.getNewSnippet}
-          />
+    <>
+      <Hotkeys
+        keyName="option+r"
+        onKeyDown={() => {
+          console.log("pressed shortcut");
+          setRestartShortcut(true);
+        }}
+        onKeyUp={() => {
+          setRestartShortcut(true);
+        }}
+      >
+        <Flex justifyContent="center" data-testid="typetest">
+          <Flex
+            direction="column"
+            alignContent="center"
+            alignItems="center"
+            w="80%"
+            gap={props.typeMode ? 5 : 14}
+            paddingY="14"
+          >
+            {/* language dropdown and regenerate button // accuracy and lpm in type mode */}
+            <TopButtons
+              typeMode={props.typeMode}
+              languages={props.languages}
+              currLang={props.currLang}
+              setCurrLang={props.setCurrLang}
+              timeLeft={props.timeLeft}
+              errors={props.errors}
+              totalTyped={props.totalTyped}
+              stats={props.stats}
+              setStats={props.setStats}
+              lpm={lpm}
+              getNewSnippet={props.getNewSnippet}
+            />
 
-          {/* code box and chatgpt explanations */}
-          <Flex direction="row" gap={6}>
-            <Flex
-              className="stats-box"
-              borderRadius={30}
-              w={props.typeMode ? "80vw" : "60vw"}
-              h="md"
-              transition={"ease 1s"}
-              padding={5}
-              bg={useColorModeValue("light.lightGrey", "dark.darkblue")}
-              overflowY="scroll"
-            >
-              <WordsContainer
-                userInput={props.typed}
-                words={props.words}
-                typeMode={props.typeMode}
-                setlpm={setlpm}
-                COUNTDOWN_SECONDS={props.COUNTDOWN_SECONDS}
-                timeElapsed={props.timeElapsed}
-                loadGpt={props.loadGpt}
-                state={props.state}
-              />
-            </Flex>
-            <Box
-              display={props.typeMode ? "none" : "show"}
-              transition={"ease 1s"}
-              className="stats-box"
-              borderRadius={30}
-              w="30vw"
-              h="md"
-              padding={5}
-              pt={10}
-              bg={useColorModeValue("light.mediumGrey", "dark.indigo")}
-              overflowY="scroll"
-            >
-              <Text
-                fontSize="xl"
-                fontWeight={800}
-                textAlign="center"
-                color={useColorModeValue("light.extraLight", "blue.100")}
+            {/* code box and chatgpt explanations */}
+            <Flex direction="row" gap={6}>
+              <Flex
+                className="stats-box"
+                borderRadius={30}
+                w={props.typeMode ? "80vw" : "60vw"}
+                h="md"
+                transition={"ease 1s"}
+                padding={5}
+                bg={useColorModeValue("light.lightGrey", "dark.darkblue")}
+                overflowY="scroll"
               >
-                {/* <BsFillChatRightDotsFill></BsFillChatRightDotsFill> */}
-                ChatGPT
-                Says...
-              </Text>
-              <br />
-              {props.loadGpt ? (
+                <WordsContainer
+                  userInput={props.typed}
+                  words={props.words}
+                  typeMode={props.typeMode}
+                  setlpm={setlpm}
+                  COUNTDOWN_SECONDS={props.COUNTDOWN_SECONDS}
+                  timeElapsed={props.timeElapsed}
+                  loadGpt={props.loadGpt}
+                  state={props.state}
+                />
+              </Flex>
+              <Box
+                display={props.typeMode ? "none" : "show"}
+                transition={"ease 1s"}
+                className="stats-box"
+                borderRadius={30}
+                w="30vw"
+                h="md"
+                padding={5}
+                pt={10}
+                bg={useColorModeValue("light.mediumGrey", "dark.indigo")}
+                overflowY="scroll"
+              >
+                <Text
+                  fontSize="xl"
+                  fontWeight={800}
+                  textAlign="center"
+                  color={useColorModeValue("light.extraLight", "blue.100")}
+                >
+                  {/* <BsFillChatRightDotsFill></BsFillChatRightDotsFill> */}
+                  ChatGPT
+                  Says...
+                </Text>
+                <br />
+                {props.loadGpt ? (
                   <Box w="27vw">
                     <SkeletonText
                       height="20px"
@@ -168,18 +169,20 @@ export default function TypeTest(props: TypeTestProps) {
                   >
                     {props.gptSays}
                   </Text>
-                )}
-            </Box>
+                  )}
+                
+              </Box>
+            </Flex>
+            {/* start, skip, restart buttons */}
+            <ControlButtons
+              typeMode={props.typeMode}
+              startTest={props.startTest}
+              restart={props.restart}
+              loading={props.loadGpt}
+            />
           </Flex>
-          {/* start, skip, restart buttons */}
-          <ControlButtons
-            typeMode={props.typeMode}
-            startTest={props.startTest}
-            restart={props.restart}
-            loading={props.loadGpt}
-          />
         </Flex>
-      </Flex>
-    </Hotkeys>
+      </Hotkeys>
+    </>
   );
 }

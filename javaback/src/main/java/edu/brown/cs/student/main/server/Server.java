@@ -18,7 +18,7 @@ import static spark.Spark.*;
  */
 public class Server {
     public static void main(String[] args) {
-        Spark.port(4100);
+        Spark.port(4000);
 
         // credit: https://stackoverflow.com/questions/29114667/cross-origin-communication-between-nginx-and-spark-java
         options("/*",

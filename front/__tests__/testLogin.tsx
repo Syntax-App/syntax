@@ -5,7 +5,11 @@ import userEvent from "@testing-library/user-event";
 import App from "@/pages/_app";
 import { screen, fireEvent } from "@testing-library/react";
 import { createMockRouter } from "../__mocks__/routerMock";
+import { useRouter } from "next/router";
 
+
+// 1- Mocking the hook using jest.fn
+const mockedRouter = jest.fn();
 
 let username: HTMLInputElement;
 let password: HTMLElement;
@@ -24,6 +28,10 @@ beforeEach(() => {
   password = screen.getByTestId("testid_password");
 });
 
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 it("should show error message when empty fields", () => {
   // check button is rendered
   expect(screen.getByText("Sign In")).toBeInTheDocument();
@@ -34,17 +42,17 @@ it("should show error message when empty fields", () => {
   });
   fireEvent.click(loginButton);
   expect(screen.getByText("* Please enter all fields.")).toBeInTheDocument();
-  //expect(router.push).toBeCalledTimes(0);
+  expect(router.push).toBeCalledTimes(0);
 
 });
 
-it("should navigate to home page after pressing login", async () => {
+it("should navigate to home page after pressing login", () => {
   expect(screen.getByText("Sign In")).toBeInTheDocument();
 
   // if fields are not empty
   let user = userEvent.setup();
-  await user.type(username, "myusername");
-  await user.type(password, "mypass");
+  user.type(username, "myusername");
+  user.type(password, "mypass");
 
   // click login button, and expect router to have pushed to index page
   const loginButton = screen.getByRole("button", {

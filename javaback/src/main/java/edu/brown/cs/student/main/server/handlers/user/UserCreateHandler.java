@@ -103,7 +103,7 @@ public class UserCreateHandler implements Route {
     public String getSerializedFailure(String error_message, Map<String, Object> user) {
         Map<String, Map<String, Object>> data = new HashMap<>();
         data.put("user", user);
-        return new CreateFailureResponse("error", error_message, user).serialize();
+        return new CreateFailureResponse("error", error_message, data).serialize();
     }
 
     public record CreateSuccessResponse(String status, Map<String, User> data) {
@@ -118,7 +118,7 @@ public class UserCreateHandler implements Route {
         }
     }
 
-    public record CreateFailureResponse(String status, String error_message, Map<String, Object> data) {
+    public record CreateFailureResponse(String status, String error_message, Map<String, Map<String, Object>> data) {
         /**
          * @return this response, serialized as Json
          */
