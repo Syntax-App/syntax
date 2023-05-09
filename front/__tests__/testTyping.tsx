@@ -15,12 +15,23 @@ import { COUNTDOWN_SECONDS } from "@/components/TypingTestInterface/hooks/useEng
 import { ThemeProvider } from "@chakra-ui/react";
 import { ChakraProvider } from "@chakra-ui/react";
 
-
-
-//const fetch = require("node-fetch");
-
+// mock fetch
 require("jest-fetch-mock").enableMocks();
 
+// mock matchMedia (from Jest docs)
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
 
 let startButton: HTMLElement;
 const router = createMockRouter({});
@@ -46,17 +57,12 @@ it('should render typing page on start button', () => {
   expect(screen.getByText('TIMER')).toBeInTheDocument();
   expect(screen.getByText('ACCURACY')).toBeInTheDocument();
   expect(screen.getByText('LPM')).toBeInTheDocument();
-  //expect(screen.getByText('100')).toBeInTheDocument();
-
 });
 
 it("should start timer on user type", async () => {
   let user = userEvent.setup();
-
-  fireEvent.click(startButton);
+  user.click(startButton);
   expect(screen.getByLabelText(TEXT_timer_accessible_name)).toBeInTheDocument();
-  //await user.type(screen.getByTestId("usertype"), "myusername");
-
-  //userEvent.type(screen.getByTestId("usertype"), "hi");
-  //expect(screen.getByText(COUNTDOWN_SECONDS)).not.toBeInTheDocument();
+  // await user.keyboard("a");
+  // expect(screen.getByText(COUNTDOWN_SECONDS)).not.toBeInTheDocument();
 });

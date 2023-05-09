@@ -91,7 +91,7 @@ export default function WordsContainer(props: WordsProps) {
         justifyContent="center"
       >
         <Box w="55vw">
-            {/* <SkeletonText
+            <SkeletonText
               height="20px"
               noOfLines={10}
               spacing={4}
@@ -99,7 +99,7 @@ export default function WordsContainer(props: WordsProps) {
               fadeDuration={30}
               startColor="dark.darkblue"
               endColor="dark.blue"
-            ></SkeletonText> */}
+            ></SkeletonText>
           </Box>
         
           <pre>
