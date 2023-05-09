@@ -26,7 +26,7 @@
   },
   {
     "text": "public class Add{\n\n\tpublic static void main(String[] args) {\n\t\t\n\t\tint first = 10;\n\t\tint second = 20;\n\n\t\tint sum = first + second;\n\n\t\tSystem.out.println(\"The sum is: \" + sum);\n\t}\n}",
-    "difficulty": 1.0
+    "difficulty": 0.0
   },
   {
     "text": "public class ListNode {\n*\tint val;\n*\tListNode next;\n*\tListNode(int x) {\n*\t\tval = x;\n *\t\tnext = null;\n*\t}\n*}\n*/\npublic class Solution {\n\tpublic ListNode removeNthFromEnd(ListNode head, int n) {\n\t\tListNode cur = head, prev = head;\n\t\twhile(n-- > 0) {\n\t\t\tcur = cur.next;\n\t\t}\n\t\tif (cur == null)\n\t\t\treturn head.next;\n\t\twhile (cur.next != null) {\n\t\t\tcur = cur.next;\n\t\t\tprev = prev.next;\n\t\t}\n\t\tprev.next = prev.next.next;\n\t\treturn head;\n\t}\n}",
