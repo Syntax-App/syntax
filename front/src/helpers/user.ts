@@ -43,9 +43,6 @@ export async function requestRankings() {
 export async function requestCode(lang: string, email?: string) {
   let response;
 
-   //console.log(lang);
-   //console.log(email);
-
   if (email) {
     response = await fetch(process.env.NEXT_PUBLIC_SPARK_BACKEND_URL + "/race/start?email=" + email + "&lang=" + lang);
   } else {
@@ -72,7 +69,7 @@ async function postData(url = "", data = {}) {
       ///'Content-Type': 'application/x-www-form-urlencoded',
     },
     redirect: "follow", // manual, *follow, error
-    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    referrerPolicy: "origin", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
   return response; // parses JSON response into native JavaScript objects

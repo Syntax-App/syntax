@@ -62,7 +62,7 @@ export default function TypeTest(props: TypeTestProps) {
   return (
     <>
       <Hotkeys
-        keyName="shift+r"
+        keyName="option+r"
         onKeyDown={() => {
           console.log("pressed shortcut");
           setRestartShortcut(true);
@@ -177,6 +177,7 @@ export default function TypeTest(props: TypeTestProps) {
               typeMode={props.typeMode}
               startTest={props.startTest}
               restart={props.restart}
+              loading={props.loadGpt}
             />
           </Flex>
         </Flex>
