@@ -1,22 +1,19 @@
 import { render } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context';
-import Home from '@/pages/index'
-import App from '@/pages/_app';
 import { screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import { createMockRouter } from '../__mocks__/routerMock';
 import NavBar from '@/components/NavBar';
-import TypeTest from '@/components/TypeTest';
-import UserType from '@/components/TypingTestInterface/TypeTestComponents/UserType';
 import { TEXT_profile_accessible_name, TEXT_ranking_accessible_name } from '@/components/NavBar';
+import { create } from 'domain';
 
-// it('should render the app', () => {
-//   render(
-//     <RouterContext.Provider value={createMockRouter({})}>
-//       <App Component={Home} pageProps={{}} />
-//     </RouterContext.Provider>
-//   );
-// });
+// jest.mock('next/router', () => ({
+//   useRouter() {
+//     createMockRouter({});
+//   },
+// }));
+
+// const useRouter = jest.spyOn(require('next/router'), 'useRouter')
 
 it('should render all nav buttons', () => {
   const router = createMockRouter({});
@@ -30,17 +27,21 @@ it('should render all nav buttons', () => {
   expect(screen.getByRole("link", { name: TEXT_ranking_accessible_name })).toBeInTheDocument();
 });
 
-it('should navigate to the profile page', () => {
+it('should navigate to the profile page', async () => {
+  let user = userEvent.setup();
+
   const router = createMockRouter({});
   render(
     <RouterContext.Provider value={router}>
       <NavBar />
     </RouterContext.Provider>
   );
-  
+
   const profileButton = screen.getByRole("link", { name: TEXT_profile_accessible_name });
-  userEvent.click(profileButton);
+  expect(profileButton).toBeInTheDocument();
+  
+  user.click(profileButton);
 
   // expect to have redirected to profile page using link
-  // expect(screen.getByText('profile-page')).toBeInTheDocument();
+  expect(router.push).toHaveBeenCalledWith('/profile');
 });
