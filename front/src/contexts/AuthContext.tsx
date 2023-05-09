@@ -22,7 +22,7 @@ export interface IAuthContext {
   loading: boolean;
 }
 
-export interface IAuthMethods {
+export interface IAuthMethods { 
   emailLogin: (email : string, password : string) => Promise<void>;
   emailSignup: (displayName : string, email : string, password : string) => Promise<void>;
   googleLogin: () => Promise<void>;
@@ -70,11 +70,10 @@ export function AuthProvider({ children }: any) {
   const [currentUser, setCurrentUser] = useState<User>();
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const googleProvider = new GoogleAuthProvider();
-  const [loading, setloading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setloading(true);
       if (user) {
         setCurrentUser(user);
         if (user.email) {
@@ -92,7 +91,7 @@ export function AuthProvider({ children }: any) {
           requestGetUser(user.email).then((r) => {
             if (r.status === "success" && isUserDataSuccessResponse(r.data.user)) {
               setUserInfo(r.data.user);
-              setloading(false);
+              setLoading(false);
             } else {
               console.log("Invalid user data info.")
             }
@@ -100,7 +99,7 @@ export function AuthProvider({ children }: any) {
         }
       } else {
         setCurrentUser(undefined);
-        setloading(false);
+        setLoading(false);
       }
     });
     return unsubscribe;
@@ -117,8 +116,10 @@ export function AuthProvider({ children }: any) {
         .then((userInf : IUserInfoResponse) => {
           if (isUserDataSuccessResponse(userInf.data.user)){
           setUserInfo(userInf.data.user);
+          setLoading(false);
           } else {
-            console.log("Attempted email login with invalid UserInfo.")
+            console.log("Attempted email login with invalid UserInfo.");
+            setLoading(false);
           }
         })
       })
@@ -141,11 +142,13 @@ export function AuthProvider({ children }: any) {
           undefined // will use default profile picture.
         ).then((userInf : IUserInfoResponse) => {
           setUserInfo(userInf.data.user);
+          setLoading(false);
         }) 
       })
       .catch((error: FirebaseError) => {
         console.log(error.code);
         console.log(error.message);
+        setLoading(false);
       });
   }
 
@@ -163,6 +166,7 @@ export function AuthProvider({ children }: any) {
             result.user.photoURL
           ).then((userInf : IUserInfoResponse) => {
             setUserInfo(userInf.data.user);
+            setLoading(false);
           });
         }
       })
