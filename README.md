@@ -74,64 +74,6 @@ syntax
 │   ├── index.html
 │   └── README.md                  
 └── .gitignore
-sprint-3-abenjell-hmasamur/
-├── data/
-│   ├── persons/
-│   │   ├── names-invalid.csv
-│   │   ├── names-no-header.csv
-│   │   ├── names-part-invalid.csv
-│   │   └── names-with-header.csv
-│   ├── stars/
-│   │   ├── star-part-invalid.csv
-│   │   ├── stardata.csv
-│   │   └── ten-star.csv
-│   └── empty.csv
-├── src/
-│   ├── main/
-│   │   └── java/
-│   │       └── edu.brown.cs.student.main/
-│   │           ├── csv/
-│   │           │   ├── creators/
-│   │           │   │   ├── CreatorFromRow.java
-│   │           │   │   ├── FactoryFailureException.java
-│   │           │   │   ├── ListCreator.java
-│   │           │   │   ├── PersonCreator.java
-│   │           │   │   └── StarCreator.java
-│   │           │   ├── objectTypes/
-│   │           │   │   ├── Person.java
-│   │           │   │   └── Star.java
-│   │           │   ├── Main.java
-│   │           │   ├── Parser.java
-│   │           │   └── Searcher.java
-│   │           └── server/
-│   │               ├── csvHandlers/
-│   │               │   ├── LoadHandler.java
-│   │               │   ├── SearchHandler.java
-│   │               │   └── ViewHandler.java
-│   │               ├── weather/
-│   │               │   ├── CacheParams.java
-│   │               │   ├── GeoCoord.java
-│   │               │   ├── WeatherHandler.java
-│   │               │   ├── WeatherProxy.java
-│   │               │   ├── WeatherResponse.java
-│   │               │   └── WeatherUtils.java
-│   │               ├── Response.java
-│   │               ├── Server.java
-│   │               └── States.java
-│   └── test/
-│       └── java/
-│           └── edu.brown.cs.student.main/
-│               ├── mocks/
-│               │   ├── MockJSON.java
-│               │   └── MockWeatherUtils.java
-│               ├── TestAPI.java
-│               ├── TestAPIUtilities.java
-│               ├── TestParser.java
-│               └── TestSearcher.java
-├── .gitignore
-├── index.html
-├── pom.xml
-└── README.md
 ```
 
 ## Design Choices
