@@ -17,7 +17,7 @@
     "difficulty": 2.0
   },
   {
-    "text": "/**\n   * Factorial. Example of what the recursive implementation looks like.\n   *\n   * @param number for which factorial is to be calculated for\n   * @return factorial\n   */\n  public static int recursiveFactorial(int number) {\n\tvar initial = 0;\n\tif (number == initial) {\n\t  return initial + 1;\n\t}\n\treturn number * recursiveFactorial(number - 1);\n  }",
+    "text": "public static int recursiveFactorial(int number) {\n\tvar initial = 0;\n\tif (number == initial) {\n\t  return initial + 1;\n\t}\n\treturn number * recursiveFactorial(number - 1);\n  }",
     "difficulty": 1.0
   },
   {
@@ -29,7 +29,7 @@
     "difficulty": 1.0
   },
   {
-    "text": "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *\t int val;\n *\t ListNode next;\n *\t ListNode(int x) {\n *\t\t val = x;\n *\t\t next = null;\n *\t }\n * }\n */\npublic class Solution {\n\tpublic ListNode removeNthFromEnd(ListNode head, int n) {\n\t\tListNode cur = head, prev = head;\n\t\twhile(n-- > 0) {\n\t\t\tcur = cur.next;\n\t\t}\n\t\tif (cur == null) \n\t\t\treturn head.next;\n\t\twhile (cur.next != null) {\n\t\t\tcur = cur.next;\n\t\t\tprev = prev.next;\n\t\t}\n\t\tprev.next = prev.next.next;\n\t\treturn head;\n\t}\n}",
+    "text": "public class ListNode {\n *\t int val;\n *\t ListNode next;\n *\t ListNode(int x) {\n *\t\t val = x;\n *\t\t next = null;\n *\t }\n * }\n */\npublic class Solution {\n\tpublic ListNode removeNthFromEnd(ListNode head, int n) {\n\t\tListNode cur = head, prev = head;\n\t\twhile(n-- > 0) {\n\t\t\tcur = cur.next;\n\t\t}\n\t\tif (cur == null) \n\t\t\treturn head.next;\n\t\twhile (cur.next != null) {\n\t\t\tcur = cur.next;\n\t\t\tprev = prev.next;\n\t\t}\n\t\tprev.next = prev.next.next;\n\t\treturn head;\n\t}\n}",
     "difficulty": 3.0
   },
   {
