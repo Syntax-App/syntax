@@ -263,12 +263,19 @@ public class TestSyntaxIntegration {
     // tests getting response with snippet when specifying email
     // NOTE: can't test for specific snippet since snippet generation is random
     @Test
-    public void testStartHandlerValid() throws IOException {
-        HttpURLConnection clientConnection = tryGETRequest("race/start?email=ayman_benjelloun_touimi@brown.edu");
+    public void testStartHandlerValid() throws IOException, InterruptedException, ExecutionException {
+        HttpResponse<String> httpResponse = tryPOSTRequest("/user/create", "{\"email\":\"testcreateuseremail@testemail.com\",\"name\":\"Test User\",\"pic\":\"example.org\"}");
+        assertEquals(200, httpResponse.statusCode());
+        UserCreateHandler.CreateSuccessResponse createResponse = getResponse(httpResponse, UserCreateHandler.CreateSuccessResponse.class);
+        assertNotNull(createResponse);
+
+        HttpURLConnection clientConnection = tryGETRequest("race/start?email=testcreateuseremail@testemail.com");
         assertEquals(200, clientConnection.getResponseCode());
         String response = request(clientConnection);
         assert(response.contains("{\"status\":\"success\",\"data\":{\"snippet\":\""));
         assert(response.contains("\"explanation\":\""));
+
+        this.deleteDocument("testcreateuseremail@testemail.com");
     }
 
     // tests getting response with snippet without specifying email
@@ -296,10 +303,17 @@ public class TestSyntaxIntegration {
 
     // tests response with new stats with valid email
     @Test
-    public void testEndHandlerValid() throws IOException, InterruptedException {
-        HttpResponse<String> response = tryPOSTRequest("/race/end", "{\"email\":\"ayman_benjelloun_touimi@brown.edu\",\"recentlpm\":\"100\",\"recentacc\":\"99\"}");
+    public void testEndHandlerValid() throws IOException, InterruptedException, ExecutionException {
+        HttpResponse<String> httpResponse = tryPOSTRequest("/user/create", "{\"email\":\"testcreateuseremail@testemail.com\",\"name\":\"Test User\",\"pic\":\"example.org\"}");
+        assertEquals(200, httpResponse.statusCode());
+        UserCreateHandler.CreateSuccessResponse createResponse = getResponse(httpResponse, UserCreateHandler.CreateSuccessResponse.class);
+        assertNotNull(createResponse);
+
+        HttpResponse<String> response = tryPOSTRequest("/race/end", "{\"email\":\"testcreateuseremail@testemail.com\",\"recentlpm\":\"100\",\"recentacc\":\"99\"}");
         assertEquals(200, response.statusCode());
         assertTrue(response.body().contains("{\"status\":\"success\",\"data\":{\"updated_stats\":{\"avgacc\":99.0,\"avglpm\":100.0,\"exp\":"));
+
+        this.deleteDocument("testcreateuseremail@testemail.com");
     }
 
     // tests error from ending race without specifying email
