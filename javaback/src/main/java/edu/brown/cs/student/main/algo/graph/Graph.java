@@ -256,7 +256,7 @@ public class Graph {
         // find minimum difference between user experience and snippet difficulty
         for (int i = 0; i < this.availableIDs.size(); i++) {
             double diff = Math.abs(
-                userExperience - this.json.array()[i].difficulty());
+                userExperience - this.json.array()[this.availableIDs.get(i)].difficulty());
             if (diff < min) {
                 min = diff;
                 minIndex = i;
