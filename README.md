@@ -160,6 +160,31 @@ updating user statistics in the various handlers.
 - Tests that user is redirected to home page after successful sign up / login
 - Tests components are rendered to screen
 
+### Snippet Credits
+- Java
+  - [BubbleSort] (https://gist.github.com/thmain/27cbb20921da6fdf762f1fb3ceffb1a7)
+  - [PDF Generation] (https://devm.io/java/15-useful-code-snippets-java-developers-131796)
+  - [Sending Email] (https://devm.io/java/15-useful-code-snippets-java-developers-131796)
+  - [Shuffle] (https://github.com/hellokaton/30-seconds-of-java8/blob/master/src/main/java/snippets/Snippets.java)
+  - [Factorial] (https://github.com/iluwatar/30-seconds-of-java/blob/master/src/main/java/math/FactorialSnippet.java)
+  - [BFS] (https://github.com/zhaohuabing/breadth-first-search-graph-java/blob/master/src/main/java/com/zhaohuabing/Graph.java)
+  - [Two-Sum] (https://github.com/SwetabhOfficial/Java-Basic-Codes-for-beginner-to-advance/blob/master/Java%20Codes%20for%20Beginner/Add%20Two%20Numbers.java)
+  - [Node Removal] (https://gist.github.com/wayetan/8179337)
+  - [Conditionals] (https://github.com/PacktPublishing/Java-Programming-for-Beginners/blob/master/Chapter03/3.2/ComplexConditionals.java)
+  - [XML Writing] (https://github.com/PacktPublishing/Java-Programming-for-Beginners/blob/master/Chapter11/11.3/WritingXML_End.java)
+
+- TypeScript/JavaScript
+  - Dijkstra's: ChatGPT
+  - User Data Promises: ChatGPT
+  - [Mail To] (https://github.com/30-seconds/30-seconds-of-react/tree/master/snippets)
+  - [Carousel] (https://github.com/30-seconds/30-seconds-of-react/tree/master/snippets)
+  - Copy to Clipboard: ChatGPT
+  - EditPost: ChatGPT
+  - Authorization: ChatGPT
+  - Chakra Component: ChatGPT
+  - [Emoji] (https://gitme.fun/blinking/ChatGPT-Next-Web/src/branch/master/app/components/emoji.tsx)
+  - Button: ChatGPT
+
 ## Errors/Bugs
 There are no known bugs.
 
