@@ -172,6 +172,15 @@ updating user statistics in the various handlers.
   - [Node Removal] (https://gist.github.com/wayetan/8179337)
   - [Conditionals] (https://github.com/PacktPublishing/Java-Programming-for-Beginners/blob/master/Chapter03/3.2/ComplexConditionals.java)
   - [XML Writing] (https://github.com/PacktPublishing/Java-Programming-for-Beginners/blob/master/Chapter11/11.3/WritingXML_End.java)
+  - [Minecraft Mod] (https://github.com/MinecraftModDevelopmentMods/OreSpawn/blob/master-1.12/src/main/java/com/mcmoddev/orespawn/commands/AddOreCommand.java)
+  - [Hex2Color] (https://github.com/HouariZegai/Calculator/blob/master/src/main/java/com/houarizegai/calculator/util/ColorUtil.java)
+  - [Update Cart] (https://github.com/shashirajraja/onlinebookstore/blob/master/src/main/java/com/bittercode/util/StoreUtil.java)
+  - [Thumbnail] (https://gist.github.com/x812/8fba1e4edcd55a891795)
+  - [Screenshot Capture] (https://gist.github.com/x812/8fba1e4edcd55a891795)
+  - [Zip Jar] (https://gist.github.com/x812/8fba1e4edcd55a891795)
+  - [Time Difference] (https://github.com/iluwatar/30-seconds-of-java)
+  - [3-Sum] (https://github.com/qiyuangong/leetcode/blob/master/java/015_3Sum.java)
+  - [Reverse LinkedList] (https://github.com/qiyuangong/leetcode/blob/master/java/206_Reverse_Linked_List.java)
 
 - TypeScript/JavaScript
   - Dijkstra's: ChatGPT
