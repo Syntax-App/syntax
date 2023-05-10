@@ -72,6 +72,9 @@ public class TestSyntaxIntegration {
         URL requestURL = new URL("http://localhost:"+Spark.port()+"/"+apiCall);
         HttpURLConnection clientConnection = (HttpURLConnection) requestURL.openConnection();
 
+        clientConnection.setRequestProperty("Referer", "https://syntax-front.vercel.app/");
+
+        //clientConnection.set
         clientConnection.connect();
         return clientConnection;
     }
@@ -81,6 +84,7 @@ public class TestSyntaxIntegration {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:"+Spark.port()+"/"+apiCall))
+                .header("Referer", "https://syntax-front.vercel.app/")
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
@@ -106,7 +110,6 @@ public class TestSyntaxIntegration {
     /**
      * Helper method to parse a response return by our Server itself in a custom
      * given format.
-     * @param clientConnection - connection to the API (ourselves)
      * @param customClass - format in which we want to parse the JSON data in.
      * @param <T> - generic return type
      * @return - instance of CustomClass, with parsed data
