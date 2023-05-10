@@ -156,7 +156,7 @@ export default function Result(props: ResultProps) {
             </Modal>
           </Stack>
         </Flex>
-        {/* continue and skip buttons */}
+        {/* continue button */}
         <HStack gap={4} alignItems="flex-end">
           <Stack alignItems="center" gap={4}>
             <Stack alignItems="center" gap={-1}>
@@ -195,9 +195,6 @@ export default function Result(props: ResultProps) {
               CONTINUE
             </Button>
           </Stack>
-          <Button borderRadius={30} height={8} width={28} variant="outline">
-            SKIP
-          </Button>
         </HStack>
       </Flex>
     </Flex>
