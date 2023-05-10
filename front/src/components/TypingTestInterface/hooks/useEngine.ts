@@ -9,13 +9,11 @@ import { type } from "os";
 // states to keep track of the game status
 export type State = "start" | "run" | "finish" | "idle";
 
-export const NUMBER_WORDS = 20;
-
-const useEngine = (countdownTime: number) => {
+const useEngine = () => {
   const [state, setState] = useState<State>("start");
   const [words, updateWords] = useState<string>("");
   const { timeLeft, startCountdown, resetCountdown, setTimeLeft, timeElapsed, setTotalTime} =
-    useCountdownTimer(1);
+    useCountdownTimer();
 
   // record keyboard strokes during start or run
   const { typed, cursor, clearTyped, resetTotalTyped, totalTyped } = useTypings(

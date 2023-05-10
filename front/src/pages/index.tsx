@@ -15,7 +15,6 @@ export default function Home() {
   const { userInfo, methods, loading } = useAuth();
   const [gptSays, setGptSays] = useState("");
   const [loadGpt, setLoadGpt] = useState(false);
-  const [countdownTime, setCountdownTime] = useState<number>(1);
 
   const {
     state,
@@ -28,7 +27,7 @@ export default function Home() {
     restart,
     totalTyped,
     timeElapsed,
-  } = useEngine(countdownTime);
+  } = useEngine();
 
   async function getNewSnippet() {
     setLoadGpt(true);
