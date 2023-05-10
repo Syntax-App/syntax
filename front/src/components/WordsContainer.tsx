@@ -16,29 +16,7 @@ export default function WordsContainer(props: WordsProps) {
   const [linesCompleted, setLinesCompleted] = useState(0);
 
   const typingBoxRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const typingBox = typingBoxRef.current;
-
-    // prevents tabbing out of the typing box
-    if (typingBox && props.state !== "finish") {
-      // selects elements that are focusable
-      const allFocusableElems = document.querySelectorAll(
-        'div, a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-
-      // sets their tabindex to -1 so they are not focusable
-      allFocusableElems.forEach((elem) => {
-        elem.setAttribute("tabIndex", "-1");
-      });
-
-      // resets the tab indices when the component unmounts
-      return () => {
-        allFocusableElems.forEach((elem) => {
-          elem.setAttribute("tabIndex", "0");
-        });
-      };
-    }
-  }, []);
+  
   // prevents spacebar from scrolling on typing box
   useEffect(() => {
     const typingBox = typingBoxRef.current;
@@ -64,6 +42,30 @@ export default function WordsContainer(props: WordsProps) {
     const linesPerMin = Math.round(perSecond * 60);
     props.setlpm(linesPerMin);
   }, [linesCompleted]);
+
+  useEffect(() => {
+    const typingBox = typingBoxRef.current;
+
+    // prevents tabbing out of the typing box
+    if (typingBox && props.state !== "finish") {
+      // selects elements that are focusable
+      const allFocusableElems = document.querySelectorAll(
+        'div, a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      // sets their tabindex to -1 so they are not focusable
+      allFocusableElems.forEach((elem) => {
+        elem.setAttribute("tabIndex", "-1");
+      });
+
+      // resets the tab indices when the component unmounts
+      return () => {
+        allFocusableElems.forEach((elem) => {
+          elem.setAttribute("tabIndex", "0");
+        });
+      };
+    }
+  }, []);
 
   return (
     <Box ref={typingBoxRef} className="typetest">

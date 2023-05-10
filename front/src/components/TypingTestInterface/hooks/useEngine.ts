@@ -14,7 +14,7 @@ export const NUMBER_WORDS = 20;
 const useEngine = (countdownTime: number) => {
   const [state, setState] = useState<State>("start");
   const [words, updateWords] = useState<string>("");
-  const { timeLeft, startCountdown, resetCountdown, setTimeLeft, timeElapsed } =
+  const { timeLeft, startCountdown, resetCountdown, setTimeLeft, timeElapsed, setTotalTime} =
     useCountdownTimer(1);
 
   // record keyboard strokes during start or run
@@ -30,7 +30,10 @@ const useEngine = (countdownTime: number) => {
   useEffect(() => {
     // split words on /n
     const numLines = words.split("\n").length;
-    setTimeLeft(numLines);
+    let time = Math.ceil(2 * numLines);
+    if (time > 60) time = 60;
+    setTimeLeft(time);
+    setTotalTime(time);
   }, [words])
 
   // begins timer as soon as user starts typing
