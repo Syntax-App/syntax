@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const useCountdownTimer = (seconds: number) => {
     const [timeLeft, setTimeLeft] = useState(seconds);
     const [timeElapsed, setTimeElapse] = useState(1);
+    const [totalTime, setTotalTime] = useState(timeLeft);
 
     const intervalRef = useRef<NodeJS.Timer | undefined>(undefined);
     const hasTimerEnded = timeLeft <= 0;
@@ -26,10 +27,11 @@ const useCountdownTimer = (seconds: number) => {
         clearInterval(intervalRef.current);
         intervalRef.current = undefined;
         // store original time left from starting amount of seconds
-        setTimeLeft(seconds);
+        console.log("totaltime:" + totalTime);
+        setTimeLeft(totalTime);
         setTimeElapse(0);
 
-    }, [seconds]);
+    }, [totalTime]);
 
     // clear countdown when it reaches 0
     useEffect(() => {
@@ -44,7 +46,7 @@ const useCountdownTimer = (seconds: number) => {
         return () => clearInterval(intervalRef.current!);
     }, []);
 
-    return {timeLeft, startCountdown, resetCountdown, setTimeLeft, timeElapsed};
+    return {timeLeft, startCountdown, resetCountdown, setTimeLeft, timeElapsed, setTotalTime};
 }
 
 export default useCountdownTimer;
