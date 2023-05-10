@@ -133,6 +133,11 @@ updating user statistics in the various handlers.
   UI components to fit our specific needs.
   
 - The frontend has a dark and light mode for accessibility.
+- 
+- We decided to keep the start page, typing test page, and test result page at the same location 
+  in the router instead of rerouting. This is because it was more straightforward to keep statistics
+  maintained throughout the three phases through states, rather than passing them to a different page 
+  on the frontend (without using the backend as a middle point). 
 
 ## Backend Testing
 
@@ -153,11 +158,8 @@ updating user statistics in the various handlers.
 
 ## Frontend Testing
 
-### Integration Tests
-
 ### Unit Tests
 - Tests that all inputs are valid during sign up / log in 
-- Tests that user is redirected to home page after successful sign up / login
 - Tests components are rendered to screen
 
 ### Snippet Credits
