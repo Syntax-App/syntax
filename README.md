@@ -5,6 +5,7 @@
 cs logins: `hmasamur`, `abenjell`, `jwan8`, `dliu58` <br />
 Total estimated time: ~48 hours <br />
 [Github Repo](https://github.com/Syntax-App/syntax)  <br />
+[Deployed Site](https://syntax-front.vercel.app/)  <br />
 
 ## Overview
 Our term project Syntax is a typing-test website that helps users practice typing code syntax
@@ -162,7 +163,7 @@ updating user statistics in the various handlers.
 - Tests that all inputs are valid during sign up / log in 
 - Tests components are rendered to screen
 
-### Snippet Credits
+## Snippet Credits
 - Java
   - [BubbleSort] (https://gist.github.com/thmain/27cbb20921da6fdf762f1fb3ceffb1a7)
   - [PDF Generation] (https://devm.io/java/15-useful-code-snippets-java-developers-131796)
