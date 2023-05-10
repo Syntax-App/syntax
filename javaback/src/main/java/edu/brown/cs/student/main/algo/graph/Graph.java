@@ -270,13 +270,15 @@ public class Graph {
      * using JSON data
      */
     private void populateIDList() {
+        List<Integer> localIds = new ArrayList<>();
         for (int i = 0; i < this.json.array().length; i++) {
-            this.availableIDs.add(i);
+            localIds.add(i);
         }
+
+        Collections.shuffle(localIds);
+
         for (int i = 0; i < 10; i++) {
-            List<Integer> copy = new ArrayList<>(this.availableIDs);
-            Collections.shuffle(copy);
-            this.availableIDs.remove(copy.remove(0));
+            this.availableIDs.add(localIds.get(i));
         }
     }
 
