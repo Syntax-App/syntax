@@ -273,6 +273,11 @@ public class Graph {
         for (int i = 0; i < this.json.array().length; i++) {
             this.availableIDs.add(i);
         }
+        for (int i = 0; i < 10; i++) {
+            List<Integer> copy = new ArrayList<>(this.availableIDs);
+            Collections.shuffle(copy);
+            this.availableIDs.remove(copy.remove(0));
+        }
     }
 
     /**
