@@ -117,8 +117,10 @@ export default function Signup() {
                 fontFamily: "source code pro",
                 color: useColorModeValue("light.mediumGrey", "dark.darkblue"),
               }}
-              color={useColorModeValue("light.darkGrey", "dark.darkblue")}
-              bg={useColorModeValue("light.backgroundGrey", "light.extralight")}
+              bg={useColorModeValue(
+                "light.backgroundGrey",
+                "dark.mediumlightblue"
+              )}
               isRequired={true}
             />
             <Input

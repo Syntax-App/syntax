@@ -25,7 +25,6 @@ interface TypeTestProps {
   restart: () => void;
   stats: { acc: number; lpm: number };
   setStats: React.Dispatch<React.SetStateAction<{ acc: number; lpm: number }>>;
-  COUNTDOWN_SECONDS: number;
   timeElapsed: number;
   getNewSnippet: () => void;
   loadGpt: boolean;
@@ -112,7 +111,6 @@ export default function TypeTest(props: TypeTestProps) {
                   words={props.words}
                   typeMode={props.typeMode}
                   setlpm={setlpm}
-                  COUNTDOWN_SECONDS={props.COUNTDOWN_SECONDS}
                   timeElapsed={props.timeElapsed}
                   loadGpt={props.loadGpt}
                   state={props.state}

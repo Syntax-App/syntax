@@ -6,7 +6,6 @@ interface WordsProps {
   userInput: string;
   words: string; // this props.code is for random generated
   typeMode: boolean;
-  COUNTDOWN_SECONDS: number;
   setlpm: React.Dispatch<React.SetStateAction<number>>;
   timeElapsed: number;
   loadGpt: boolean;
@@ -59,12 +58,12 @@ export default function WordsContainer(props: WordsProps) {
   useEffect(() => {
     var perSecond = 0;
     // prevents LPM from going to infinity
-    if (props.timeElapsed > 0){
+    if (props.timeElapsed > 0) {
       perSecond = linesCompleted / props.timeElapsed;
-    };
+    }
     const linesPerMin = Math.round(perSecond * 60);
     props.setlpm(linesPerMin);
-  }, [linesCompleted])
+  }, [linesCompleted]);
 
   return (
     <Box ref={typingBoxRef} className="typetest">
