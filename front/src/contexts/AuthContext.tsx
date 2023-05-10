@@ -206,7 +206,7 @@ export function AuthProvider({ children }: any) {
   }
 
   function isUserDataSuccessResponse(json: any): json is IUserInfo {
-    //if (!("uuid" in json)) return false;
+    if (!("uuid" in json)) return false;
     if (!("name" in json)) return false;
     if (!("email" in json)) return false;
     if (!("pic" in json)) return false;

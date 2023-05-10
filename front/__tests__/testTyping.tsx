@@ -11,7 +11,6 @@ import {
   TEXT_restart_accessible_name,
 } from "@/components/ControlButtons";
 import { TEXT_timer_accessible_name } from "@/components/TopButtons";
-import { COUNTDOWN_SECONDS } from "@/components/TypingTestInterface/hooks/useEngine";
 import { ThemeProvider } from "@chakra-ui/react";
 import { ChakraProvider } from "@chakra-ui/react";
 

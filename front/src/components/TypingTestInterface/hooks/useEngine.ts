@@ -10,23 +10,28 @@ import { type } from "os";
 export type State = "start" | "run" | "finish" | "idle";
 
 export const NUMBER_WORDS = 20;
-export const COUNTDOWN_SECONDS = 30;
 
-const useEngine = () => {
+const useEngine = (countdownTime: number) => {
   const [state, setState] = useState<State>("start");
   const [words, updateWords] = useState<string>("");
-  const { timeLeft, startCountdown, resetCountdown } =
-    useCountdownTimer(COUNTDOWN_SECONDS);
+  const { timeLeft, startCountdown, resetCountdown, setTimeLeft, timeElapsed } =
+    useCountdownTimer(1);
+
   // record keyboard strokes during start or run
   const { typed, cursor, clearTyped, resetTotalTyped, totalTyped } = useTypings(
     state !== "finish" && state !== "idle"
   );
 
-  const [timeElapsed, setTimeElapsed] = useState(1);
   const [errors, setErrors] = useState(0);
-  const [linesCompleted, setLinesCompleted] = useState(0);
   const isStarting = state === "start" && cursor > 0;
   const finishedTyping = cursor === words.length;
+
+  //update timer based on number of lines in words
+  useEffect(() => {
+    // split words on /n
+    const numLines = words.split("\n").length;
+    setTimeLeft(numLines);
+  }, [words])
 
   // begins timer as soon as user starts typing
   useEffect(() => {
@@ -55,10 +60,6 @@ const useEngine = () => {
     setErrors(countErrors(typed, wordsReached));
   }, [errors, countErrors, typed]);
 
-  useEffect(() => {
-    setTimeElapsed(COUNTDOWN_SECONDS - timeLeft);
-  }, [timeLeft]);
-
   const restart = useCallback(() => {
     resetCountdown();
     resetTotalTyped();
@@ -77,7 +78,6 @@ const useEngine = () => {
     errors,
     totalTyped,
     restart,
-    COUNTDOWN_SECONDS,
     timeElapsed,
   };
 };

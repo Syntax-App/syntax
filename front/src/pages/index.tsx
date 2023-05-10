@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useState } from "react";
 import useEngine from "../components/TypingTestInterface/hooks/useEngine";
 import Result from "@/components/Result";
@@ -15,6 +15,7 @@ export default function Home() {
   const { userInfo, methods, loading } = useAuth();
   const [gptSays, setGptSays] = useState("");
   const [loadGpt, setLoadGpt] = useState(false);
+  const [countdownTime, setCountdownTime] = useState<number>(1);
 
   const {
     state,
@@ -26,9 +27,8 @@ export default function Home() {
     errors,
     restart,
     totalTyped,
-    COUNTDOWN_SECONDS,
     timeElapsed,
-  } = useEngine();
+  } = useEngine(countdownTime);
 
   async function getNewSnippet() {
     setLoadGpt(true);
@@ -92,7 +92,6 @@ export default function Home() {
         restart={restart}
         stats={stats}
         setStats={setStats}
-        COUNTDOWN_SECONDS={COUNTDOWN_SECONDS}
         timeElapsed={timeElapsed}
         loadGpt={loadGpt}
         languages={languages}
