@@ -107,7 +107,7 @@ public class Graph {
 
         // set start of graph
         int minIndex = this.determineHead(userExperience);
-        this.availableIDs.remove(minIndex);
+        this.availableIDs.remove((Object) minIndex);
 
         // build graph
         this.head = this.addEdges(this.availableIDs.size(), userExperience,
@@ -141,7 +141,7 @@ public class Graph {
             for (int i = 0; i < Math.min(3, nodesLeft); i++) {
                 // add random node ID and difference to choices
                 destinationIDs.add(randList.get(i));
-                double diff = this.json.array()[i].difficulty() - exp;
+                double diff = this.json.array()[randList.get(i)].difficulty() - exp;
                 diffs[i] = diff;
                 // keep track of number of easier snippets
                 if (diff <= 0) {
