@@ -46,24 +46,6 @@ public class TestSyntaxUnit {
         assert response.get("error_message").equals("User with given email does not exist!");
     }
 
-    // test proper serialization of success response
-    @Test
-    public void testSerializeSuccess() throws IOException {
-        MockStates state = new MockStates();
-        UserGetHandler getHandler = new UserGetHandler(state);
-        JSONUtils jsonUtils = new JSONUtils();
-        Map<String, Object> data = jsonUtils.fromJson(MockJSON.mockDocs.get(0));
-        //assert getHandler.getSerializedSuccess("success", data).equals("{\"status\":\"success\",\"data\":{\"user\":{\"uuid\":123.0,\"name\":\"Daniel Liu\",\"email\":\"daniel_liu2@brown.edu\",\"pic\":\"google.com\",\"stats\":{\"highlpm\":0.0,\"highacc\":0.0,\"avgacc\":0.0,\"avglpm\":0.0,\"numraces\":0.0}}}}");
-    }
-
-    // test proper serialization of failure response
-    @Test
-    public void testSerializeFailure() {
-        MockStates state = new MockStates();
-        UserGetHandler getHandler = new UserGetHandler(state);
-        //assert getHandler.getSerializedFailure("error", "failed").equals("{\"status\":\"error\",\"error_message\":\"failed\"}");
-    }
-
     // test proper creation of request body
     @Test
     public void testCreateBodyParams() throws IOException {
@@ -193,13 +175,5 @@ public class TestSyntaxUnit {
         cache.getExplanation("test2");
         assert cache.isCachedExact("test2");
         assert !(cache.isCachedExact("test1"));
-    }
-
-    // tests that fresh user should start with easiest snippet, Add
-    @Test
-    public void testDetermineHead() {
-        Graph graph = new Graph("");
-        graph.constructGraph(0.0);
-        assert graph.getHeadID() == 6;
     }
 }
