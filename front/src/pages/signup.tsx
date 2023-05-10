@@ -9,14 +9,14 @@ import {
   InputRightElement,
   Divider,
   useColorModeValue,
-  ButtonGroup,
-  ChakraProvider,
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { useAuth } from "@/contexts/AuthContext";
 import { Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+
+export const TEXT_signup_accessible_name = "Signup Button";
 
 export default function Signup() {
   const { currentUser, methods } = useAuth();
@@ -36,24 +36,24 @@ export default function Signup() {
     await router.push("/");
   }
 
-  async function handleSignUp(){
+  async function handleSignUp() {
     if (pass == confirmPass) setInvalidSignup(false);
-      if (
-        pass == confirmPass &&
-        name !== "" &&
-        email !== "" &&
-        pass !== "" &&
-        confirmPass !== ""
-      ) {
-        // successfully register user
-        await methods?.emailSignup(name, email, pass);
-        await router.push("/");
-      } else if (pass != confirmPass || pass === "" || confirmPass === "") {
-        setInvalidSignup(true);
-      } else {
-        setEmptyFields(true);
-        return;
-      }
+    if (
+      pass == confirmPass &&
+      name !== "" &&
+      email !== "" &&
+      pass !== "" &&
+      confirmPass !== ""
+    ) {
+      // successfully register user
+      await methods?.emailSignup(name, email, pass);
+      await router.push("/");
+    } else if (pass != confirmPass || pass === "" || confirmPass === "") {
+      setInvalidSignup(true);
+    } else {
+      setEmptyFields(true);
+      return;
+    }
   }
 
   const handleClick = () => setShow(!show);
@@ -108,6 +108,7 @@ export default function Signup() {
               </Text>
             </Flex>
             <Input
+              data-testid="testid_username"
               value={name}
               onChange={(e) => setName(e.target.value)}
               variant={"solid"}
@@ -121,6 +122,7 @@ export default function Signup() {
               isRequired={true}
             />
             <Input
+              data-testid="testid_email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               mt="1rem"
@@ -138,6 +140,7 @@ export default function Signup() {
             />
             <InputGroup size="md" mt="1rem">
               <Input
+                data-testid="testid_password"
                 value={pass}
                 onChange={(e) => setPass(e.target.value)}
                 type={show ? "text" : "password"}
@@ -179,6 +182,7 @@ export default function Signup() {
             </InputGroup>
             <InputGroup size="md" mt="1rem" mb=".3rem">
               <Input
+                data-testid="testid_confirmpassword"
                 value={confirmPass}
                 onChange={(e) => setConfirmPass(e.target.value)}
                 type={show ? "text" : "password"}
@@ -234,6 +238,7 @@ export default function Signup() {
             </Text>
 
             <Button
+              aria-label={TEXT_signup_accessible_name}
               width="100%"
               borderRadius="3rem"
               bg={useColorModeValue("light.darkGrey", "#83BFF6")}
@@ -304,4 +309,3 @@ export default function Signup() {
     </Flex>
   );
 }
-

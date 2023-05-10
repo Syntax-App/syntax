@@ -24,17 +24,13 @@ export default function WordsContainer(props: WordsProps) {
     if (typingBox && props.state !== "finish") {
       // selects elements that are focusable
       const allFocusableElems = document.querySelectorAll(
-        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'div, a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
 
       // sets their tabindex to -1 so they are not focusable
       allFocusableElems.forEach((elem) => {
         elem.setAttribute("tabIndex", "-1");
       });
-
-      // sets focus on the typing box
-      typingBox.setAttribute("tabIndex", "0");
-      typingBox.focus();
 
       // resets the tab indices when the component unmounts
       return () => {
@@ -44,7 +40,6 @@ export default function WordsContainer(props: WordsProps) {
       };
     }
   }, []);
-
   // prevents spacebar from scrolling on typing box
   useEffect(() => {
     const typingBox = typingBoxRef.current;
@@ -103,8 +98,14 @@ export default function WordsContainer(props: WordsProps) {
               spacing={4}
               skeletonHeight={4}
               fadeDuration={30}
-              startColor="dark.darkblue"
-              endColor="dark.blue"
+              startColor={useColorModeValue(
+                "light.mediumGrey",
+                "dark.darkblue"
+              )}
+              endColor={useColorModeValue(
+                "light.lightGrey",
+                "dark.blue"
+              )}
             />
           </Box>
         ) : (

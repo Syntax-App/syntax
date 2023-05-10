@@ -33,14 +33,16 @@ interface TypeTestProps {
 }
 
 export default function TypeTest(props: TypeTestProps) {
-  const [lpm, setlpm] = useState(0);
+  const [lpm, setlpm] = useState<number>(0);
   const [restartShortcut, setRestartShortcut] = useState(false);
 
+  // RESTART SHORTCUT
   useEffect(() => {
-    if (props.state === "start") {
-      setlpm(0);
+    if (restartShortcut) {
+      setRestartShortcut(false);
+      props.restart();
     }
-  }, [props.state]);
+  }, [restartShortcut, setRestartShortcut]);
 
   // prevents typing while code snippet is loading
   useEffect(() => {
@@ -51,13 +53,11 @@ export default function TypeTest(props: TypeTestProps) {
     }
   }, [props.loadGpt]);
 
-  // RESTART SHORTCUT
   useEffect(() => {
-    if (restartShortcut) {
-      setRestartShortcut(false);
-      props.restart();
+    if (props.state === "start") {
+      setlpm(0);
     }
-  }, [restartShortcut, setRestartShortcut]);
+  }, [props.state]);
 
   return (
     <>
@@ -137,8 +137,7 @@ export default function TypeTest(props: TypeTestProps) {
                   color={useColorModeValue("light.extraLight", "blue.100")}
                 >
                   {/* <BsFillChatRightDotsFill></BsFillChatRightDotsFill> */}
-                  ChatGPT
-                  Says...
+                  ChatGPT Says...
                 </Text>
                 <br />
                 {props.loadGpt ? (
@@ -169,8 +168,7 @@ export default function TypeTest(props: TypeTestProps) {
                   >
                     {props.gptSays}
                   </Text>
-                  )}
-                
+                )}
               </Box>
             </Flex>
             {/* start, skip, restart buttons */}

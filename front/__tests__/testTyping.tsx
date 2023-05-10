@@ -48,21 +48,23 @@ beforeEach(() => {
   });
 });
 
-it("should render the homepage", () => {
-  expect(screen.getByTestId("typetest")).toBeInTheDocument();
+it("should render the homepage", async () => {
+  expect(await screen.getByTestId("typetest")).toBeInTheDocument();
 });
 
-it('should render typing page on start button', () => {
-  userEvent.click(startButton);
-  expect(screen.getByText('TIMER')).toBeInTheDocument();
-  expect(screen.getByText('ACCURACY')).toBeInTheDocument();
-  expect(screen.getByText('LPM')).toBeInTheDocument();
+it('should render typing page on start button', async () => {
+  await userEvent.click(startButton);
+  expect(await screen.getByText('TIMER')).toBeInTheDocument();
+  expect(await screen.getByText("ACCURACY")).toBeInTheDocument();
+  expect(await screen.getByText("LPM")).toBeInTheDocument();
 });
 
 it("should start timer on user type", async () => {
   let user = userEvent.setup();
-  user.click(startButton);
-  expect(screen.getByLabelText(TEXT_timer_accessible_name)).toBeInTheDocument();
+  await user.click(startButton);
+  expect(
+    await screen.getByLabelText(TEXT_timer_accessible_name)
+  ).toBeInTheDocument();
   // await user.keyboard("a");
   // expect(screen.getByText(COUNTDOWN_SECONDS)).not.toBeInTheDocument();
 });
